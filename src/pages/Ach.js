@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom'
-import AchClickable from '../components/AchClickable'
 import AchList from '../components/AchList'
+import AchRecommend from '../components/AchRecommend'
 import API from '../api'
 
 
@@ -26,6 +26,7 @@ export default () => {
     <>
       <h1>Record of Achievement</h1>
       <AchList achs={achs} setAchs={setAchs} />
+      <AchRecommend courses={courses} />
     </>
   )
 }
