@@ -1,18 +1,23 @@
-import React from 'react'
+import React, { useState } from 'react'
 import AchCard from './AchCard'
 import AchClickable from './AchClickable'
-import styled from 'styled-components'
+import AchFilter from './AchFilter'
 import API from '../api'
+import styled from 'styled-components'
 
 const ListWrapper = styled.div`
   padding-bottom: 1rem;
 `
 
 export default ({ achs, setAchs }) => {
+  const [ filter, setFilter ] = useState(null)
 
   return (
     <ListWrapper>
+      <AchFilter setFilter={setFilter} />
+
       {achs.map((ach, i) =>
+        (!filter || ach.Type == filter)  &&
         <AchCard
           ach={ach}
           onEdit={(field, value) => {
@@ -40,6 +45,7 @@ export default ({ achs, setAchs }) => {
 function freshAch() {
   return {
     Name: 'Untitled',
-    About: 'No description'
+    About: 'No description',
+    Type: 'Other'
   }
 }

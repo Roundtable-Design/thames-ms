@@ -9,7 +9,6 @@ export default () => {
 
   const { id } = useParams()
   const [ achs, setAchs ] = useState(null)
-  const [ prev, setPrev ] = useState(null)
   const [ courses, setCourses ] = useState(null)
 
   useEffect(() => {
