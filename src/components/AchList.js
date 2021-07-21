@@ -1,14 +1,19 @@
-import React from 'react'
+import React, { useState } from 'react'
 import AchCard from './AchCard'
 import AchClickable from './AchClickable'
+import AchFilter from './AchFilter'
 import API from '../api'
 
 
 export default ({ achs, setAchs }) => {
+  const [ filter, setFilter ] = useState(null)
 
   return (
     <>
+      <AchFilter setFilter={setFilter} />
+
       {achs.map((ach, i) =>
+        (!filter || ach.Type == filter)  &&
         <AchCard
           ach={ach}
           onEdit={(field, value) => {
@@ -36,6 +41,7 @@ export default ({ achs, setAchs }) => {
 function freshAch() {
   return {
     Name: 'Untitled',
-    About: 'No description'
+    About: 'No description',
+    Type: 'Other'
   }
 }
