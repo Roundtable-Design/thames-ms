@@ -1,53 +1,27 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useParams } from 'react-router-dom'
 import AchClickable from '../components/AchClickable'
-import AchParagraph from '../components/AchParagraph'
-import AchCard from '../components/AchCard'
+import AchList from '../component/AchList'
 
+
+let dummy_ach_list = [
+
+  { Name: 'test', About: 'thing' }
+
+]
 
 export default () => {
   const { id } = useParams()
+  const [ achs, setAchs ] = useState()
+
+  // replace with with a request to the api later
+
+  setAchs(dummy_ach_list)
+
   return (
-    <h1>Achivements page</h1>
+    <>
+      <h1>Record of Achievement</h1>
+      <AchList achs={achs} setAchs={setAchs} />
+    </>
   )
-  // return achieved && (
-  //   <>
-  //     <h1>&#128162; Record of Achievement</h1>
-  //     <AchList/>
-  //     <AchRecommend/>
-  //     <AchDownload/>
-  //   </>
 }
-
-
-// async function achievedByStudent(id) {
-//   const response = await API.get(`achievements/${id}`)
-//
-//   if (response[content]) {
-//     return response.content.map(({ fields }) => fields)
-//   }
-// }
-
-
-/* demo...
-
-<>
-  <h1>hello {id}</h1>
-  <p>Buttons</p>
-  <AchClickable>hello</AchClickable>
-
-  <p>Information paragraph</p>
-  <AchParagraph>
-    This is a paragraph containing helpful information.
-  </AchParagraph>
-
-  <p>Achivement cards</p>
-  <AchCard ach={{
-    Name: 'Maths competition',
-    Related: [ 'Maths', 'Physics', 'Computer Science'],
-    About: 'I took part in a maths contest and came second place.'
-  }}
-    onEdit={console.log}
-  />
-</>
-*/
