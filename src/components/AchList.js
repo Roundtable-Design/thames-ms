@@ -1,6 +1,7 @@
 import React from 'react'
 import AchCard from './AchCard'
 import AchClickable from './AchClickable'
+import API from '../api'
 
 
 export default ({ achs, setAchs }) => {
@@ -13,6 +14,10 @@ export default ({ achs, setAchs }) => {
           onEdit={(field, value) => {
             achs[i][field] = value
             setAchs(achs)
+
+            let copy = {...ach}
+            delete copy.id
+            API.update(`/achievement/${ach.id}`, copy)
           }}
         />
       )}
