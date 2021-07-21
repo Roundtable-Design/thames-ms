@@ -4,7 +4,8 @@ import theme from '../theme'
 
 
 export default styled.div`
-  border: 3px solid black;
+  border: 1px solid black;
+  border-radius: 5px;
   background: white;
   padding: .3rem 1rem;
   > * { outline: none }
