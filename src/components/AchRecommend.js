@@ -9,7 +9,7 @@ const CourseList = styled.ul`
 `
 
 
-export default ({ courses  }) => {
+export default ({ courses }) => {
   return courses ? (
     <div>
       <h2>Recommendations</h2>
@@ -18,7 +18,7 @@ export default ({ courses  }) => {
           Based on your achievements, we think you might like these university courses &#127891;:
         </p>
         <CourseList>
-          {courses.map(({ name, link, uni }) => <li><a href={ link }>{ name } ({ uni })</a></li>)}
+          {courses.map(({ name, link }) => <li><a href={ link }>{ name }</a></li>)}
         </CourseList>
       </section>
     </div>
