@@ -7,7 +7,7 @@ export default ({ achs, setAchs }) => {
 
   return (
     <>
-      {achs.map((i, ach) =>
+      {achs.map((ach, i) =>
         <AchCard
           ach={ach}
           onEdit={(field, value) => {
@@ -19,10 +19,10 @@ export default ({ achs, setAchs }) => {
 
       <AchClickable onClick={() => {
         achs.push(freshAch())
-        setAchs(achs)
+        setAchs([...achs])
       }}>
         Add achievement
-      <AchClickable>
+      </AchClickable>
     </>
   )
 }
@@ -31,6 +31,6 @@ export default ({ achs, setAchs }) => {
 function freshAch() {
   return {
     Name: 'Untitled',
-    About: ''
+    About: 'No description'
   }
 }

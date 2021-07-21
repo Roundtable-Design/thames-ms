@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useParams } from 'react-router-dom'
 import AchClickable from '../components/AchClickable'
-import AchList from '../component/AchList'
+import AchList from '../components/AchList'
 
 
 let dummy_ach_list = [
@@ -12,13 +12,13 @@ let dummy_ach_list = [
 
 export default () => {
   const { id } = useParams()
-  const [ achs, setAchs ] = useState()
+  const [ achs, setAchs ] = useState(null)
 
   // replace with with a request to the api later
 
-  setAchs(dummy_ach_list)
+  !achs && setAchs(dummy_ach_list)
 
-  return (
+  return achs && (
     <>
       <h1>Record of Achievement</h1>
       <AchList achs={achs} setAchs={setAchs} />
