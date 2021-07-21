@@ -5,17 +5,11 @@ import AchRecommend from '../components/AchRecommend'
 import API from '../api'
 
 
-let dummy_ach_list = [
-
-  { Name: 'test', About: 'thing' }
-
-]
-
-
 export default () => {
 
   const { id } = useParams()
   const [ achs, setAchs ] = useState(null)
+  const [ prev, setPrev ] = useState(null)
   const [ courses, setCourses ] = useState(null)
 
   useEffect(() => {

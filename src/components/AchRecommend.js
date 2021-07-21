@@ -10,6 +10,7 @@ const CourseList = styled.ul`
 
 
 export default ({ courses }) => {
+  console.log(courses)
   return courses ? (
     <div>
       <h2>Recommendations</h2>
