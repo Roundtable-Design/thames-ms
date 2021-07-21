@@ -37,7 +37,7 @@ export default () => {
     <div>
       <h2>Download</h2>
       <section>
-        <p>Download all your achievements as a perminent document</p>
+        <p>Download all your achievements as a permanent document</p>
           <button onClick={() => downloadAchievements(achievements)}>
             Download now
           </button>
