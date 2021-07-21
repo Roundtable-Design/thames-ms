@@ -4,6 +4,8 @@ import styled from 'styled-components'
 
 const CardWrapper = styled.div`
   padding-bottom: 1rem ;
+  box-shadow: 1rem;
+  }
 `
 
 export default ({ ach, onEdit }) => {
