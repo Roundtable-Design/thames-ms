@@ -68,7 +68,7 @@ const App = () => {
 					""
 				)}
 				{role.staff ? (
-					<Route path="/achievements" component={AchTeacher} />
+					<Route path="/teacherAch" component={AchTeacher} />
 				) : (
 					""
 				)}
