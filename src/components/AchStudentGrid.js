@@ -56,21 +56,22 @@ export default ({ students }) => {
   const [ subjectFilter, setSubjectFilter ] = useState(null)
   const [ achievements, setAchievements ] = useState(null)
   let studentAchievements;
+
   React.useEffect(() => {
+    console.log("UseEffect")
     if(!achievements) {      (async () => {
         setAchievements( await API.get(`all`))
       })();
     }
   });
-
   return achievements && (
     <StudentsWrapper>
       <AchFilter options={typeOptions} setFilter={setTypeFilter}/>
       <AchFilter options={subjectOptions} setFilter={setSubjectFilter}/>
       { students.content?.map((student, i) =>
         <StudentsColumn href={`./achievements/${student.id}`}>
-         <StudentName>{student.Forname} {student.Surname}</StudentName>
-          {achievements?.map((achievement, j) =>
+         <StudentName>{student.Forename} {student.Surname}</StudentName>
+          {achievements.content?.map((achievement, j) =>
             (student.id == achievements.student_id) &&
             (!typeFilter || achievement.Type == typeFilter)  &&
             (!subjectFilter || achievement.Associations == subjectFilter) &&
