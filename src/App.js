@@ -15,8 +15,8 @@ import Student from "./pages/Student";
 import Test from "./pages/Test";
 import useRole from "./hooks/useRole";
 import Logout from "./pages/Logout";
-import Ach from "./pages/Ach"
-
+import Ach from "./pages/Ach";
+import AchTeacher from "./pages/AchTeacher";
 
 const App = () => {
 	const [role] = useRole();
@@ -64,6 +64,11 @@ const App = () => {
 				)}
 				{role.student || role.parent ? (
 					<Route path="/signout" component={Logout} />
+				) : (
+					""
+				)}
+				{role.staff ? (
+					<Route path="/achievements" component={AchTeacher} />
 				) : (
 					""
 				)}

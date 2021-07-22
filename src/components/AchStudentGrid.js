@@ -4,7 +4,7 @@ import AchFilter from './AchFilter'
 import API from "../api";
 
 
-const StudentWrapper = styled.div`
+const StudentsWrapper = styled.div`
   display: flex;
 `
 const StudentsColumn = styled.div`
@@ -51,19 +51,29 @@ const subjectOptions = [
 ]
 
 
-export default async ({ students }) => {
+export default ({ students }) => {
   const [ typeFilter, setTypeFilter ] = useState(null)
-  const [subjectFilter, setSubjectFilter ] = useState(null)
-  let achievements;
-  return (
-    <StudentsWrapper
+  const [ subjectFilter, setSubjectFilter ] = useState(null)
+  const [ achievements, setAchievements ] = useState(null)
+  let studentAchievements;
+  console.log("Here")
+  console.log(students)
+  React.useEffect(() => {
+    if(!achievements) {      (async () => {
+        setAchievements( await API.get(`achievements`))
+      })();
+    }
+  });
+
+  return achievements && (
+    <StudentsWrapper>
       <AchFilter options={typeOptions} setFilter={setTypeFilter}/>
       <AchFilter options={subjectOptions} setFilter={setSubjectFilter}/>
-      {students.map((student, i) =>
-        <StudentsColumn href = `./achievements/${student.id}`>
+      { students.content?.map((student, i) =>
+        <StudentsColumn href={`./achievements/${student.id}`}>
          <StudentName>{student.Forname} {student.Surname}</StudentName>
-         (achievements = await API.get(`achievements/${student.Achivements}`))) &&
-          {achievements.map((achievement, j) =>
+          {achievements?.map((achievement, j) =>
+            (student.id == achievements.student_id) &&
             (!typeFilter || achievement.Type == typeFilter)  &&
             (!subjectFilter || achievement.Associations == subjectFilter) &&
             <AchWrapper>
@@ -72,7 +82,7 @@ export default async ({ students }) => {
             </AchWrapper>
         )}
         </StudentsColumn>
-      )}
-    <StudentsWrapper/>
+      )};
+    </StudentsWrapper>
   )
 }
