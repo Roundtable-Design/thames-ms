@@ -26,6 +26,7 @@ export default ({ achs, setAchs }) => {
 
             let copy = {...ach}
             delete copy.id
+            delete copy.student_id
             API.update(`/achievement/${ach.id}`, copy)
           }}
         />
