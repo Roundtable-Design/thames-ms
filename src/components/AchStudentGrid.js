@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
 import AchFilter from './AchFilter'
+import API from "../api";
 
 
 const StudentWrapper = styled.div`
@@ -8,7 +9,7 @@ const StudentWrapper = styled.div`
 `
 const StudentsColumn = styled.div`
   min-width: 5rem;
-  max-widthL: 10rem;
+  padding: 2rem;
 `
 
 const StudentName = styled.h1`
@@ -50,17 +51,19 @@ const subjectOptions = [
 ]
 
 
-export default ({ students }) => {
+export default async ({ students }) => {
   const [ typeFilter, setTypeFilter ] = useState(null)
   const [subjectFilter, setSubjectFilter ] = useState(null)
+  let achievements;
   return (
     <StudentsWrapper
       <AchFilter options={typeOptions} setFilter={setTypeFilter}/>
       <AchFilter options={subjectOptions} setFilter={setSubjectFilter}/>
       {students.map((student, i) =>
-        <StudentsColumn href = `./achievements/${student.id}``>
+        <StudentsColumn href = `./achievements/${student.id}`>
          <StudentName>{student.Forname} {student.Surname}</StudentName>
-          {student.Achievements.map((achievement, j) =>
+         (achievements = await API.get(`achievements/${student.Achivements}`))) &&
+          {achievements.map((achievement, j) =>
             (!typeFilter || achievement.Type == typeFilter)  &&
             (!subjectFilter || achievement.Associations == subjectFilter) &&
             <AchWrapper>
