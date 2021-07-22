@@ -56,11 +56,9 @@ export default ({ students }) => {
   const [ subjectFilter, setSubjectFilter ] = useState(null)
   const [ achievements, setAchievements ] = useState(null)
   let studentAchievements;
-  console.log("Here")
-  console.log(students)
   React.useEffect(() => {
     if(!achievements) {      (async () => {
-        setAchievements( await API.get(`achievements`))
+        setAchievements( await API.get(`all`))
       })();
     }
   });
