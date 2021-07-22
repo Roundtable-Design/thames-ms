@@ -44,9 +44,12 @@ export default ({ achs, setAchs }) => {
 
 
 function freshAch() {
-  return {
+  createNew = new object {
     Name: 'Untitled',
     About: 'No description',
     Type: 'Other'
+  }
+  return {
+    API.create(`/achievement`, createNew)
   }
 }
