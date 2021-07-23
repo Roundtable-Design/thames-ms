@@ -6,13 +6,7 @@ import typeOptions from '../data/typeOptions';
 import subjectOptions from '../data/subjectOptions';
 import AchExpandable from './AchExpandable';
 
-const StudentName = styled.h1`
-  font-weight: bold;
-`;
-
-const AchWrapper = styled.div`
-  border: 1px;
-  border-radius: 3px;
+const AchWrapper = styled.a`
 `;
 
 const StudentsWrapper = styled.div`
@@ -75,20 +69,19 @@ export default ({ students }) => {
           (!typeFilter || isType(student, achievements, typeFilter)) &&
             (!subjectFilter || isSubject(student, achievements, subjectFilter)) && (
             <>
-              <StudentName>
-                {student.fields.Forename} {student.fields.Surname}
-              </StudentName>
-              <AchExpandable>
-                {achievements.content?.map((achievement, j) =>
-                  (student.fields.id == achievement.fields.student_id) &&
-                    (!typeFilter || achievement.fields.Type == typeFilter) &&
-                    (!subjectFilter || achievement.fields.Associations == subjectFilter) && (
-                      <AchWrapper href={`./achievements/${student.fields.id}`}>
-                        <h2>{achievement.fields.Name}</h2>
-                        <p>{achievement.fields.Date}</p>
-                      </AchWrapper>
-                    )
-                )}
+              <AchExpandable studentName={`${student.fields.Forename} ${student.fields.Surname}`}>
+                <div>
+                  {achievements.content?.map((achievement, j) =>
+                    (student.fields.id == achievement.fields.student_id) &&
+                      (!typeFilter || achievement.fields.Type == typeFilter) &&
+                      (!subjectFilter || achievement.fields.Associations == subjectFilter) && (
+                        <AchWrapper href={`/achievements/${achievement.fields.student_id}`}>
+                          <h2>{achievement.fields.Name}</h2>
+                          <p>{achievement.fields.Date}</p>
+                        </AchWrapper>
+                      )
+                  )}
+                </div>
               </AchExpandable>
             </>
           )

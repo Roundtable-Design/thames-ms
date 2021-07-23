@@ -67,7 +67,7 @@ const App = () => {
 				) : (
 					""
 				)}
-				{role.staff ? (
+				{role.staff || role.student ? (
 					<Route path="/teacherAch" component={AchTeacher} />
 				) : (
 					""
