@@ -2,15 +2,12 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import AchFilter from "./AchFilter";
 import API from "../api";
+import typeOptions from '../data/typeOptions'
+import subjectOptions from '../data/subjectOptions'
+import AchClickable from './AchClickable'
 
 const StudentsWrapper = styled.div`
-  display: flex;
-`;
-const StudentsColumn = styled.div`
-  min-width: 20rem;
-  padding: 2rem;
-  border: 2px;
-  bord-radius: 5px;
+  max-width: 67.5rem;
 `;
 
 const StudentName = styled.h1`
@@ -22,40 +19,48 @@ const AchWrapper = styled.div`
   border-radius: 3px;
 `;
 
-const typeOptions = [
-  { value: null, label: "None" },
-  { value: "Competition", label: "Competition" },
-  { value: "Masterclass", label: "Masterclass" },
-  { value: "Online course", label: "Online course" },
-  { value: "Personal project", label: "Personal project" },
-  { value: "Reading", label: "Reading" },
-  { value: "Work experience", label: "Work experience" },
-  { value: "Other", label: "Other" },
-];
+function isType(student, achievements, type) {
+  let found = false;
+  let i = 0;
+  for(i < achievements.content.length; i++;) {
+    if(achievements.content[i].fields.student_id == student.fields.id) {
+      if (achievements.content[i].fields.type == type) {
+        found = true;
+      }
+    }
+  }
+  return found
+}
 
-const subjectOptions = [
-  { value: null, label: "None" },
-  { value: "Art", label: "Art" },
-  { value: "Maths", label: "Maths" },
-  { value: "Biology", label: "Biology" },
-  { value: "Chemistry", label: "Chemistry" },
-  { value: "English", label: "English" },
-  { value: "Physics", label: "Physics" },
-  { value: "Computer Science", label: "Computer Science" },
-  { value: "History", label: "History" },
-  { value: "Geography", label: "Geography" },
-  { value: "French", label: "French" },
-  { value: "Spanish", label: "Spanish" },
-  { value: "Buisness Studies", label: "Buisness Studies" },
-  { value: "Sport", label: "Sport" },
-  { value: "Other", label: "Other" },
-];
+function isSubject(student, achievements, subject) {
+  let found = false;
+  let i = 0;
+  console.log("1")
+  console.log(i < achievements.content.length)
+  for(i < achievements.content.length; i++;) {
+    console.log("2")
+    console.log(achievements.content[i].fields.student_id == student.fields.id)
+    if(achievements.content[i].fields.student_id == student.fields.id) {
+      console.log(achievements.content[i].fields.student_id == student.fields.id)
+      let j = 0
+      for ( j < achievements.content[i].fields.Associations.length; j++;)
+      console.log(achievements.content[i].fields.Associations)
+        if (achievements.content[i].fields.Associations[j] == subject) {
+          found = true;
+        }
+    }
+  }
+  return found
+}
 
 export default ({ students }) => {
   const [typeFilter, setTypeFilter] = useState(null);
   const [subjectFilter, setSubjectFilter] = useState(null);
   const [achievements, setAchievements] = useState(null);
+  const [ expanded, setExpanded ] = useState(false);
+  const [ show, setShow ] = useState(true);
   let studentAchievements;
+
 
   React.useEffect(() => {
     if (!achievements) {
@@ -70,21 +75,27 @@ export default ({ students }) => {
         <AchFilter options={typeOptions} setFilter={setTypeFilter} />
         <AchFilter options={subjectOptions} setFilter={setSubjectFilter} />
         {students.content?.map((student, i) =>
-          <StudentsColumn href={`./achievements/${student.fields.id}`}>
-            <StudentName>
-              {student.fields.Forename} {student.fields.Surname}
-            </StudentName>
-            {achievements.content?.map((achievement, j) =>
-              (student.fields.id == achievement.fields.student_id) &&
-                (!typeFilter || achievement.fields.Type == typeFilter) &&
-                (!subjectFilter || achievement.fields.Associations == subjectFilter) && (
-                  <AchWrapper>
-                    <h2>{achievement.fields.Name}</h2>
-                    <p>{achievement.fields.Date}</p>
-                  </AchWrapper>
-                )
-            )}
-          </StudentsColumn>
+          (!typeFilter || isType(student, achievements, typeFilter)) &&
+            (!subjectFilter || isSubject(student, achievements, subjectFilter)) && (
+            <AchClickable
+            onClick={() => setExpanded(!expanded)}
+            onBlur={() => setExpanded(false)}>
+              <StudentName>
+                {student.fields.Forename} {student.fields.Surname}
+              </StudentName>
+              {achievements.content?.map((achievement, j) =>
+                (student.fields.id == achievement.fields.student_id) &&
+                  (!typeFilter || achievement.fields.Type == typeFilter) &&
+                  (!subjectFilter || achievement.fields.Associations == subjectFilter) &&
+                  (expanded == true) && (
+                    <AchWrapper href={`./achievements/${student.fields.id}`}>
+                      <h2>{achievement.fields.Name}</h2>
+                      <p>{achievement.fields.Date}</p>
+                    </AchWrapper>
+                  )
+              )}
+            </AchClickable>
+          )
         )}
       </StudentsWrapper>
     )
