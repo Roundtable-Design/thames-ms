@@ -49,7 +49,7 @@ export default ({ query = null }) => {
 								<Paragraph>{fields.Year_Group}</Paragraph>
 							</Card.Body>
 							{fields.hasOwnProperty("Assignment_Count") && (
-								<Card.Footer style={{backgroundColor: "#DCEFC8"}}>
+								<Card.Footer style={{backgroundColor: "#DCEFC8", borderTop:"#DCEFC8"}}>
 									{fields.Assignment_Count} active assignment
 									{fields.Assignment_Count !== 1 && "s"}
 								</Card.Footer>
