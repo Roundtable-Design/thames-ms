@@ -8,6 +8,7 @@ import React from "react";
 import Section from "../components/Section";
 import Students from "./sections/Students";
 import useRole from "../hooks/useRole";
+import { Logo } from "../components";
 
 export default () => {
 	const [role] = useRole();
@@ -20,9 +21,10 @@ export default () => {
 			{role.parent && <Students />}
 			{role.staff && (
 				<React.Fragment>
+					<Logo />
 					<Classes />
 					<Section>
-						<Link to="/createAssignment">
+						<Link to="/createAssignment" style={{color: "#CE0F69"}}>
 							Create new assignment
 						</Link>
 					</Section>

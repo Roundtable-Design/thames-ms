@@ -6,6 +6,8 @@ export const Card = styled(BootstrapCard)`
 	margin-bottom: ${theme.gutter}px;
 	grid-column: 1 / -1;
 
+	color: #002E5D !important;
+
 	${({ onClick }) => onClick && `cursor: pointer;`}
 
 	${theme.breakpoint("sm")`grid-column: span 3`}
@@ -66,6 +68,8 @@ const captionStyles = `
 `;
 
 export const Caption = styled.h5`
+	color: #002E5D;
+	padding-bottom: 7px;
 	${captionStyles}
 	${variantStyles}
 `;

@@ -42,13 +42,14 @@ export default ({ query = null }) => {
 						<Card
 							onClick={() => history.push(`/class/${fields.id}`)}
 							key={`class-${index}`}
+							style={{borderColor: "#DCEFC8"}}
 						>
 							<Card.Body>
 								<Title>{fields.Title}</Title>
 								<Paragraph>{fields.Year_Group}</Paragraph>
 							</Card.Body>
 							{fields.hasOwnProperty("Assignment_Count") && (
-								<Card.Footer>
+								<Card.Footer style={{backgroundColor: "#DCEFC8"}}>
 									{fields.Assignment_Count} active assignment
 									{fields.Assignment_Count !== 1 && "s"}
 								</Card.Footer>
