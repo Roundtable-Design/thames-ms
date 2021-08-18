@@ -9,7 +9,7 @@ export const Wrapper = styled.div`
 	`}
 
 	padding-bottom: ${theme.gutter}px;
-	margin: 0;
+	margin: 30px 0 0 0;
 	/* border-bottom: 1px solid ${theme.color.light}; */
 
 	/* margin-bottom: ${theme.gutter * 2}px; */
