@@ -10,7 +10,7 @@ export const Header = ({ heading, subheading, ...props }) => {
 		<Section {...props}>
 			<Logo />
 			{/* <Heading style={{ marginBottom: "0px" }}>{heading}</Heading> */}
-			<Subheading style={{ marginBottom: `67px` }}>
+			<Subheading style={{ marginBottom: `0` }}>
 				{subheading}
 			</Subheading>
 		</Section>
