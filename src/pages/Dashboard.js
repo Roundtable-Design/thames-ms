@@ -8,7 +8,11 @@ import React from "react";
 import Section from "../components/Section";
 import Students from "./sections/Students";
 import useRole from "../hooks/useRole";
-import { Logo } from "../components";
+import { Logo, Button } from "../components";
+import TeacherNav from "../components/TeacherNav";
+import styled from "styled-components";
+
+
 
 export default () => {
 	const [role] = useRole();
@@ -21,13 +25,14 @@ export default () => {
 			{role.parent && <Students />}
 			{role.staff && (
 				<React.Fragment>
-					<Logo />
+					<TeacherNav />
+					{/* <Logo style={{margin:"51px auto"}} /> */}
 					<Classes />
-					<Section>
+					{/* <Section>
 						<Link to="/createAssignment" style={{color: "#CE0F69"}}>
-							Create new assignment
+							<Button>Create assignment</Button>
 						</Link>
-					</Section>
+					</Section> */}
 				</React.Fragment>
 			)}
 		</React.Fragment>

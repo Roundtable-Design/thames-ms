@@ -10,6 +10,8 @@ import React from "react";
 import ReactQuill from "react-quill"; // ES6
 import Section from "../components/Section";
 import { useHistory } from "react-router-dom";
+import TeacherNav from "../components/TeacherNav";
+
 
 export default () => {
 	const history = useHistory();
@@ -84,6 +86,8 @@ export default () => {
 				<ActivityIndicator>{submitLoading}</ActivityIndicator>
 			)}
 
+			<TeacherNav />
+
 			<Heading>Create Assignment</Heading>
 
 			<Form onSubmit={handleSubmit}>
@@ -137,6 +141,7 @@ export default () => {
 						<Col>
 							<Form.Label>Set</Form.Label>
 							<Form.Control
+								
 								required
 								type="date"
 								onChange={({ target }) =>
@@ -147,6 +152,7 @@ export default () => {
 						<Col>
 							<Form.Label>Due</Form.Label>
 							<Form.Control
+								
 								required
 								type="date"
 								onChange={({ target }) =>
@@ -159,7 +165,7 @@ export default () => {
 				<Section title="Ecpected">
 					<Form.Row>
 						<Col>
-							<Form.Label>Expected Time Unit</Form.Label>
+							<Form.Label >Expected Time Unit</Form.Label>
 							<Form.Control
 								as="select"
 								required
