@@ -64,7 +64,7 @@ export default ({ query = null }) => {
 								<Title>{fields.Title}</Title>
 								<Paragraph>{fields.Class_Name}</Paragraph>
 							</Card.Body>
-							<Card.Footer>{getStatus(fields.Due)}</Card.Footer>
+							<Card.Footer style={{backgroundColor: "#DCEFC8", borderTop:"#DCEFC8"}}>{getStatus(fields.Due)}</Card.Footer>
 						</Card>
 					))}
 				</Grid>

@@ -10,6 +10,7 @@ import StaffAssignments from "./sections/StaffAssignments";
 import Students from "./sections/Students";
 import Table from "react-bootstrap/Table";
 import { useParams } from "react-router-dom";
+import TeacherNav from "../components/TeacherNav";
 
 export default () => {
 	const { id } = useParams();
@@ -42,6 +43,7 @@ export default () => {
 
 	return (
 		<React.Fragment>
+			<TeacherNav />
 			{record && (
 				<Header
 					error={error}

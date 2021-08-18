@@ -42,7 +42,7 @@ export default ({ query = null }) => {
 						<Card
 							onClick={() => history.push(`/class/${fields.id}`)}
 							key={`class-${index}`}
-							style={{borderColor: "#DCEFC8"}}
+							// style={{borderColor: "#DCEFC8"}}
 						>
 							<Card.Body>
 								<Title>{fields.Title}</Title>
