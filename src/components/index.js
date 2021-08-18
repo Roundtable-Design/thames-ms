@@ -7,6 +7,7 @@ export const Card = styled(BootstrapCard)`
 	grid-column: 1 / -1;
 
 	color: #002E5D !important;
+	border-color: #DCEFC8;
 
 	${({ onClick }) => onClick && `cursor: pointer;`}
 
@@ -39,11 +40,12 @@ export const Subheading = styled.h2`
 `;
 
 export const Heading = styled.h1`
-	font-size: 48px;
-	line-height: 56px;
+	/* font-size: 48px;
+	line-height: 56px; */
+	color: #002E5D;
 	margin-top: ${theme.gutter * 2}px;
 	margin-bottom: ${theme.gutter * 3}px;
-	font-weight: lighter;
+	/* font-weight: lighter; */
 	${variantStyles}
 `;
 
@@ -95,3 +97,17 @@ export const Alert = styled.div`
 	border-radius: 3px;
 	margin-bottom: ${theme.gutter * 2}px;
 `;
+
+export const Button = styled.button`
+	appearance: none;
+	width: auto;
+	padding: 8px 11.5px;
+
+	border: 1px solid #CE0F69;
+	border-radius: 3px;
+	background-color: #FFFFFF;
+	
+    color: #CE0F69;
+	cursor: pointer;
+`;
+
