@@ -11,6 +11,7 @@ import ReactQuill from "react-quill"; // ES6
 import Section from "../components/Section";
 import { useHistory } from "react-router-dom";
 import TeacherNav from "../components/TeacherNav";
+import Container from "react-bootstrap/Container";
 
 
 export default () => {
@@ -82,12 +83,13 @@ export default () => {
 
 	return (
 		<React.Fragment>
+			
 			{submitLoading && (
 				<ActivityIndicator>{submitLoading}</ActivityIndicator>
 			)}
 
 			<TeacherNav />
-
+			<Container>
 			<Heading>Create Assignment</Heading>
 
 			<Form onSubmit={handleSubmit}>
@@ -202,6 +204,7 @@ export default () => {
 					</Button>
 				</Section>
 			</Form>
+			</Container>
 		</React.Fragment>
 	);
 };
