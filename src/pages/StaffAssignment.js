@@ -5,6 +5,8 @@ import ReviewAssignment from "./sections/ReviewAssignment";
 import Section from "../components/Section";
 import { useParams } from "react-router-dom";
 import useRole from "../hooks/useRole";
+import TeacherNav from "../components/TeacherNav";
+import Container from "react-bootstrap/Container";
 
 export default () => {
 	const [role] = useRole();
@@ -36,17 +38,20 @@ export default () => {
 
 	return (
 		<React.Fragment>
-			{record && (
-				<Header heading={record.Title} subheading={record.Class_Name} />
-			)}
-			<Section loading={loading} error={error} title="Summary">
+			< TeacherNav />
+			<Container>
 				{record && (
-					<div
-						dangerouslySetInnerHTML={{ __html: record.Content }}
-					></div>
+					<Header heading={record.Title} subheading={record.Class_Name} />
 				)}
-			</Section>
-			{record && role.staff && <ReviewAssignment assignmentId={id} />}
+				<Section loading={loading} error={error} title="Summary">
+					{record && (
+						<div
+							dangerouslySetInnerHTML={{ __html: record.Content }}
+						></div>
+					)}
+				</Section>
+				{record && role.staff && <ReviewAssignment assignmentId={id} />}
+			</Container>
 		</React.Fragment>
 	);
 };
