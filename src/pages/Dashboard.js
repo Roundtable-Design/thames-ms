@@ -8,9 +8,8 @@ import React from "react";
 import Section from "../components/Section";
 import Students from "./sections/Students";
 import useRole from "../hooks/useRole";
-import { Logo, Button } from "../components";
 import TeacherNav from "../components/TeacherNav";
-import styled from "styled-components";
+import Container from "react-bootstrap/Container";
 
 
 
@@ -27,7 +26,9 @@ export default () => {
 				<React.Fragment>
 					<TeacherNav />
 					{/* <Logo style={{margin:"51px auto"}} /> */}
-					<Classes />
+					<Container>
+						<Classes />
+					</Container>
 					{/* <Section>
 						<Link to="/createAssignment" style={{color: "#CE0F69"}}>
 							<Button>Create assignment</Button>

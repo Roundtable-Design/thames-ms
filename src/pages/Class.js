@@ -11,6 +11,7 @@ import Students from "./sections/Students";
 import Table from "react-bootstrap/Table";
 import { useParams } from "react-router-dom";
 import TeacherNav from "../components/TeacherNav";
+import Container from "react-bootstrap/Container";
 
 export default () => {
 	const { id } = useParams();
@@ -44,18 +45,20 @@ export default () => {
 	return (
 		<React.Fragment>
 			<TeacherNav />
-			{record && (
-				<Header
-					error={error}
-					heading={record.Title}
-					subheading={record.Year_Group}
+			<Container>
+				{record && (
+					<Header
+						error={error}
+						heading={record.Title}
+						subheading={record.Year_Group}
+					/>
+				)}
+				<StaffAssignments
+					query={{
+						class_id: id,
+					}}
 				/>
-			)}
-			<StaffAssignments
-				query={{
-					class_id: id,
-				}}
-			/>
+			</Container>
 		</React.Fragment>
 	);
 };
