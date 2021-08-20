@@ -8,7 +8,7 @@ import theme from "../../theme";
 export const Header = ({ heading, subheading, ...props }) => {
 	return (
 		<Section {...props}>
-			<Logo />
+			{/* <Logo /> */}
 			{/* <Heading style={{ marginBottom: "0px" }}>{heading}</Heading> */}
 			<Subheading style={{ marginBottom: `0` }}>
 				{subheading}
