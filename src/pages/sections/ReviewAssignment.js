@@ -62,6 +62,7 @@ export default ({ assignmentId }) => {
 
 		const {
 			// Teacher_Checked,
+			Late,
 			Status,
 			Effort,
 			Feedback,
@@ -72,10 +73,12 @@ export default ({ assignmentId }) => {
 
 			const response = await API.update(`review/${review_id}`, {
 				// Teacher_Checked,
+				Late,
 				Status,
 				Effort,
 				Feedback,
 			});
+			console.log("check this", response);
 
 			if (!response.hasOwnProperty("content"))
 				throw new Error("Empty response");
@@ -104,6 +107,7 @@ export default ({ assignmentId }) => {
 						<th>Name</th>
 						<th>Status</th>
 						<th>Effort</th>
+						<th>Late</th>
 						<th>Feedback</th>
 					</tr>
 				</thead>
@@ -136,7 +140,6 @@ export default ({ assignmentId }) => {
 										Pending
 									</option>
 									<option value="Handed In">Handed In</option>
-									<option value="Re-submit">Re-submit</option>
 								</Form.Control>
 								</td>
 								<td key={`td-${3}`}>
@@ -146,6 +149,17 @@ export default ({ assignmentId }) => {
 										onChange={({ target }) =>
 											editReview(fields.id, {
 												Effort: target.value,
+											})
+										}
+									/>
+								</td>
+								<td key={`td-${4}`}>
+									<Form.Check
+										value={fields.Late}
+										checked= {fields.Late}
+										onChange={({ target }) =>
+											editReview(fields.id, {
+												Late: target.checked,
 											})
 										}
 									/>
