@@ -111,3 +111,8 @@ export const Button = styled.button`
 	cursor: pointer;
 `;
 
+export const AssignmentDate = styled.h5`
+
+`
+export const AssignmentEstimatedDuration = styled.h5`
+`
