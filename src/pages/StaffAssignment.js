@@ -7,6 +7,7 @@ import { useParams } from "react-router-dom";
 import useRole from "../hooks/useRole";
 import TeacherNav from "../components/TeacherNav";
 import Container from "react-bootstrap/Container";
+import { AssignmentDate, AssignmentEstimatedDuration } from "../components";
 
 export default () => {
 	const [role] = useRole();
@@ -29,6 +30,7 @@ export default () => {
 
 					setRecord(response.content[0].fields);
 					setLoading(false);
+					console.log(record);
 				} catch (err) {
 					setError(err.toString());
 				}
@@ -41,8 +43,13 @@ export default () => {
 			< TeacherNav />
 			<Container>
 				{record && (
-					<Header heading={record.Title} subheading={record.Class_Name} />
+					<React.Fragment>
+						<Header heading={record.Title} subheading={record.Class_Name} />
+						<AssignmentDate>Assignment created on: {record.Set}</AssignmentDate>
+						<AssignmentEstimatedDuration>Estimated completion time for assignment: {record.Expected_Time} {record.Expected_Time_Unit}</AssignmentEstimatedDuration>
+					</React.Fragment>
 				)}
+
 				<Section loading={loading} error={error} title="Summary">
 					{record && (
 						<div
