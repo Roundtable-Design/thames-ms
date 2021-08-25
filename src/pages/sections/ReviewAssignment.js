@@ -101,7 +101,7 @@ export default ({ assignmentId }) => {
 	return (
 		<Section title="Review" error={error}>
 			{loading && <ActivityIndicator inline>{loading}</ActivityIndicator>}
-			<Table style={{ minWidth: "1000px" }} striped bordered>
+			<Table style={{ minWidth: "1080px" }} striped bordered>
 				<thead>
 					<tr>
 						<th>Name</th>
@@ -140,6 +140,7 @@ export default ({ assignmentId }) => {
 										Pending
 									</option>
 									<option value="Handed In">Handed In</option>
+									<option value="Resubmit">Resubmit</option>
 								</Form.Control>
 								</td>
 								<td key={`td-${3}`}>
