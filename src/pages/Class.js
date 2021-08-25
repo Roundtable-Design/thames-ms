@@ -35,6 +35,8 @@ export default () => {
 
 					setRecord(fields);
 					setLoading(false);
+
+					// student_id
 				} catch (err) {
 					setError(err.toString());
 				}
@@ -58,6 +60,8 @@ export default () => {
 						class_id: id,
 					}}
 				/>
+
+				{record && <Students classId={id} />}
 			</Container>
 		</React.Fragment>
 	);
