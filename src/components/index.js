@@ -136,6 +136,16 @@ export const Button = styled.button`
     }
 `;
 
+export const ButtonWrapper = styled.div`
+	display: flex;
+	justify-content: flex-end;
+	width: 100%;
+	text-align: right;
+	margin: 20px 0;
+
+
+`;
+
 export const AssignmentDate = styled.h5`
 
 `
