@@ -136,3 +136,8 @@ export const Button = styled.button`
     }
 `;
 
+export const AssignmentDate = styled.h5`
+
+`
+export const AssignmentEstimatedDuration = styled.h5`
+`

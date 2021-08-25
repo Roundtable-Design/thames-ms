@@ -22,7 +22,7 @@ export default () => {
 		React.useState("Loading classes...");
 	const [error, setError] = React.useState();
 	const [table, setTable] = React.useState();
-
+	const [isAssignment, setIsAssignment] = React.useState();
 	const [record, setRecord] = React.useState({});
 
 	console.log("Hello?");
@@ -83,127 +83,145 @@ export default () => {
 
 	return (
 		<React.Fragment>
-			
+
 			{submitLoading && (
 				<ActivityIndicator>{submitLoading}</ActivityIndicator>
 			)}
 
 			<TeacherNav />
 			<Container>
-			<Heading>Create Assignment</Heading>
-
-			<Form onSubmit={handleSubmit}>
-				<Section loading={classesLoading} error={error} title="Class">
-					<Form.Control
-						required
-						as="select"
-						onChange={({ target }) => {
-							const class_id =
-								target.options[target.selectedIndex].value;
-
-							console.log({ table, class_id });
-
-							editRecord({
-								class_id: [class_id],
-								student_id: table.find(
-									({ id }) => id === class_id
-								).fields.student_id,
-							});
-						}}
-					>
-						<option value="">-- Select a class --</option>
-						{table &&
-							table.map(({ id, fields }) => (
-								<option value={id}>
-									{fields.Title}, {fields.Year_Group}
-								</option>
-							))}
-					</Form.Control>
-				</Section>
-				<Section title="Content">
-					<Form.Group>
-						<Form.Label>Title</Form.Label>
+				<Heading>Create Assignment</Heading>
+				<p>NOTE: Fields marked as * are required</p>
+				<Form onSubmit={handleSubmit}>
+					<Section loading={classesLoading} error={error} title="Type of event *">
 						<Form.Control
 							required
-							type="text"
-							onChange={({ target }) =>
-								editRecord({ Title: target.value })
-							}
-						/>
-					</Form.Group>
-					<Form.Group>
-						<Form.Label>Body</Form.Label>
-						<ReactQuill
-							onChange={(value) => editRecord({ Content: value })}
-						/>
-					</Form.Group>
-				</Section>
-				<Section title="Date">
-					<Form.Row>
-						<Col>
-							<Form.Label>Set</Form.Label>
-							<Form.Control
-								
-								required
-								type="date"
-								onChange={({ target }) =>
-									editRecord({ Set: target.value })
-								}
-							/>
-						</Col>
-						<Col>
-							<Form.Label>Due</Form.Label>
-							<Form.Control
-								
-								required
-								type="date"
-								onChange={({ target }) =>
-									editRecord({ Due: target.value })
-								}
-							/>
-						</Col>
-					</Form.Row>
-				</Section>
-				<Section title="Ecpected">
-					<Form.Row>
-						<Col>
-							<Form.Label >Expected Time Unit</Form.Label>
-							<Form.Control
-								as="select"
-								required
-								onChange={({ target }) =>
-									editRecord({
-										Expected_Time_Unit:
-											target.options[target.selectedIndex]
-												.value,
-									})
-								}
-							>
-								<option value="">
-									-- Select a time unit --
-								</option>
-								<option value="Minutes">Minutes</option>
-								<option value="Hours">Hours</option>
-							</Form.Control>
-						</Col>
-						<Col>
-							<Form.Label>Expected Time</Form.Label>
+							as="select"
+							onChange={({ target }) => {
+								setIsAssignment((target.value === 'assignment') ? true : false);
+								editRecord({
+									is_Reminder: (target.value === 'assignment') ? false : true
+								})
+							}}
+						>
+							<option value="">-- Assign event type --</option>
+							<option value="assignment">Assignment</option>
+							<option value="reminder">Reminder</option>
+						</Form.Control>
+					</Section>
+					<Section loading={classesLoading} error={error} title="Class *">
+						<Form.Control
+							required
+							as="select"
+							onChange={({ target }) => {
+								const class_id =
+									target.options[target.selectedIndex].value;
+
+								console.log({ table, class_id });
+
+								editRecord({
+									class_id: [class_id],
+									student_id: table.find(
+										({ id }) => id === class_id
+									).fields.student_id,
+								});
+							}}
+						>
+							<option value="">-- Select a class --</option>
+							{table &&
+								table.map(({ id, fields }) => (
+									<option value={id}>
+										{fields.Title}, {fields.Year_Group}
+									</option>
+								))}
+						</Form.Control>
+					</Section>
+					<Section title="Content">
+						<p>To attach a file to this assignment add a link to a file on the school Google Drive</p>
+						<Form.Group>
+							<Form.Label>Title *</Form.Label>
 							<Form.Control
 								required
 								type="text"
 								onChange={({ target }) =>
-									editRecord({ Expected_Time: target.value })
+									editRecord({ Title: target.value })
 								}
 							/>
-						</Col>
-					</Form.Row>
-				</Section>
-				<Section>
-					<Button type="submit" variant="secondary">
-						Submit
-					</Button>
-				</Section>
-			</Form>
+						</Form.Group>
+						<Form.Group>
+							<Form.Label>Body</Form.Label>
+							<ReactQuill
+								onChange={(value) => editRecord({ Content: value })}
+							/>
+						</Form.Group>
+					</Section>
+					<Section title="Date">
+						<Form.Row>
+							<Col>
+								<Form.Label>Set *</Form.Label>
+								<Form.Control
+
+									required
+									type="date"
+									onChange={({ target }) =>
+										editRecord({ Set: target.value })
+									}
+								/>
+							</Col>
+							<Col>
+								<Form.Label>Due *</Form.Label>
+								<Form.Control
+
+									required
+									type="date"
+									onChange={({ target }) =>
+										editRecord({ Due: target.value })
+									}
+								/>
+							</Col>
+						</Form.Row>
+					</Section>
+					{isAssignment &&
+						<Section title="Expected time to complete assignment">
+							<Form.Row>
+								<Col>
+									<Form.Label >Expected Time Unit</Form.Label>
+									<Form.Control
+										as="select"
+
+										onChange={({ target }) =>
+											editRecord({
+												Expected_Time_Unit:
+													target.options[target.selectedIndex]
+														.value,
+											})
+										}
+									>
+										<option value="">
+											-- Select a time unit --
+										</option>
+										<option value="Minutes">Minutes</option>
+										<option value="Hours">Hours</option>
+									</Form.Control>
+								</Col>
+								<Col>
+									<Form.Label>Expected Time</Form.Label>
+									<Form.Control
+
+										type="text"
+										onChange={({ target }) =>
+											editRecord({ Expected_Time: target.value })
+										}
+									/>
+								</Col>
+							</Form.Row>
+						</Section>}
+					<Section>
+						<Button type="submit" variant="secondary">
+							Submit
+						</Button>
+					</Section>
+				</Form>
 			</Container>
 		</React.Fragment>
 	);
