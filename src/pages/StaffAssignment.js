@@ -8,6 +8,7 @@ import useRole from "../hooks/useRole";
 import TeacherNav from "../components/TeacherNav";
 import Container from "react-bootstrap/Container";
 import { AssignmentDate, AssignmentEstimatedDuration } from "../components";
+import {ButtonWrapper, Button} from "../components/";
 
 export default () => {
 	const [role] = useRole();
@@ -16,6 +17,8 @@ export default () => {
 	const [record, setRecord] = React.useState(null);
 	const [loading, setLoading] = React.useState("Loading assignment data...");
 	const [error, setError] = React.useState();
+
+	const [edit,setEdit] = React.useState(false);
 
 	React.useEffect(() => {
 		if (loading) {
@@ -42,6 +45,12 @@ export default () => {
 		<React.Fragment>
 			< TeacherNav />
 			<Container>
+				<ButtonWrapper>
+					<Button green
+						onClick={()=>setEdit(true)}
+						>Edit</Button>
+				</ButtonWrapper>
+				
 				{record && (
 					<React.Fragment>
 						<Header heading={record.Title} subheading={record.Class_Name} />
