@@ -111,7 +111,7 @@ const TeacherNav = () => {
 
                         <NavItem href="/createAssignment" > 
                             <BsPlusCircle style={{marginRight: "6px"}}/>
-                                Create assignment
+                                Create
                         </NavItem>
                 
                         <NavItem>

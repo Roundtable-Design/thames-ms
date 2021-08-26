@@ -148,17 +148,17 @@ export default ({ query = null }) => {
 						)
 						.map(({ fields }, index) => (
 							<ListItem
-								reminder={fields.Is_Reminder}
+								reminder={fields.is_Reminder}
 								hide={
 									fields.Student_Checked ||
 									// fields.Teacher_Checked ||
-									(fields.Is_Reminder &&
+									(fields.is_Reminder &&
 										CheckOverdueRreminder(
 											fields.Assignment_Due
 										))
 								}
 								title={CheckReminderTitle(
-									fields.Is_Reminder,
+									fields.is_Reminder,
 									fields.Class_Name,
 									fields.Assignment_Title
 								)}
@@ -216,7 +216,7 @@ export default ({ query = null }) => {
 									fields.Status=="Resubmit"
 								}
 								title={CheckReminderTitle(
-									fields.Is_Reminder,
+									fields.is_Reminder,
 									fields.Class_Name,
 									fields.Assignment_Title
 								)}
