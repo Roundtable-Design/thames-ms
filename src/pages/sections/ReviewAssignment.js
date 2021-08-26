@@ -9,6 +9,7 @@ import Section from "../../components/Section";
 import Table from "react-bootstrap/Table";
 import queryString from "query-string";
 
+
 export default ({ assignmentId }) => {
 	const [loading, setLoading] = React.useState("Loading reviews...");
 	const [error, setError] = React.useState();
@@ -101,7 +102,7 @@ export default ({ assignmentId }) => {
 	return (
 		<Section title="Review" error={error}>
 			{loading && <ActivityIndicator inline>{loading}</ActivityIndicator>}
-			<Table style={{ minWidth: "1080px" }} striped bordered>
+			<Table style={{ minWidth: "1000px" }} striped bordered>
 				<thead>
 					<tr>
 						<th>Name</th>
