@@ -137,7 +137,7 @@ export default () => {
 				effort={feedbackContent.Effort}
 				pending={feedbackStatus=="Pending"}
 				handed={feedbackStatus=="Handed In"}
-				resubmit={feedbackStatus=="Re-submit"}
+				resubmit={feedbackStatus=="Resubmit"}
 				/>
 			
 			<Menu activeAssignment={true} activeAvatar={false} />

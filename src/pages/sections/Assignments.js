@@ -41,8 +41,8 @@ export default ({ query = null }) => {
 	const translateDate = (date, status) => {
 		if (dueButtonText === "Count Down") {
 			
-			if (status=="Re-submit"){
-				return "Re-submit";
+			if (status=="Resubmit"){
+				return "Resubmit";
 			}
 			return moment(new Date(date)).format("ll");
 		} else {
@@ -50,8 +50,8 @@ export default ({ query = null }) => {
 			const now = moment(new Date());
 			const diff = moment.duration(date.diff(now)).days();
 			const diffHours = moment.duration(date.diff(now)).hours();
-			if (status=="Re-submit"){
-				return "Re-submit";
+			if (status=="Resubmit"){
+				return "Resubmit";
 			}
 			else{
 				if (diff > 0) {
@@ -80,8 +80,8 @@ export default ({ query = null }) => {
 	};
 
 	const translateCompleteDate = (date, status) => {	
-		if (status=="Re-submit"){
-			return "Re-submit";
+		if (status=="Resubmit"){
+			return "Resubmit";
 		}else if(status=="Handed In"){
 			return moment(new Date(date)).format("MMM Do YY");
 		}else{
@@ -213,7 +213,7 @@ export default ({ query = null }) => {
 									!fields.Teacher_Checked
 								}
 								resubmit={
-									fields.Status=="Re-submit"
+									fields.Status=="Resubmit"
 								}
 								title={CheckReminderTitle(
 									fields.Is_Reminder,
