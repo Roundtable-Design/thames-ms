@@ -14,6 +14,7 @@ import TeacherNav from "../components/TeacherNav";
 import Container from "react-bootstrap/Container";
 
 
+
 export default () => {
 	const history = useHistory();
 
@@ -24,8 +25,6 @@ export default () => {
 	const [table, setTable] = React.useState();
 	const [isAssignment, setIsAssignment] = React.useState();
 	const [record, setRecord] = React.useState({});
-
-	console.log("Hello?");
 
 	const handleSubmit = async (event) => {
 		event.preventDefault();
@@ -116,8 +115,6 @@ export default () => {
 							onChange={({ target }) => {
 								const class_id =
 									target.options[target.selectedIndex].value;
-
-								console.log({ table, class_id });
 
 								editRecord({
 									class_id: [class_id],
