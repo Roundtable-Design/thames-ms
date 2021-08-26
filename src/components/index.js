@@ -141,7 +141,13 @@ export const ButtonWrapper = styled.div`
 	justify-content: flex-end;
 	width: 100%;
 	text-align: right;
-	margin: 20px 0;
+	margin: 30px 0 0 0;
+
+	${({ hide }) =>
+		hide &&
+		`
+		display: none;
+	`}
 
 
 `;
