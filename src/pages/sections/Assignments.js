@@ -172,7 +172,7 @@ export default ({ query = null }) => {
 										"Tomorrow"
 								}
 								resubmit={
-									fields.Status=="Re-submit"
+									fields.Status=="Resubmit"
 								}
 								handed={
 									fields.Status=="Handed In"

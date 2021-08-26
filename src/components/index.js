@@ -109,6 +109,31 @@ export const Button = styled.button`
 	
     color: #CE0F69;
 	cursor: pointer;
+
+	${({ yellow }) =>
+		yellow &&
+		`
+		border: 3px solid #EAAA00;
+		color: #002E5D;	
+	`}
+
+	${({ green }) =>
+		green &&
+		`
+		border: 3px solid #DCEFC8;
+		color: #002E5D;	
+	`}
+
+	${({ pink }) =>
+		pink &&
+		`
+		border: 3px solid #CE0F69;
+		color: #002E5D;	
+	`}
+
+	&:focus, &:hover, &:visited, &:link, &:active {
+        text-decoration: none;
+    }
 `;
 
 export const AssignmentDate = styled.h5`
