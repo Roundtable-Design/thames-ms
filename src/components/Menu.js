@@ -107,7 +107,7 @@ const Menu = ({
 			let { content: reviews } = await API.get(`/reviews`);
 
 			let reviewsCount = reviews.filter(
-				({ fields }) => !fields.Student_Checked && !fields.Is_Reminder
+				({ fields }) => !fields.Student_Checked && !fields.is_Reminder
 			).length;
 
 			setTotalAssignment(reviewsCount);
