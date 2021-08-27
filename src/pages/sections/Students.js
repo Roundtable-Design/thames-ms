@@ -20,37 +20,39 @@ export default ({ query = null , classId}) => {
 	const [loading, setLoading] = React.useState("Loading students...");
 	const [error, setError] = React.useState();
 	const [records, setRecords] = React.useState();
-	const [behaviour, setBehaviour] = React.useState();
 
 	const [green, setGreen] = React.useState(1);
 
-	const [red, setRed] = React.useState(0);
-	const [comments, setComments] = React.useState("");
-
 	const history = useHistory();
 
-	const handleSubmit = async (event) => {
-		event.preventDefault();
+	// const handleSubmit = async (event) => {
+	// 	event.preventDefault();
 
-		try {
-			setLoading("Submitting form...");
+	// 	try {
+	// 		setLoading("Submitting form...");
 
-			const response = await API.create("behaviour", {
-				student_id: [id],
-				Green_Points: parseInt(green, 10),
-			});
+	// 		const response = await API.update(`student/${student_id}`, {
+	// 			Green_Points
+	// 		});
 
-			if (!response.hasOwnProperty("content"))
-				throw new Error("Empty response");
+	// 		const response = await API.create("behaviour", {
+	// 			student_id: [id],
+	// 			Green_Points: parseInt(green, 10),
+	// 		});
 
-			setGreen(null);
+	// 		if (!response.hasOwnProperty("content"))
+	// 			throw new Error("Empty response");
 
-			setLoading(false);
-		} catch (err) {
-			console.error(err);
-			setError(err.toString());
-		}
-	};
+
+
+	// 		setGreen(null);
+
+	// 		setLoading(false);
+	// 	} catch (err) {
+	// 		console.error(err);
+	// 		setError(err.toString());
+	// 	}
+	// };
 
 	const fetchStudents = async () => {
 		try {
@@ -66,29 +68,6 @@ export default ({ query = null , classId}) => {
 				throw new Error("Empty response");
 
 			setRecords(response.content);
-			console.log("class : ", response.content);
-
-			// delete api get behaviour later
-
-				const responseBehaviour = await API.get(
-					"behaviour"
-					+
-					(query !== null
-						? `?${queryString.stringify(query)}`
-						: "")
-				);
-
-				if (!responseBehaviour.hasOwnProperty("content"))
-					throw new Error("Empty response");	
-
-				setBehaviour(responseBehaviour.content);
-				console.log("behaviour ", responseBehaviour.content);
-
-			// 
-
-			setRed(0);
-			setComments("");
-
 			setLoading(false);
 
 		} catch (err) {
@@ -99,7 +78,6 @@ export default ({ query = null , classId}) => {
 
 	const editPoints = async (student_id, props) => {
 		const record = records.find(({ id }) => id === student_id);
-		console.log(record.id);
 
 		Object.keys(props).forEach((key) => {
 			record.fields[key] = props[key];
@@ -116,8 +94,6 @@ export default ({ query = null , classId}) => {
 				Green_Points
 			});
 
-			console.log("green points - try getting response", Green_Points);
-
 			if (!response.hasOwnProperty("content"))
 				throw new Error("Empty response");
 
@@ -132,15 +108,23 @@ export default ({ query = null , classId}) => {
 
 	const addPoint = (studentID, studentPoint) => {
 		setGreen(green);
-		console.log("green addPoint", green);
-		console.log("student Point original", studentPoint);
 		studentPoint++;
-		console.log("student Point updated", studentPoint);
 		editPoints(studentID, {
 			Green_Points: studentPoint,
 		})
-		console.log("done");
 	}
+
+	// const editRecord = (props) => {
+	// 	const copy = { ...record };
+
+	// 	Object.keys(props).forEach((key) => {
+	// 		copy[key] = props[key];
+	// 	});
+
+	// 	console.log("Edit => ", copy);
+	// 	console.log("Props", props);
+	// 	setRecord(copy);
+	// };
 
 	React.useEffect(() => {
 		fetchStudents();
@@ -155,14 +139,15 @@ export default ({ query = null , classId}) => {
 							<th>Name</th>
 							<th>Total Green Points</th>
 							<th>
-								<Button 
-									yellow
-									// onClick={() =>
-									// 	addPoint()
-									// }
-									>
-										Add Green Point to All
-								</Button>
+								{/* <Button 
+									yellow */}
+									{/* onClick={() =>
+										addPoint()
+									 } */}
+									{/* > */}
+										Add Green Points 
+										{/* to All */}
+								{/* </Button> */}
 							</th>
 						</tr>
 					</thead>
