@@ -23,6 +23,7 @@ export default () => {
 	const [error, setError] = React.useState();
 
 	const [edit,setEdit] = React.useState(false);
+	const [buttonText, setButtonText] = React.useState("Edit");
 
 	React.useEffect(() => {
 		if (loading) {
@@ -34,6 +35,8 @@ export default () => {
 
 					if (!response.hasOwnProperty("content"))
 						throw new Error("Empty response");
+
+					setButtonText(buttonText);
 
 					setRecord(response.content[0].fields);
 					setLoading(false);
@@ -49,6 +52,15 @@ export default () => {
 		return moment(new Date(date)).format('LL'); 
 	};
 
+	const openEdit = () =>{
+		setEdit(!edit);
+		if(!edit){
+			setButtonText("Cancel");
+		}else{
+			setButtonText("Edit");
+		}
+	}
+
 
 	return (
 		<React.Fragment>
@@ -58,8 +70,8 @@ export default () => {
 				// hide={edit}
 				>
 					<Button green
-						onClick={()=>setEdit(!edit)}
-						>Edit</Button>
+						onClick={()=>openEdit()}
+						>{buttonText}</Button>
 				</ButtonWrapper>
 
 				{record && edit && (
@@ -92,9 +104,9 @@ export default () => {
 				{record && !edit &&(
 					<Section loading={loading} error={error} title="Summary">
 						
-							<div
-								dangerouslySetInnerHTML={{ __html: record.Content }}
-							></div>
+						<div
+							dangerouslySetInnerHTML={{ __html: record.Content }}
+						></div>
 						
 					</Section>
 				)}
