@@ -14,6 +14,7 @@ import { useHistory } from "react-router-dom";
 import TeacherNav from "../components/TeacherNav";
 import Container from "react-bootstrap/Container";
 import { useParams } from "react-router-dom";
+import queryString from "query-string";
 
 
 
@@ -29,23 +30,38 @@ export default ({assignmentId, assignmentTitle, assignmentContent, reminder, due
 	const [classesLoading, setClassesLoading] = React.useState("Loading classes...");
 	const [table, setTable] = React.useState();
 	const [isAssignment, setIsAssignment] = React.useState();
-	// const [record, setRecord] = React.useState({});
+	const [assignment, setAssignment] = React.useState();
+	
 
-	const handleSubmit = async (event) => {
-		event.preventDefault();
-
+	const fetchAssignment = async () => {
 		try {
-			setSubmitLoading("Submitting form...", { record });
+			setLoading("Fetching assignment...");
 
-			// Create new assignment
-			const assignmentResponse = await API.create("assignment", {
-				record,
-			});
+			console.log("assignmentId", assignmentId)
 
-			if (!assignmentResponse.hasOwnProperty("content"))
+			const response = await API.get(`assignment/${assignmentId}`);
+
+			// const response = await API.get(
+			// 	`assignments?${queryString.stringify({
+			// 		assignment_id: assignmentId,
+			// 	})}`
+			// );
+			// const response = await API.get(`assignment/${assignmentId}`);
+
+			if (!response.hasOwnProperty("content"))
 				throw new Error("Empty response");
 
-			history.push("/");
+			
+			// assignmentTitle={record.Title} 
+			// assignmentContent={record.Content} 
+			// reminder={record.is_Reminder}
+			// dueDate={record.Due}
+			// estimatedTime={record.Expected_Time} 
+			// estimatedUnit={record.Expected_Time_Unit}
+
+			setAssignment(response.content);
+			console.log("this assignment", response.content);
+			setLoading(false);
 		} catch (err) {
 			console.error(err);
 			setError(err.toString());
@@ -53,34 +69,55 @@ export default ({assignmentId, assignmentTitle, assignmentContent, reminder, due
 	};
 
 	const editRecord = (props) => {
-		const copy = { ...record };
+		// const assignment = assignment.find(({ id }) => id === assignmentId);
+
+		const copy = { ...assignment };
 
 		Object.keys(props).forEach((key) => {
 			copy[key] = props[key];
+			// assignment.fields[key] = props[key];
 		});
 
-		console.log("Edit => ", copy);
 		console.log("Props", props);
-		setRecord(copy);
+		setAssignment(copy);
+
+		// const {
+		// 	Title,
+		// 	Content,
+		// 	Due,
+		// 	Expected_Time,
+		// 	Expected_Time_Unit,
+		// } = assignment.fields;
+
+		console.log(assignment);
+
+		// console.log(record);
+	};
+
+	const handleSubmit = async (event) => {
+
+		try {
+			setLoading("Updating form...");
+
+			const assignmentUpdate = await API.update('assignment/${assignmentId}',{
+				assignment,
+			});
+
+			if (!assignmentUpdate.hasOwnProperty("content"))
+				throw new Error("Empty response");
+
+				console.log("newAssignment", assignmentUpdate)
+			setLoading(false);
+			fetchAssignment();
+
+		} catch (err) {
+			console.error(err);
+			setError(err.toString());
+		}
 	};
 
 	React.useEffect(() => {
-		(async function () {
-			try {
-					const response = await API.get(`assignment/${id}`);
-
-					console.log({ response });
-
-					if (!response.hasOwnProperty("content"))
-						throw new Error("Empty response");
-
-					setRecord(response.content[0].fields);
-					setLoading(false);
-					console.log("check assignment data", record);
-			} catch (err) {
-				setError(err.toString());
-			}
-		})();
+		fetchAssignment();
 	}, []);
 
 	return (
@@ -92,7 +129,7 @@ export default ({assignmentId, assignmentTitle, assignmentContent, reminder, due
 
 			<TeacherNav />
 			<Container>
-				<Heading>Update Assignment</Heading>
+				<Heading style={{marginTop: 0}}>Update Assignment</Heading>
 				<Form onSubmit={handleSubmit}>
 					<Section title="Content">
 						<p>To attach a file to this assignment add a link to a file on the school Google Drive</p>
@@ -101,7 +138,7 @@ export default ({assignmentId, assignmentTitle, assignmentContent, reminder, due
 							<Form.Control
 								required
 								type="text"
-                                value={assignmentTitle}
+                                defaultValue={assignmentTitle}
 								onChange={({ target }) =>
 									editRecord({ Title: target.value })
 								}
@@ -111,8 +148,6 @@ export default ({assignmentId, assignmentTitle, assignmentContent, reminder, due
 							<Form.Label>Body</Form.Label>
 							<ReactQuill
 								 defaultValue={assignmentContent}
-								// dangerouslySetInnerHTML={{ __html: record.Content }}
-                                // value={assignmentContent }
 								onChange={(value) => editRecord({ Content: value })}
 							/>
 						</Form.Group>
@@ -122,7 +157,7 @@ export default ({assignmentId, assignmentTitle, assignmentContent, reminder, due
 							<Col>
 								<Form.Label>Due *</Form.Label>
 								<Form.Control
-                                    value={dueDate}
+                                    defaultValue={dueDate}
 									required
 									type="date"
 									onChange={({ target }) =>
@@ -139,7 +174,7 @@ export default ({assignmentId, assignmentTitle, assignmentContent, reminder, due
 									<Form.Label >Expected Time Unit</Form.Label>
 									<Form.Control
 										as="select"
-                                        value={estimatedUnit}
+                                        defaultValue={estimatedUnit}
 
 										onChange={({ target }) =>
 											editRecord({
@@ -159,7 +194,7 @@ export default ({assignmentId, assignmentTitle, assignmentContent, reminder, due
 								<Col>
 									<Form.Label>Expected Time</Form.Label>
 									<Form.Control
-                                        value={estimatedTime}
+                                        defaultValue={estimatedTime}
 										type="text"
 										onChange={({ target }) =>
 											editRecord({ Expected_Time: target.value })
