@@ -77,19 +77,6 @@ export default ({assignmentId, assignmentTitle, assignmentContent, reminder, due
 					setRecord(response.content[0].fields);
 					setLoading(false);
 					console.log("check assignment data", record);
-				// } 
-				// console.log("Starting...");
-
-				// const response = await API.get("classes");
-
-				// if (!response.hasOwnProperty("content"))
-				// 	throw new Error("Empty response");
-
-				// setTable(response.content);
-				// console.log("This is the response", response.content);
-				// setClassesLoading(false);
-
-				// console.log("Table is here", { table: response.content });
 			} catch (err) {
 				setError(err.toString());
 			}
