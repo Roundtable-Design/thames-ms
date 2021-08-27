@@ -1,4 +1,4 @@
-import { Card, Grid, Paragraph, Title } from "../../components";
+import { Grid } from "../../components";
 
 import API from "../../api";
 import React from "react";
@@ -24,35 +24,6 @@ export default ({ query = null , classId}) => {
 	const [green, setGreen] = React.useState(1);
 
 	const history = useHistory();
-
-	// const handleSubmit = async (event) => {
-	// 	event.preventDefault();
-
-	// 	try {
-	// 		setLoading("Submitting form...");
-
-	// 		const response = await API.update(`student/${student_id}`, {
-	// 			Green_Points
-	// 		});
-
-	// 		const response = await API.create("behaviour", {
-	// 			student_id: [id],
-	// 			Green_Points: parseInt(green, 10),
-	// 		});
-
-	// 		if (!response.hasOwnProperty("content"))
-	// 			throw new Error("Empty response");
-
-
-
-	// 		setGreen(null);
-
-	// 		setLoading(false);
-	// 	} catch (err) {
-	// 		console.error(err);
-	// 		setError(err.toString());
-	// 	}
-	// };
 
 	const fetchStudents = async () => {
 		try {
@@ -114,18 +85,6 @@ export default ({ query = null , classId}) => {
 		})
 	}
 
-	// const editRecord = (props) => {
-	// 	const copy = { ...record };
-
-	// 	Object.keys(props).forEach((key) => {
-	// 		copy[key] = props[key];
-	// 	});
-
-	// 	console.log("Edit => ", copy);
-	// 	console.log("Props", props);
-	// 	setRecord(copy);
-	// };
-
 	React.useEffect(() => {
 		fetchStudents();
 	}, []);
@@ -164,9 +123,6 @@ export default ({ query = null , classId}) => {
 												{fields.Forename}
 											{/* </Link> */}
 											</td>
-											{/* <td key={`td-${1}`}>
-												{fields.Year_Group}
-											</td> */}
 											<td>
 												{fields.Green_Points}
 											</td>
@@ -175,9 +131,6 @@ export default ({ query = null , classId}) => {
 													yellow
 													onClick={() =>
 														addPoint(fields.id, fields.Green_Points)
-														// editPoints(fields.id, {
-														// 	Green_Points: target.value,
-														// })
 													}
 													>
 														Add Green Point
@@ -193,26 +146,6 @@ export default ({ query = null , classId}) => {
 							))} 
 					</tbody>
 				</Table>
-
-							{/* <Card
-							onClick={() =>
-								history.push(`/student/${fields.id}`)
-						 	}
-						 	key={`student-${index}`}
-						 > */}
-						 	{/* <Card.Body>
-						 		<Title>
-						 			{fields.Surname}, {fields.Forename}
-						 		</Title>
-						 		<Paragraph>{fields.Year_Group}</Paragraph>
-						 	</Card.Body>
-						 	<Card.Footer>
-						 		{fields.Assignment_Title.length} active
-						 		assignment
-						 		{fields.Assignment_Title.length !== 1 && "s"}
-						 	</Card.Footer>
-						 </Card> */}
-					 {/* ))} */}
 			</Grid>
 		</Section>
 	);

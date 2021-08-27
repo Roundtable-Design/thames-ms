@@ -40,18 +40,6 @@ export default ({ assignmentId }) => {
 		}
 	};
 
-	const editRecord = (props) => {
-		const copy = { ...record };
-
-		Object.keys(props).forEach((key) => {
-			copy[key] = props[key];
-		});
-
-		console.log("Edit => ", copy);
-		console.log("Props", props);
-		setRecord(copy);
-	};
-
 	const editReview = async (review_id, props) => {
 		const review = reviews.find(({ id }) => id === review_id);
 
@@ -79,7 +67,6 @@ export default ({ assignmentId }) => {
 				Effort,
 				Feedback,
 			});
-			console.log("check this", response);
 
 			if (!response.hasOwnProperty("content"))
 				throw new Error("Empty response");
