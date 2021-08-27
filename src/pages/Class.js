@@ -36,7 +36,6 @@ export default () => {
 					setRecord(fields);
 					setLoading(false);
 
-					// student_id
 				} catch (err) {
 					setError(err.toString());
 				}
