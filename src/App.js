@@ -5,7 +5,9 @@ import Class from "./pages/Class";
 import Container from "react-bootstrap/Container";
 import CreateAssignment from "./pages/CreateAssignment";
 import Dashboard from "./pages/Dashboard";
+import Footer from "./components/Footer";
 import Login from "./pages/Login";
+import Logout from "./pages/Logout";
 import Nav from "./components/Nav";
 import NotFound from "./pages/NotFound";
 import Profile from "./pages/Profile";
@@ -14,7 +16,6 @@ import StaffAssignment from "./pages/StaffAssignment";
 import Student from "./pages/Student";
 import Test from "./pages/Test";
 import useRole from "./hooks/useRole";
-import Logout from "./pages/Logout";
 
 const App = () => {
 	const [role] = useRole();
@@ -69,6 +70,7 @@ const App = () => {
 				{/* {role.none && <Redirect from="/" to="/login" />} */}
 				{/* <Route component={NotFound} /> */}
 			</Switch>
+			<Footer />
 		</BrowserRouter>
 	);
 };
