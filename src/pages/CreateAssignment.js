@@ -1,19 +1,18 @@
 import "react-quill/dist/quill.snow.css"; // ES6
-import Table from "react-bootstrap/Table";
+
 import API from "../api";
 import ActivityIndicator from "../components/ActivityIndicator";
 import Button from "react-bootstrap/Button";
 import Col from "react-bootstrap/Col";
+import Container from "react-bootstrap/Container";
 import Form from "react-bootstrap/Form";
 import { Heading } from "../components/";
 import React from "react";
 import ReactQuill from "react-quill"; // ES6
 import Section from "../components/Section";
-import { useHistory } from "react-router-dom";
+import Table from "react-bootstrap/Table";
 import TeacherNav from "../components/TeacherNav";
-import Container from "react-bootstrap/Container";
-
-
+import { useHistory } from "react-router-dom";
 
 export default () => {
 	const history = useHistory();
@@ -21,8 +20,9 @@ export default () => {
 	const [submitLoading, setSubmitLoading] = React.useState(false);
 	const [classesLoading, setClassesLoading] =
 		React.useState("Loading classes...");
-	const [studentsLoading, setStudentsLoading] =
-		React.useState("Loading students...");
+	const [studentsLoading, setStudentsLoading] = React.useState(
+		"Loading students..."
+	);
 	const [error, setError] = React.useState();
 	const [table, setTable] = React.useState();
 	const [studentsTable, setStudentsTable] = React.useState();
@@ -30,11 +30,28 @@ export default () => {
 	const [classId, setClassId] = React.useState();
 	const [record, setRecord] = React.useState({});
 
-
 	// removed 'Short Report' and 'Long Report' from radioEventTypes for now
 
 	const radioEventTypes = ["Assignment", "Reminder"];
-	const gradesTypes = ["9", "9/8", "8", "8/7", "7", "7/6", "6", "6/5", "5", "5/4", "4", "4/3", "3", "3/2", "2", "2/1", "1"];
+	const gradesTypes = [
+		"9",
+		"9/8",
+		"8",
+		"8/7",
+		"7",
+		"7/6",
+		"6",
+		"6/5",
+		"5",
+		"5/4",
+		"4",
+		"4/3",
+		"3",
+		"3/2",
+		"2",
+		"2/1",
+		"1",
+	];
 	const performanceRanks = [1, 2, 3, 4];
 
 	const handleSubmit = async (event) => {
@@ -42,8 +59,6 @@ export default () => {
 		try {
 			setSubmitLoading("Submitting form...", { record });
 
-			console.log("Assignment creating started");
-			
 			// Create new assignment
 			const assignmentResponse = await API.create("assignment", {
 				record,
@@ -60,7 +75,7 @@ export default () => {
 			setError(err.toString());
 			console.log("Assignment cannot be created");
 		}
-	}
+	};
 
 	const editRecord = (props) => {
 		const copy = { ...record };
@@ -87,9 +102,15 @@ export default () => {
 				setTable(response.content);
 				setClassesLoading(false);
 				setStudentsTable(students.content);
-
+				console.log(
+					"This is the response for students",
+					students.content
+				);
 				setStudentsLoading(false);
 
+				console.log("Student table is here", {
+					table: students.content,
+				});
 			} catch (err) {
 				setError(err.toString());
 			}
@@ -107,20 +128,24 @@ export default () => {
 				<p>NOTE: Fields marked as * are required</p>
 				<Form onSubmit={handleSubmit}>
 					<Section title="Type of event *">
-						{radioEventTypes.map((type, key) =>
+						{radioEventTypes.map((type, key) => (
 							<Form.Check
 								key={key}
 								type="radio"
 								name="TypeOfEvent"
 								label={type}
 								onChange={({ target }) => {
-									setEventType(key)
+									setEventType(key);
 									console.log(key);
 								}}
 							/>
-						)}
+						))}
 					</Section>
-					<Section loading={classesLoading} error={error} title="Class *">
+					<Section
+						loading={classesLoading}
+						error={error}
+						title="Class *"
+					>
 						<Form.Control
 							required
 							as="select"
@@ -147,10 +172,13 @@ export default () => {
 								))}
 						</Form.Control>
 					</Section>
-					{(!(eventType == 2 || eventType == 3)) &&
+					{!(eventType == 2 || eventType == 3) && (
 						<React.Fragment>
 							<Section title="Content">
-								<p>To attach a file to this assignment add a link to a file on the school Google Drive</p>
+								<p>
+									To attach a file to this assignment add a
+									link to a file on the school Google Drive
+								</p>
 								<Form.Group>
 									<Form.Label>Title *</Form.Label>
 									<Form.Control
@@ -164,7 +192,9 @@ export default () => {
 								<Form.Group>
 									<Form.Label>Body</Form.Label>
 									<ReactQuill
-										onChange={(value) => editRecord({ Content: value })}
+										onChange={(value) =>
+											editRecord({ Content: value })
+										}
 									/>
 								</Form.Group>
 							</Section>
@@ -173,65 +203,78 @@ export default () => {
 									<Col>
 										<Form.Label>Set *</Form.Label>
 										<Form.Control
-
 											required
 											type="date"
 											onChange={({ target }) =>
-												editRecord({ Set: target.value })
+												editRecord({
+													Set: target.value,
+												})
 											}
 										/>
 									</Col>
 									<Col>
 										<Form.Label>Due *</Form.Label>
 										<Form.Control
-
 											required
 											type="date"
 											onChange={({ target }) =>
-												editRecord({ Due: target.value })
+												editRecord({
+													Due: target.value,
+												})
 											}
 										/>
 									</Col>
 								</Form.Row>
 							</Section>
-							{!(eventType == 1) &&
+							{!(eventType == 1) && (
 								<Section title="Expected time to complete assignment">
 									<Form.Row>
 										<Col>
-											<Form.Label >Expected Time Unit</Form.Label>
+											<Form.Label>
+												Expected Time Unit
+											</Form.Label>
 											<Form.Control
 												as="select"
-
 												onChange={({ target }) =>
 													editRecord({
 														Expected_Time_Unit:
-															target.options[target.selectedIndex]
-																.value,
+															target.options[
+																target
+																	.selectedIndex
+															].value,
 													})
 												}
 											>
 												<option value="">
 													-- Select a time unit --
 												</option>
-												<option value="Minutes">Minutes</option>
-												<option value="Hours">Hours</option>
+												<option value="Minutes">
+													Minutes
+												</option>
+												<option value="Hours">
+													Hours
+												</option>
 											</Form.Control>
 										</Col>
 										<Col>
-											<Form.Label>Expected Time</Form.Label>
+											<Form.Label>
+												Expected Time
+											</Form.Label>
 											<Form.Control
-
 												type="text"
 												onChange={({ target }) =>
-													editRecord({ Expected_Time: target.value })
+													editRecord({
+														Expected_Time:
+															target.value,
+													})
 												}
 											/>
 										</Col>
 									</Form.Row>
 								</Section>
-							}
+							)}
 						</React.Fragment>
-					}
+					)}
 					{/* Commented the code for reports */}
 					{/* {((eventType == 2 || eventType == 3) &&
 						<React.Fragment>
