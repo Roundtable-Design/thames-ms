@@ -75,17 +75,18 @@ export default () => {
 				</ButtonWrapper>
 
 				{record && edit && (
-					<React.Fragment>
-						<UpdateAssignment 
-							assignmentId={id} 
-							assignmentTitle={record.Title} 
-							assignmentContent={record.Content} 
-							reminder={record.is_Reminder}
-							dueDate={record.Due}
-							estimatedTime={record.Expected_Time} 
-							estimatedUnit={record.Expected_Time_Unit}
-							/>
-					</React.Fragment>
+					"Edit assignment is coming soon!"
+					// <React.Fragment>
+					// 	<UpdateAssignment 
+					// 		assignmentId={id} 
+					// 		assignmentTitle={record.Title} 
+					// 		assignmentContent={record.Content} 
+					// 		reminder={record.is_Reminder}
+					// 		dueDate={record.Due}
+					// 		estimatedTime={record.Expected_Time} 
+					// 		estimatedUnit={record.Expected_Time_Unit}
+					// 		/>
+					// </React.Fragment>
 				)}
 				
 				{record && !edit &&
