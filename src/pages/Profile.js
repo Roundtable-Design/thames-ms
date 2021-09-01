@@ -55,7 +55,6 @@ export default () => {
 	const CheckYear = (year, points, comms) => {
 		const string = year.toString();
 		const number = string.replace(/\D/g, "");
-		console.log("My year :", number);
 		setSystemCounter(points);
 		if (number > 9) {
 			setShow(true);
@@ -109,8 +108,12 @@ export default () => {
 					);
 					setAchievement(parseContent(record.Achievement));
 
+
 					setReports(parseContent(record.Reports));
 					setCommendations(record.Commendations_Name);
+
+					console.log("My coms are", record.Commendations_Name);
+
 
 					setLoading(false);
 				} catch (err) {
@@ -136,17 +139,17 @@ export default () => {
 						email={record.Email}
 					/>
 
-					{/* <CommendationsWrapper show={show}>
+					<CommendationsWrapper show={show}>
 						{commendations.length
-							? commendations.map((commendation) => (
+							 ? commendations.map((commendation) => (
 									<ProfileCommendations
-										dangerouslySetInnerHTML={{
-											__html: marked(commendation),
-										}}
-									/>
+										// dangerouslySetInnerHTML={{
+										// 	__html: marked(commendation),
+										// }}
+										>{commendation}</ProfileCommendations>
 							  ))
-							: ""}
-					</CommendationsWrapper> */}
+							 : ""} 
+					</CommendationsWrapper>
 
 					{/* `achievement` already marked */}
 					<ProfileContent achievement={achievement} report>
