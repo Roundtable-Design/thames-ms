@@ -40,11 +40,6 @@ export default ({query = null, classId}) => {
 			setRecords(response.content);
 			setLoading(false);
 
-			console.log("fields.class_year_id", classId)
-
-
-			console.log(response.content.id)
-
 		} catch (err) {
 			console.error(err);
 			setError(err.toString());
