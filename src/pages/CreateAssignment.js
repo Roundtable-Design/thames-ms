@@ -102,15 +102,8 @@ export default () => {
 				setTable(response.content);
 				setClassesLoading(false);
 				setStudentsTable(students.content);
-				console.log(
-					"This is the response for students",
-					students.content
-				);
 				setStudentsLoading(false);
-
-				console.log("Student table is here", {
-					table: students.content,
-				});
+				
 			} catch (err) {
 				setError(err.toString());
 			}
