@@ -115,11 +115,9 @@ const Menu = ({
 			setRecord(me);
 
 			setCount(me.fields.Green_Points);
-			console.log(me.fields)
 
 			if(me.fields.Commendations==null){
 				setCount(0)
-				console.log("Null");
 			}else{
 				if (me.fields.Year_Group[0].toString().replace(/\D/g, "") > 9) {
 					setCount(me.fields.Commendations.length);

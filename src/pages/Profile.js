@@ -73,11 +73,7 @@ export default () => {
 
 		const svg = require("../assets/icons/paperclip-pink.svg");
 
-		console.log({ svg });
-
 		$("a").prepend(`<img src='${svg}' />`);
-
-		console.log("html", $.html());
 
 		return $.html()
 			.replace("<html><head></head><body>", "")
@@ -95,8 +91,6 @@ export default () => {
 
 					const record = response.content[0].fields;
 					setRecord(record);
-
-					console.log("Record is", record);
 
 					if(record.Commendations==null){
 						CheckYear(
