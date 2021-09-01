@@ -61,7 +61,7 @@ export default () => {
 			setShow(true);
 			setSystemTitle("Commendations:");
 			if(comms.length){
-				setSystemCounter(comms);
+				setSystemCounter(comms.length);
 			} else{
 				setSystemCounter(0);
 			}
@@ -108,8 +108,6 @@ export default () => {
 						record.Commendations
 					);
 					setAchievement(parseContent(record.Achievement));
-
-					console.log(record);
 
 					setReports(parseContent(record.Reports));
 					setCommendations(record.Commendations_Name);
