@@ -14,10 +14,10 @@ import {Button} from "../../components/";
 
 
 
-export default ({ query = null , classId}) => {
+export default ({query = null, classId}) => {
 	const { id } = useParams();
 
-	const [loading, setLoading] = React.useState("Loading students...");
+	const [loading, setLoading] = React.useState("Loading students data...");
 	const [error, setError] = React.useState();
 	const [records, setRecords] = React.useState();
 
@@ -28,7 +28,6 @@ export default ({ query = null , classId}) => {
 	const fetchStudents = async () => {
 		try {
 			const response = await API.get(
-				
 				"students" +
 					(query !== null
 						? `?${queryString.stringify(query)}`
@@ -40,6 +39,11 @@ export default ({ query = null , classId}) => {
 
 			setRecords(response.content);
 			setLoading(false);
+
+			console.log("fields.class_year_id", classId)
+
+
+			console.log(response.content.id)
 
 		} catch (err) {
 			console.error(err);
@@ -68,6 +72,7 @@ export default ({ query = null , classId}) => {
 			if (!response.hasOwnProperty("content"))
 				throw new Error("Empty response");
 
+
 			setLoading(false);
 
 			fetchStudents();
@@ -86,11 +91,12 @@ export default ({ query = null , classId}) => {
 	}
 
 	React.useEffect(() => {
-		fetchStudents();
+			fetchStudents();
 	}, []);
 
 	return (
 		<Section title="Students" loading={loading} error={error}>
+			{/* {records.length ? ( */}
 			<Grid>
 				<Table style={{ width: "510px"}} striped bordered>
 					<thead>
@@ -139,7 +145,7 @@ export default ({ query = null , classId}) => {
 										</tr>
 									):(
 										""
-									)} 
+									)}  
 
 								</React.Fragment>
 									
@@ -147,6 +153,9 @@ export default ({ query = null , classId}) => {
 					</tbody>
 				</Table>
 			</Grid>
+			{/* ) : (
+				<p>No students in this class</p>
+			)} */}
 		</Section>
 	);
 };

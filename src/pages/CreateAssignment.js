@@ -167,7 +167,7 @@ export default () => {
 							{table &&
 								table.map(({ id, fields }) => (
 									<option value={id}>
-										{fields.Title}, {fields.Year_Group}
+										{fields.id}
 									</option>
 								))}
 						</Form.Control>
