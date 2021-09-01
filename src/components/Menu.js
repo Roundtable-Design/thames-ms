@@ -88,7 +88,7 @@ const Menu = ({
 	pointsCounter,
 }) => {
 	const [record, setRecord] = React.useState(null);
-	const [count, setCount] = React.useState();
+	const [count, setCount] = React.useState(0);
 	const [totalAssignment, setTotalAssignment] = React.useState(0);
 
 	const countComms = (comms) => {
@@ -115,11 +115,15 @@ const Menu = ({
 			setRecord(me);
 
 			setCount(me.fields.Green_Points);
+			console.log(me.fields)
 
-			console.log(me.fields.Year_Group)
-
-			if (me.fields.Year_Group[0].toString().replace(/\D/g, "") > 9) {
-				setCount(me.fields.Commendations.length);
+			if(me.fields.Commendations==null){
+				setCount(0)
+				console.log("Null");
+			}else{
+				if (me.fields.Year_Group[0].toString().replace(/\D/g, "") > 9) {
+					setCount(me.fields.Commendations.length);
+				}
 			}
 		})();
 	}, []);

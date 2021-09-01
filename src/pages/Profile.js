@@ -47,7 +47,7 @@ export default () => {
 
 	const [show, setShow] = React.useState(false);
 	const [systemTitle, setSystemTitle] = React.useState("Points:");
-	const [systemCounter, setSystemCounter] = React.useState(0);
+	const [systemCounter, setSystemCounter] = React.useState();
 	const [commendations, setCommendations] = React.useState([]);
 	const [reports, setReports] = React.useState();
 	const [achievement, setAchievement] = React.useState("");
@@ -96,24 +96,26 @@ export default () => {
 					const record = response.content[0].fields;
 					setRecord(record);
 
-					// Seems that when there aren't any commendations present,
-					// this page never loads. Needs to be fixed
-
 					console.log("Record is", record);
 
-					CheckYear(
-						record.Year_Group,
-						record.Green_Points,
-						record.Commendations
-					);
-					setAchievement(parseContent(record.Achievement));
+					if(record.Commendations==null){
+						CheckYear(
+							record.Year_Group,
+							record.Green_Points,
+							0
+						);
+					}else{
+						setCommendations(record.Commendations_Name);
+						CheckYear(
+							record.Year_Group,
+							record.Green_Points,
+							record.Commendations
+						);
+					}
 
+					setAchievement(parseContent(record.Achievement));			
 
 					setReports(parseContent(record.Reports));
-					setCommendations(record.Commendations_Name);
-
-					console.log("My coms are", record.Commendations_Name);
-
 
 					setLoading(false);
 				} catch (err) {
@@ -148,7 +150,7 @@ export default () => {
 										// }}
 										>{commendation}</ProfileCommendations>
 							  ))
-							 : ""} 
+							 : "No commendation"} 
 					</CommendationsWrapper>
 
 					{/* `achievement` already marked */}
