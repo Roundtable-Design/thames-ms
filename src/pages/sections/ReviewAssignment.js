@@ -47,7 +47,7 @@ export default ({ assignmentId }) => {
 			review.fields[key] = props[key];
 		});
 
-		console.log("Status", props);
+		console.log("all props", props);
 
 		const {
 			// Teacher_Checked,
@@ -155,7 +155,8 @@ export default ({ assignmentId }) => {
 								</td>
 								<td key={`td-${5}`}>
 									<Form.Control
-										value={fields.Feedback}
+										as="textarea"
+										// value={fields.Feedback}
 										onBlur={({ target }) =>
 											editReview(fields.id, {
 												Feedback: target.value,

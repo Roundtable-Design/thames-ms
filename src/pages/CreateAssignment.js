@@ -36,15 +36,20 @@ export default () => {
 	const radioEventTypes = ["Assignment", "Reminder"];
 	const gradesTypes = ["9", "9/8", "8", "8/7", "7", "7/6", "6", "6/5", "5", "5/4", "4", "4/3", "3", "3/2", "2", "2/1", "1"];
 	const performanceRanks = [1, 2, 3, 4];
+
 	const handleSubmit = async (event) => {
 		event.preventDefault();
 		try {
 			setSubmitLoading("Submitting form...", { record });
+
+			console.log("Assignment creating started");
 			
 			// Create new assignment
 			const assignmentResponse = await API.create("assignment", {
 				record,
 			});
+
+			console.log("Assignment was pushed");
 
 			if (!assignmentResponse.hasOwnProperty("content"))
 				throw new Error("Empty response");
@@ -53,6 +58,7 @@ export default () => {
 		} catch (err) {
 			console.error(err);
 			setError(err.toString());
+			console.log("Assignment cannot be created");
 		}
 	}
 
@@ -63,8 +69,6 @@ export default () => {
 			copy[key] = props[key];
 		});
 
-		console.log("Edit => ", copy);
-		console.log("Props", props);
 		setRecord(copy);
 	};
 
@@ -79,15 +83,13 @@ export default () => {
 					throw new Error("Empty response");
 				else if (!students.hasOwnProperty("content"))
 					throw new Error("Empty student response");
+
 				setTable(response.content);
-				console.log("This is the response", response.content);
 				setClassesLoading(false);
-				console.log("Table is here", { table: response.content });
 				setStudentsTable(students.content);
-				console.log("This is the response for students", students.content);
+
 				setStudentsLoading(false);
 
-				console.log("Student table is here", { table: students.content });
 			} catch (err) {
 				setError(err.toString());
 			}
@@ -123,7 +125,7 @@ export default () => {
 							required
 							as="select"
 							onChange={({ target }) => {
-								let class_id = target.options[target.selectedIndex].value;
+								const class_id = target.options[target.selectedIndex].value;
 								setClassId(class_id)
 								console.log(classId);
 								console.log({ table, class_id });
