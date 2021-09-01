@@ -103,7 +103,7 @@ export default () => {
 				setClassesLoading(false);
 				setStudentsTable(students.content);
 				setStudentsLoading(false);
-				
+
 			} catch (err) {
 				setError(err.toString());
 			}
@@ -120,7 +120,7 @@ export default () => {
 				<Heading>Create</Heading>
 				<p>NOTE: Fields marked as * are required</p>
 				<Form onSubmit={handleSubmit}>
-					<Section title="Type of event *">
+					{/* <Section title="Type of event *">
 						{radioEventTypes.map((type, key) => (
 							<Form.Check
 								key={key}
@@ -133,7 +133,7 @@ export default () => {
 								}}
 							/>
 						))}
-					</Section>
+					</Section> */}
 					<Section
 						loading={classesLoading}
 						error={error}
@@ -146,13 +146,16 @@ export default () => {
 								const class_id = target.options[target.selectedIndex].value;
 								setClassId(class_id)
 								console.log(classId);
-								console.log({ table, class_id });
+								console.log(table.find(
+									({ id }) => id === class_id
+								).fields.student_id);
 
 								editRecord({
 									class_id: [class_id],
 									student_id: table.find(
 										({ id }) => id === class_id
 									).fields.student_id,
+									
 								});
 							}}
 						>
