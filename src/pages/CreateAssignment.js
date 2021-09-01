@@ -59,6 +59,8 @@ export default () => {
 		try {
 			setSubmitLoading("Submitting form...", { record });
 
+			console.log("Assignment is ", record);
+
 			// Create new assignment
 			const assignmentResponse = await API.create("assignment", {
 				record,
@@ -120,7 +122,7 @@ export default () => {
 				<Heading>Create</Heading>
 				<p>NOTE: Fields marked as * are required</p>
 				<Form onSubmit={handleSubmit}>
-					{/* <Section title="Type of event *">
+					<Section title="Type of event *">
 						{radioEventTypes.map((type, key) => (
 							<Form.Check
 								key={key}
@@ -129,11 +131,10 @@ export default () => {
 								label={type}
 								onChange={({ target }) => {
 									setEventType(key);
-									console.log(key);
 								}}
 							/>
 						))}
-					</Section> */}
+					</Section>
 					<Section
 						loading={classesLoading}
 						error={error}
@@ -145,10 +146,6 @@ export default () => {
 							onChange={({ target }) => {
 								const class_id = target.options[target.selectedIndex].value;
 								setClassId(class_id)
-								console.log(classId);
-								console.log(table.find(
-									({ id }) => id === class_id
-								).fields.student_id);
 
 								editRecord({
 									class_id: [class_id],
@@ -203,7 +200,7 @@ export default () => {
 											type="date"
 											onChange={({ target }) =>
 												editRecord({
-													Set: target.value,
+													Set: target.value
 												})
 											}
 										/>
@@ -215,7 +212,7 @@ export default () => {
 											type="date"
 											onChange={({ target }) =>
 												editRecord({
-													Due: target.value,
+													Due: target.value
 												})
 											}
 										/>
@@ -261,7 +258,7 @@ export default () => {
 												onChange={({ target }) =>
 													editRecord({
 														Expected_Time:
-															target.value,
+															target.value
 													})
 												}
 											/>
