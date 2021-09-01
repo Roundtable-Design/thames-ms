@@ -156,13 +156,12 @@ export default () => {
 						</Col>
 					</Form.Row>
 				</Section>
-				<Section title="Ecpected">
+				<Section title="Expected time to complete assignment">
 					<Form.Row>
 						<Col>
 							<Form.Label>Expected Time Unit</Form.Label>
 							<Form.Control
 								as="select"
-								required
 								onChange={({ target }) =>
 									editRecord({
 										Expected_Time_Unit:
@@ -181,7 +180,6 @@ export default () => {
 						<Col>
 							<Form.Label>Expected Time</Form.Label>
 							<Form.Control
-								required
 								type="text"
 								onChange={({ target }) =>
 									editRecord({ Expected_Time: target.value })
