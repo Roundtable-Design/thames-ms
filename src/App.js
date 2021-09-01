@@ -14,6 +14,7 @@ import StaffAssignment from "./pages/StaffAssignment";
 import Student from "./pages/Student";
 import Test from "./pages/Test";
 import useRole from "./hooks/useRole";
+import Logout from "./pages/Logout";
 
 const App = () => {
 	const [role] = useRole();
@@ -59,11 +60,15 @@ const App = () => {
 				) : (
 					""
 				)}
+				{role.student || role.parent ? (
+					<Route path="/signout" component={Logout} />
+				) : (
+					""
+				)}
 				<Route path="/login" component={Login} />
 				{/* {role.none && <Redirect from="/" to="/login" />} */}
 				{/* <Route component={NotFound} /> */}
 			</Switch>
-			{/* </Container> */}
 		</BrowserRouter>
 	);
 };

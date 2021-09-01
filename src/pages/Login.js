@@ -4,6 +4,7 @@ import Container from "react-bootstrap/Container";
 import Header from "../components/Header";
 import React from "react";
 import styled from "styled-components";
+import {Logo} from "../components/index";
 
 const HeaderWrapper = styled.div`
 	height: 55vh;
@@ -14,6 +15,9 @@ const HeaderWrapper = styled.div`
 	display: flex;
 	align-items: center;
 	justify-content: center;
+	flex-direction: column;	
+	flex-wrap: wrap;
+	flex-grow: 1;
 `;
 
 const LoginWrapper = styled.div`
@@ -31,6 +35,7 @@ export default () => {
 	return (
 		<React.Fragment>
 			<HeaderWrapper>
+				<Logo />
 				<Header subheading={"Please sign in to continue"} />
 			</HeaderWrapper>
 			<LoginWrapper>

@@ -11,7 +11,7 @@ import ProfileInfo from "../components/ProfileInfo";
 import ProfilePoints from "../components/ProfilePoints";
 import React from "react";
 import cheerio from "cheerio";
-import moment from "moment";
+import marked from "marked";
 import styled from "styled-components";
 import { useParams } from "react-router-dom";
 import useRole from "../hooks/useRole";
@@ -47,7 +47,7 @@ export default () => {
 
 	const [show, setShow] = React.useState(false);
 	const [systemTitle, setSystemTitle] = React.useState("Points:");
-	const [systemCounter, setSystemCounter] = React.useState(0);
+	const [systemCounter, setSystemCounter] = React.useState();
 	const [commendations, setCommendations] = React.useState([]);
 	const [reports, setReports] = React.useState();
 	const [achievement, setAchievement] = React.useState("");
@@ -55,21 +55,25 @@ export default () => {
 	const CheckYear = (year, points, comms) => {
 		const string = year.toString();
 		const number = string.replace(/\D/g, "");
-		console.log("My year :", number);
 		setSystemCounter(points);
 		if (number > 9) {
 			setShow(true);
 			setSystemTitle("Commendations:");
-			setSystemCounter(comms);
+			if(comms.length){
+				setSystemCounter(comms.length);
+			} else{
+				setSystemCounter(0);
+			}
+			
 		}
 	};
 
 	const parseContent = (content) => {
-		const $ = cheerio.load(content);
+		const $ = cheerio.load(marked(content));
 
-		$("a").prepend(
-			`<img src='${require("../assets/icons/paperclip-pink.svg")}' />`
-		);
+		const svg = require("../assets/icons/paperclip-pink.svg");
+
+		$("a").prepend(`<img src='${svg}' />`);
 
 		return $.html()
 			.replace("<html><head></head><body>", "")
@@ -81,7 +85,6 @@ export default () => {
 			(async function () {
 				try {
 					const response = await API.get(`/me`);
-					// const response = await API.get(`student/${id}`);
 
 					if (!response.hasOwnProperty("content"))
 						throw new Error("Empty response");
@@ -89,17 +92,24 @@ export default () => {
 					const record = response.content[0].fields;
 					setRecord(record);
 
-					console.log("Record is", record);
+					if(record.Commendations==null){
+						CheckYear(
+							record.Year_Group,
+							record.Green_Points,
+							0
+						);
+					}else{
+						setCommendations(record.Commendations_Name);
+						CheckYear(
+							record.Year_Group,
+							record.Green_Points,
+							record.Commendations
+						);
+					}
 
-					CheckYear(
-						record.Year_Group,
-						record.Green_Points,
-						record.Commendations.length
-					);
-					setAchievement(parseContent(record.Achievement));
+					setAchievement(parseContent(record.Achievement));			
+
 					setReports(parseContent(record.Reports));
-					console.log("reports", record.Reports);
-					setCommendations(record.Commendations_Name);
 
 					setLoading(false);
 				} catch (err) {
@@ -127,17 +137,26 @@ export default () => {
 
 					<CommendationsWrapper show={show}>
 						{commendations.length
-							? commendations.map((commendation) => (
-									<ProfileCommendations>
-										{commendation}
-									</ProfileCommendations>
+							 ? commendations.map((commendation) => (
+									<ProfileCommendations
+										// dangerouslySetInnerHTML={{
+										// 	__html: marked(commendation),
+										// }}
+										>{commendation}</ProfileCommendations>
 							  ))
-							: ""}
+							 : "No commendation"} 
 					</CommendationsWrapper>
 
+					{/* `achievement` already marked */}
 					<ProfileContent achievement={achievement} report>
-						<div dangerouslySetInnerHTML={{ __html: reports }} />
+						<div
+							dangerouslySetInnerHTML={{
+								__html: marked(reports),
+							}}
+						/>
 					</ProfileContent>
+
+					<LogoutButton />
 				</ContentWrapper>
 				<Menu activeAssignment={false} activeAvatar={true} />
 			</Wrapper>

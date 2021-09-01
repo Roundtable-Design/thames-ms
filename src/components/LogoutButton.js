@@ -1,10 +1,9 @@
 import React from "react";
 import styled, {keyframes} from "styled-components";
 
-
 const Wrapper = styled.div`
 	width: 100%;
-    height: 100%;
+    height: auto;
 	margin: 0 auto;
     padding: 30px 0;
 
@@ -38,9 +37,13 @@ const Button = styled.button`
 `;
 
 const LogoutButton = ({ ...props }) => {
+    
 	return (
 		<Wrapper {...props}>
-            <Button>Sign Out</Button>
+            <Button onClick={() => 
+                window.location.href = "/signout"
+				}>Sign Out</Button>
+            
 		</Wrapper>
 	);
 };

@@ -8,17 +8,32 @@ import cheerio from "cheerio";
 import moment from "moment";
 import { useParams } from "react-router-dom";
 import useRole from "../hooks/useRole";
+import StudentViewFeedback from "../components/StudentViewFeedback";
+import styled from "styled-components";
+
+
+const Wrapper = styled.div`
+	box-sizing: border-box;
+	width: 100%;
+	height: calc(100vh - 312px);
+`;
 
 export default () => {
 	const [role] = useRole();
 
 	const { id } = useParams();
 	const [record, setRecord] = React.useState(null);
+	const [feedbackContent, setFeedbackContent] = React.useState(null);
 	const [loading, setLoading] = React.useState("Loading assignment data...");
 	const [error, setError] = React.useState();
 	const [content, setContent] = React.useState("");
 	const [studentCompleted, setStudentCompleted] = React.useState();
 	const [reviewId, setReviewId] = React.useState();
+	const [feedbackStatus, setFeedbackStatus] = React.useState();
+	// const [feedbackEffort, setFeedbackEffort] = React.useState();
+	// const [feedbackMessage, setFeedbackMessage] = React.useState();
+
+
 
 	const translateDate = (date) => {
 		return moment(new Date(date)).format("MMM Do YY");
@@ -46,12 +61,22 @@ export default () => {
 				try {
 					const response = await API.get(`assignment/${id}`);
 
-					console.log("Assignment call successful");
-
 					if (!response.hasOwnProperty("content"))
 						throw new Error("Empty response");
 
 					const record = response.content[0].fields;
+
+					const assignmentReviews = await API.get(`reviews?assignment_id=${id}`);
+					const feedbackContent = assignmentReviews.content[0].fields;
+					setFeedbackContent(feedbackContent);
+					setFeedbackStatus(feedbackContent.Status);
+					if(feedbackContent.Status==null){
+						setFeedbackStatus("Pending")
+					}
+					
+					
+					console.log(feedbackContent);
+
 					const {
 						content: [
 							{
@@ -59,6 +84,8 @@ export default () => {
 							},
 						],
 					} = await API.get(`reviews?assignment_id=${id}`);
+
+
 
 					setReviewId(reviewId);
 					setStudentCompleted(Student_Checked);
@@ -80,8 +107,12 @@ export default () => {
 		setStudentCompleted(!studentCompleted);
 	};
 
+	const handleAssignmentFeedbackStatus = (status) =>{
+
+	}
+
 	return !loading ? (
-		<React.Fragment>
+		<Wrapper>
 			<TaskHeader
 				image={record.Class_Icon[0].url}
 				subject={record.Class_Name}
@@ -97,10 +128,20 @@ export default () => {
 				onChange={handleCompletedChange}
 			>
 				<div dangerouslySetInnerHTML={{ __html: content }} />
+
+				
 			</TaskContent>
-			{role.staff && <ReviewAssignment assignmentId={id} />}
+			<StudentViewFeedback 
+				content={feedbackContent.Feedback}
+				status={feedbackStatus}
+				effort={feedbackContent.Effort}
+				pending={feedbackStatus=="Pending"}
+				handed={feedbackStatus=="Handed In"}
+				resubmit={feedbackStatus=="Resubmit"}
+				/>
+			
 			<Menu activeAssignment={true} activeAvatar={false} />
-		</React.Fragment>
+		</Wrapper>
 	) : (
 		"Loading..."
 	);

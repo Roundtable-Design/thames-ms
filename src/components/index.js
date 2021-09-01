@@ -6,6 +6,9 @@ export const Card = styled(BootstrapCard)`
 	margin-bottom: ${theme.gutter}px;
 	grid-column: 1 / -1;
 
+	color: #002E5D !important;
+	border-color: #DCEFC8;
+
 	${({ onClick }) => onClick && `cursor: pointer;`}
 
 	${theme.breakpoint("sm")`grid-column: span 3`}
@@ -37,11 +40,12 @@ export const Subheading = styled.h2`
 `;
 
 export const Heading = styled.h1`
-	font-size: 48px;
-	line-height: 56px;
+	/* font-size: 48px;
+	line-height: 56px; */
+	color: #002E5D;
 	margin-top: ${theme.gutter * 2}px;
 	margin-bottom: ${theme.gutter * 3}px;
-	font-weight: lighter;
+	/* font-weight: lighter; */
 	${variantStyles}
 `;
 
@@ -54,7 +58,7 @@ export const Logo = styled.div`
     background-image: url("${require("../assets/logo.svg")}");
 
 	margin: 41px auto;
-	margin-top: 127px;
+	/* margin-top: 127px; */
 
 `;
 
@@ -66,6 +70,8 @@ const captionStyles = `
 `;
 
 export const Caption = styled.h5`
+	color: #002E5D;
+	padding-bottom: 7px;
 	${captionStyles}
 	${variantStyles}
 `;
@@ -91,3 +97,63 @@ export const Alert = styled.div`
 	border-radius: 3px;
 	margin-bottom: ${theme.gutter * 2}px;
 `;
+
+export const Button = styled.button`
+	appearance: none;
+	width: auto;
+	padding: 8px 11.5px;
+
+	border: 1px solid #CE0F69;
+	border-radius: 3px;
+	background-color: #FFFFFF;
+	
+    color: #CE0F69;
+	cursor: pointer;
+
+	${({ yellow }) =>
+		yellow &&
+		`
+		border: 3px solid #EAAA00;
+		color: #002E5D;	
+	`}
+
+	${({ green }) =>
+		green &&
+		`
+		border: 3px solid #DCEFC8;
+		color: #002E5D;	
+	`}
+
+	${({ pink }) =>
+		pink &&
+		`
+		border: 3px solid #CE0F69;
+		color: #002E5D;	
+	`}
+
+	&:focus, &:hover, &:visited, &:link, &:active {
+        text-decoration: none;
+    }
+`;
+
+export const ButtonWrapper = styled.div`
+	display: flex;
+	justify-content: flex-end;
+	width: 100%;
+	text-align: right;
+	margin: 30px 0 0 0;
+
+	${({ hide }) =>
+		hide &&
+		`
+		display: none;
+	`}
+
+
+`;
+
+export const AssignmentDate = styled.h5`
+
+`
+export const AssignmentEstimatedDuration = styled.h5`
+`

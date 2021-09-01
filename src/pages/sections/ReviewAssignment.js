@@ -9,10 +9,14 @@ import Section from "../../components/Section";
 import Table from "react-bootstrap/Table";
 import queryString from "query-string";
 
+
 export default ({ assignmentId }) => {
 	const [loading, setLoading] = React.useState("Loading reviews...");
 	const [error, setError] = React.useState();
 	const [reviews, setReviews] = React.useState();
+	const [record, setRecord] = React.useState({});
+	const [currentStatus, setCurrentStatus] = React.useState();
+
 
 	const fetchReviews = async () => {
 		try {
@@ -43,27 +47,25 @@ export default ({ assignmentId }) => {
 			review.fields[key] = props[key];
 		});
 
+		console.log("Status", props);
+
 		const {
-			Teacher_Checked,
+			// Teacher_Checked,
 			Late,
+			Status,
 			Effort,
-			Grade,
-			Not_Applicable,
-			Green_Points,
-			Comments,
+			Feedback,
 		} = review.fields;
 
 		try {
 			setLoading("Updating reviews...");
 
 			const response = await API.update(`review/${review_id}`, {
-				Teacher_Checked,
+				// Teacher_Checked,
 				Late,
+				Status,
 				Effort,
-				Grade,
-				Not_Applicable,
-				Green_Points,
-				Comments,
+				Feedback,
 			});
 
 			if (!response.hasOwnProperty("content"))
@@ -91,11 +93,10 @@ export default ({ assignmentId }) => {
 				<thead>
 					<tr>
 						<th>Name</th>
-						<th>Handed in?</th>
-						<th>Late?</th>
+						<th>Status</th>
 						<th>Effort</th>
-						<th>Grade</th>
-						<th>N/A</th>
+						<th>Late</th>
+						<th>Feedback</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -109,28 +110,28 @@ export default ({ assignmentId }) => {
 									</Link>
 								</td>
 								<td key={`td-${2}`}>
-									<Form.Check
-										value={fields.Teacher_Checked}
-										checked={fields.Teacher_Checked}
-										onChange={({ target }) =>
-											editReview(fields.id, {
-												Teacher_Checked: target.checked,
-											})
-										}
-									/>
+								<Form.Control
+									as="select"
+									required
+									defaultValue={fields.Status}
+									onChange={({ target }) =>
+									
+									editReview(fields.id, {
+											Status: 
+												target.options[target.selectedIndex]
+													.value,
+										})
+									}
+								>	
+									{/* <option value="Current Status">{fields.Status}</option> */}
+									<option value="Pending">
+										Pending
+									</option>
+									<option value="Handed In">Handed In</option>
+									<option value="Resubmit">Resubmit</option>
+								</Form.Control>
 								</td>
 								<td key={`td-${3}`}>
-									<Form.Check
-										value={fields.Late}
-										checked={fields.Late}
-										onChange={({ target }) =>
-											editReview(fields.id, {
-												Late: target.checked,
-											})
-										}
-									/>
-								</td>
-								<td key={`td-${4}`}>
 									<Rating
 										value={fields.Effort}
 										defaultValue={0}
@@ -141,23 +142,23 @@ export default ({ assignmentId }) => {
 										}
 									/>
 								</td>
-								<td key={`td-${5}`}>
-									<Form.Control
-										value={fields.Grade}
-										onBlur={({ target }) =>
+								<td key={`td-${4}`}>
+									<Form.Check
+										value={fields.Late}
+										checked= {fields.Late}
+										onChange={({ target }) =>
 											editReview(fields.id, {
-												Grade: target.value,
+												Late: target.checked,
 											})
 										}
 									/>
 								</td>
-								<td key={`td-${6}`}>
-									<Form.Check
-										value={fields.Not_Applicable}
-										checked={fields.Not_Applicable}
-										onChange={({ target }) =>
+								<td key={`td-${5}`}>
+									<Form.Control
+										value={fields.Feedback}
+										onBlur={({ target }) =>
 											editReview(fields.id, {
-												Not_Applicable: target.checked,
+												Feedback: target.value,
 											})
 										}
 									/>

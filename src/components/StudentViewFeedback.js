@@ -6,7 +6,7 @@ import Rating from "@material-ui/lab/Rating";
 
 const Wrapper = styled.div`
 	width: 100%;
-    height: 100%;
+    height: auto;
 	margin: 0 auto;
     padding: 19px 30px 115px 30px;
 
@@ -20,8 +20,8 @@ const FeedbackWrapper = styled.div`
         margin-bottom: 3px;
     }
 
-    ${({ waiting }) =>
-		waiting &&
+    ${({ pending }) =>
+		pending &&
 		`
             display: none;
     `}
@@ -48,6 +48,12 @@ const TaskStatus = styled.h6`
 		`
         color: #CE0F69; 
     `}
+
+    ${({ pending }) =>
+		pending &&
+		`
+            color: #5CBDE5;
+    `}
 `;
 
 const StatusWrapper = styled.div`
@@ -63,42 +69,31 @@ const StatusWrapper = styled.div`
         justify-self: flex-start;
     }
 
-    ${({ waiting }) =>
-		waiting &&
+    ${({ pending }) =>
+		pending &&
 		`
         display: none;
     `}
 `;
 
 
-const StudentViewFeedback = ({ ...props }) => {
-    const [status, setStatus] = React.useState("Pending");
-    const [waiting, setWaiting] = React.useState(false);
-
-
-    React.useEffect(() => {
-		(async function () {
-			setStatus(status);
-            setWaiting(false);
-		})();
-	}, []);
-
+const StudentViewFeedback = ({pending, content, status, effort, handed, resubmit, ...props }) => {
 	return (
 		<Wrapper {...props}>
-            <FeedbackWrapper waiting={waiting}>
+            <FeedbackWrapper pending={pending}>
                 <ProfileSectionTitle>Feedback</ProfileSectionTitle>
                 <ProfileSectionContent>
-                    Dignissim tincidunt consequat magna lectus vel tincidunt. Faucibus tristique adipiscing non vel tellus lectus. Sed nisl at eu sit odio et nulla. Et in volutpat vestibulum consectetur et et id felis. Ut in amet urna suscipit elit ut sed nulla. 
+                    {content}
                 </ProfileSectionContent>
             </FeedbackWrapper>
             <StatusWrapper>
                 <ProfileSectionTitle>Task status:</ProfileSectionTitle>
-                <TaskStatus resubmit>{status}</TaskStatus>
+                <TaskStatus pending={pending} resubmit={resubmit} handed={handed}>{status}</TaskStatus>
             </StatusWrapper>
-            <StatusWrapper waiting={waiting}>
+            <StatusWrapper pending={pending}>
                 <ProfileSectionTitle>Effort</ProfileSectionTitle>
                 <Rating
-					value="4"
+					value={effort}
 					defaultValue={0}
 				/>
             </StatusWrapper>

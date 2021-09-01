@@ -59,12 +59,16 @@ export default ({ query = null }) => {
 								history.push(`/assignment/${fields.id}`)
 							}
 							key={`assignment-${index}`}
-						>
+							>
 							<Card.Body>
 								<Title>{fields.Title}</Title>
 								<Paragraph>{fields.Class_Name}</Paragraph>
 							</Card.Body>
-							<Card.Footer>{getStatus(fields.Due)}</Card.Footer>
+							{!fields.is_Reminder ? (
+								<Card.Footer style={{backgroundColor: "#DCEFC8", borderTop:"#DCEFC8"}}>{getStatus(fields.Due)}</Card.Footer>
+							):(								
+								<Card.Footer style={{backgroundColor: "#99D6EA", borderTop:"#99D6EA"}}>{getStatus(fields.Due)}</Card.Footer>
+							)}	
 						</Card>
 					))}
 				</Grid>

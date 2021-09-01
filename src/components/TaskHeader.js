@@ -6,7 +6,10 @@ const Wrapper = styled.div`
 	box-sizing: border-box;
     padding: 0;
     padding: 8px 22px;
-
+    top: 0;
+    left: 0;
+    position: sticky;
+    
     width: 100vw;
     max-width: 540px;
     height: 74px;

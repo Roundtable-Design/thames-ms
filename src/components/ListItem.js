@@ -47,7 +47,7 @@ const Wrapper = styled.div`
             color: #002E5D;
         }
         ${Date}{
-            color: #002E5D;
+            color: #5CBDE5; //002E5D;
         } 
     `}
     ${({ checked }) =>
@@ -69,6 +69,28 @@ const Wrapper = styled.div`
 		`
         ${Date}{
             color: #CE0F69;
+        } 
+    `}
+
+	${({ resubmit }) =>
+		resubmit &&
+		`
+        ${Date}{
+            color: #CE0F69;
+        } 
+		${ViewMore}{
+            background-image: url("${require("../assets/icons/chevron-right.svg")}");
+        } 
+    `}
+
+${({ handed }) =>
+		handed &&
+		`
+        ${Date}{
+            color: #EAAA00;
+        } 
+		${ViewMore}{
+            background-image: url("${require("../assets/icons/check.svg")}");
         } 
     `}
 
@@ -130,6 +152,8 @@ const ListItem = ({
 	children,
 	hide,
 	overdue,
+	resubmit,
+	handed,
 	...props
 }) => {
 	return (
@@ -140,6 +164,8 @@ const ListItem = ({
 			checked={checked}
 			hide={hide}
 			overdue={overdue}
+			resubmit={resubmit}
+			handed={handed}
 		>
 			<Title>{title}</Title>
 			<Date id="due"> {date} </Date>
