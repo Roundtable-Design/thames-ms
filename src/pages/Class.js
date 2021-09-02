@@ -50,8 +50,8 @@ export default () => {
 				{record && (
 					<Header
 						error={error}
-						heading={record.Title}
-						subheading={record.Year_Group}
+						heading={record.id}
+						// subheading={record.Year_Group}
 					/>
 				)}
 				<StaffAssignments
