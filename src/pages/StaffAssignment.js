@@ -92,7 +92,8 @@ export default () => {
 				{record && !edit &&
 				 (
 					<React.Fragment>
-						<Header heading={record.Title} subheading={record.Class_Name} 
+						<Header heading={record.id} 
+							// subheading={record.Class_Name} 
 							style={{marginTop: 0}}/>
 						<AssignmentDate>Assignment created on: {transformDate(record.Set)}</AssignmentDate>
 						<AssignmentDate>Assignment is due on: {transformDate(record.Due)}</AssignmentDate>

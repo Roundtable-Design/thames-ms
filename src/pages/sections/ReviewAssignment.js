@@ -104,10 +104,10 @@ export default ({ assignmentId }) => {
 						reviews.map(({ fields }, index) => (
 							<tr key={`row-${index}`}>
 								<td key={`td-${1}`}>
-									<Link to={`/student/${fields.student_id}`}>
+									{/* <Link to={`/student/${fields.student_id}`}> */}
 										{fields.Student_Surname},{" "}
 										{fields.Student_Forename}
-									</Link>
+									{/* </Link> */}
 								</td>
 								<td key={`td-${2}`}>
 								<Form.Control
