@@ -2,8 +2,10 @@
 <html lang="en">
 	<head>
 		<script>
-			if (location.href.split("://")[0] === "http") {
-				location.href = "https://" + location.href.split("://")[1];
+			if (!location.href.includes("localhost:")) {
+				if (location.href.split("://")[0] === "http") {
+					location.href = "https://" + location.href.split("://")[1];
+				}
 			}
 		</script>
 
