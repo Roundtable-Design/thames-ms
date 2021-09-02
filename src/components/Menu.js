@@ -88,8 +88,8 @@ const Menu = ({
 	pointsCounter,
 }) => {
 	const [record, setRecord] = React.useState(null);
-	const [count, setCount] = React.useState(0);
-	const [totalAssignment, setTotalAssignment] = React.useState(0);
+	const [count, setCount] = React.useState();
+	const [totalAssignment, setTotalAssignment] = React.useState();
 
 	const countComms = (comms) => {
 		if(comms == 'undefined'){
@@ -116,11 +116,11 @@ const Menu = ({
 
 			setCount(me.fields.Green_Points);
 
-			if(me.fields.Commendations==null){
-				setCount(0)
-			}else{
-				if (me.fields.Year_Group[0].toString().replace(/\D/g, "") > 9) {
-					setCount(me.fields.Commendations.length);
+			if (me.fields.Year_Group[0].toString().replace(/\D/g, "") > 9) {
+				if(me.fields.Commendations==null){
+					setCount(0)
+				}else{
+				setCount(me.fields.Commendations.length);
 				}
 			}
 		})();
