@@ -102,9 +102,12 @@ export default () => {
 					throw new Error("Empty student response");
 
 				setTable(response.content);
-				setClassesLoading(false);
+				
 				setStudentsTable(students.content);
+				console.log("Ending...");
+				setClassesLoading(false);
 				setStudentsLoading(false);
+				
 
 			} catch (err) {
 				setError(err.toString());
