@@ -47,7 +47,7 @@ export default ({query = null, classId}) => {
 	};
 
 	const editPoints = async (student_id, props) => {
-		const record = records.find(({ fields }) => fields.id === student_id);
+		const record = records.find(({ id }) => id === student_id);
 		console.log(records);
 
 		console.log(student_id);
