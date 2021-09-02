@@ -27,6 +27,8 @@ export default ({ query = null }) => {
 					throw new Error("Empty response");
 
 				setTable(response.content);
+
+				console.log(response.content);
 				setLoading(false);
 			} catch (err) {
 				setError(err.toString());
