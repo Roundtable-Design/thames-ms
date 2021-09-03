@@ -1,17 +1,10 @@
-import { Heading, Paragraph } from "../components";
-
 import Assignments from "./sections/Assignments";
-import Behaviour from "./sections/Behaviour";
 import Classes from "./sections/Classes";
-import { Link } from "react-router-dom";
-import React from "react";
-import Section from "../components/Section";
-import Students from "./sections/Students";
-import useRole from "../hooks/useRole";
-import TeacherNav from "../components/TeacherNav";
 import Container from "react-bootstrap/Container";
-
-
+import React from "react";
+import Students from "./sections/Students";
+import TeacherNav from "../components/TeacherNav";
+import useRole from "../hooks/useRole";
 
 export default () => {
 	const [role] = useRole();

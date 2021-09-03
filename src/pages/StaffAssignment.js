@@ -1,18 +1,17 @@
+import { AssignmentDate, AssignmentEstimatedDuration } from "../components";
+import { Button, ButtonWrapper } from "../components/";
+
 import API from "../api";
+import Container from "react-bootstrap/Container";
 import Header from "../components/Header";
 import React from "react";
 import ReviewAssignment from "./sections/ReviewAssignment";
 import Section from "../components/Section";
-import { useParams } from "react-router-dom";
-import useRole from "../hooks/useRole";
 import TeacherNav from "../components/TeacherNav";
-import Container from "react-bootstrap/Container";
-import { AssignmentDate, AssignmentEstimatedDuration } from "../components";
-import {ButtonWrapper, Button} from "../components/";
 import UpdateAssignment from "./UpdateAssignment";
 import moment from "moment";
-
-
+import { useParams } from "react-router-dom";
+import useRole from "../hooks/useRole";
 
 export default () => {
 	const [role] = useRole();
@@ -22,7 +21,7 @@ export default () => {
 	const [loading, setLoading] = React.useState("Loading assignment data...");
 	const [error, setError] = React.useState();
 
-	const [edit,setEdit] = React.useState(false);
+	const [edit, setEdit] = React.useState(false);
 	const [buttonText, setButtonText] = React.useState("Edit");
 
 	React.useEffect(() => {
@@ -47,72 +46,79 @@ export default () => {
 			})();
 		}
 	}, [loading]);
-	
+
 	const transformDate = (date) => {
-		return moment(new Date(date)).format('LL'); 
+		return moment(new Date(date)).format("LL");
 	};
 
-	const openEdit = () =>{
+	const openEdit = () => {
 		setEdit(!edit);
-		if(!edit){
+		if (!edit) {
 			setButtonText("Cancel");
-		}else{
+		} else {
 			setButtonText("Edit");
 		}
-	}
-
+	};
 
 	return (
 		<React.Fragment>
-			< TeacherNav />
+			<TeacherNav />
 			<Container>
-				<ButtonWrapper 
+				<ButtonWrapper
 				// hide={edit}
 				>
-					<Button green
-						onClick={()=>openEdit()}
-						>{buttonText}</Button>
+					<Button green onClick={() => openEdit()}>
+						{buttonText}
+					</Button>
 				</ButtonWrapper>
 
 				{record && edit && (
-					"Edit assignment is coming soon!"
-					// <React.Fragment>
-					// 	<UpdateAssignment 
-					// 		assignmentId={id} 
-					// 		assignmentTitle={record.Title} 
-					// 		assignmentContent={record.Content} 
-					// 		reminder={record.is_Reminder}
-					// 		dueDate={record.Due}
-					// 		estimatedTime={record.Expected_Time} 
-					// 		estimatedUnit={record.Expected_Time_Unit}
-					// 		/>
-					// </React.Fragment>
-				)}
-				
-				{record && !edit &&
-				 (
 					<React.Fragment>
-						<Header heading={record.Title} 
-							subheading={record.Class_Name} 
-							style={{marginTop: 0}}/>
-						<AssignmentDate>Assignment created on: {transformDate(record.Set)}</AssignmentDate>
-						<AssignmentDate>Assignment is due on: {transformDate(record.Due)}</AssignmentDate>
+						<UpdateAssignment
+							assignmentId={id}
+							assignmentTitle={record.Title}
+							assignmentContent={record.Content}
+							reminder={record.is_Reminder}
+							dueDate={record.Due}
+							estimatedTime={record.Expected_Time}
+							estimatedUnit={record.Expected_Time_Unit}
+						/>
+					</React.Fragment>
+				)}
+
+				{record && !edit && (
+					<React.Fragment>
+						<Header
+							heading={record.Title}
+							subheading={record.Class_Name}
+							style={{ marginTop: 0 }}
+						/>
+						<AssignmentDate>
+							Assignment created on: {transformDate(record.Set)}
+						</AssignmentDate>
+						<AssignmentDate>
+							Assignment is due on: {transformDate(record.Due)}
+						</AssignmentDate>
 						{!record.is_Reminder && (
-							<AssignmentEstimatedDuration>Estimated completion time for assignment: {record.Expected_Time} {record.Expected_Time_Unit}</AssignmentEstimatedDuration>
+							<AssignmentEstimatedDuration>
+								Estimated completion time for assignment:{" "}
+								{record.Expected_Time}{" "}
+								{record.Expected_Time_Unit}
+							</AssignmentEstimatedDuration>
 						)}
 					</React.Fragment>
 				)}
 
-				{record && !edit &&(
+				{record && !edit && (
 					<Section loading={loading} error={error} title="Summary">
-						
 						<div
 							dangerouslySetInnerHTML={{ __html: record.Content }}
 						></div>
-						
 					</Section>
 				)}
-				{record && role.staff && !edit && <ReviewAssignment assignmentId={id} />}
+				{record && role.staff && !edit && (
+					<ReviewAssignment assignmentId={id} />
+				)}
 			</Container>
 		</React.Fragment>
 	);
