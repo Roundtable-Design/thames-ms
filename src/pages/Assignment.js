@@ -136,7 +136,7 @@ export default () => {
 				status={feedbackStatus}
 				effort={feedbackContent.Effort}
 				pending={feedbackStatus=="Pending"}
-				handed={feedbackStatus=="Handed In"}
+				handed={feedbackStatus=="Handed in"}
 				resubmit={feedbackStatus=="Resubmit"}
 				/>
 			
