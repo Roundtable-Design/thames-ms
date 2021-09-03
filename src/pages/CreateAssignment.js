@@ -115,6 +115,13 @@ export default () => {
 		})();
 	}, []);
 
+	const SetCreateType =(key)=>{
+		setEventType(key);
+		if(key==1){
+			editRecord({is_Reminder: true});
+		}
+	}
+
 	return (
 		<React.Fragment>
 			{submitLoading && (
@@ -133,7 +140,7 @@ export default () => {
 								name="TypeOfEvent"
 								label={type}
 								onChange={({ target }) => {
-									setEventType(key);
+									SetCreateType(key);
 								}}
 							/>
 						))}
