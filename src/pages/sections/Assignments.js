@@ -82,7 +82,7 @@ export default ({ query = null }) => {
 	const translateCompleteDate = (date, status) => {	
 		if (status=="Resubmit"){
 			return "Resubmit";
-		}else if(status=="Handed In"){
+		}else if(status=="Handed in"){
 			return moment(new Date(date)).format("MMM Do YY");
 		}else{
 			return "Pending";
@@ -175,7 +175,7 @@ export default ({ query = null }) => {
 									fields.Status=="Resubmit"
 								}
 								handed={
-									fields.Status=="Handed In"
+									fields.Status=="Handed in"
 								}
 								onClick={() =>
 									history.push(
