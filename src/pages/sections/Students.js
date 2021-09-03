@@ -97,13 +97,13 @@ export default ({query = null, classId}) => {
 
 	return (
 		<Section title="Students" loading={loading} error={error}>
-			{yearGroup <=9 ? (
 			<Grid>
 				<Table style={{ width: "510px"}} striped bordered>
 					<thead>
 						<tr>
 							<th>Name</th>
-							<th>Total Green Points</th>
+							{yearGroup <=9 && (<th>Total Green Points</th>)}
+							{yearGroup <=9 && (
 							<th>
 								<Button 
 									yellow 
@@ -114,27 +114,24 @@ export default ({query = null, classId}) => {
 										Add Green Points to All 
 										{/* to All */}
 								</Button>
-							</th>
+							</th>)}
 						</tr>
 					</thead>
 					<tbody>
 						{records &&
 							records.map(({ fields }, index) => (
 								<React.Fragment>
-									{ fields.Year_Group <= 9 ? (
-										// fields.class_year_id.includes(classId) && ? (
+										{/* fields.class_year_id.includes(classId) && ? ( */}
 										<tr key={`row-${index}`} >
 										
 											<td key={`td-${1}`}>
-											{/* <Link to={`/student/${fields.student_id}`}> */}
 												{fields.Surname},{" "}
 												{fields.Forename}
-											{/* </Link> */}
 											</td>
-											<td>
+											{yearGroup <=9 && (<td>
 												{fields.Green_Points}
-											</td>
-											<td>
+											</td>)}
+											{yearGroup <=9 && (<td>
 												<Button 
 													yellow
 													onClick={() =>
@@ -143,18 +140,13 @@ export default ({query = null, classId}) => {
 													>
 														Add Green Point
 												</Button>
-											</td>
+											</td>)}
 										</tr>
-									):(
-										""
-									)}  
-
 								</React.Fragment>	
 							))} 
 					</tbody>
 				</Table>
 			</Grid>
-			):("")}
 		</Section>
 	);
 };
