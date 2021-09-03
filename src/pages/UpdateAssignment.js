@@ -12,9 +12,6 @@ import React from "react";
 import ReactQuill from "react-quill"; // ES6
 import Section from "../components/Section";
 import TeacherNav from "../components/TeacherNav";
-import queryString from "query-string";
-import { useHistory } from "react-router-dom";
-import { useParams } from "react-router-dom";
 
 export default ({
 	assignmentId,
