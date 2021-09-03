@@ -21,6 +21,7 @@ export default ({
 	dueDate,
 	estimatedTime,
 	estimatedUnit,
+	onSubmit,
 }) => {
 	const [loading, setLoading] = React.useState("Loading assignment data...");
 	const [error, setError] = React.useState();
@@ -92,14 +93,9 @@ export default ({
 
 	return (
 		<React.Fragment>
-			{submitLoading && (
-				<ActivityIndicator>{submitLoading}</ActivityIndicator>
-			)}
-
-			<TeacherNav />
 			<Container>
 				<Heading style={{ marginTop: 0 }}>Update Assignment</Heading>
-				<Form onSubmit={handleSubmit}>
+				<Form onSubmit={onSubmit}>
 					<Section title="Content">
 						<p>
 							To attach a file to this assignment add a link to a

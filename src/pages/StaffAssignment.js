@@ -1,6 +1,8 @@
 import { AssignmentDate, AssignmentEstimatedDuration } from "../components";
 import { Button, ButtonWrapper } from "../components/";
-
+import Col from "react-bootstrap/Col";
+import Form from "react-bootstrap/Form";
+import { Heading } from "../components/";
 import API from "../api";
 import Container from "react-bootstrap/Container";
 import Header from "../components/Header";
@@ -8,6 +10,8 @@ import React from "react";
 import ReviewAssignment from "./sections/ReviewAssignment";
 import Section from "../components/Section";
 import TeacherNav from "../components/TeacherNav";
+import ReactQuill from "react-quill"; // ES6
+
 import UpdateAssignment from "./UpdateAssignment";
 import moment from "moment";
 import { useParams } from "react-router-dom";
@@ -17,35 +21,83 @@ export default () => {
 	const [role] = useRole();
 
 	const { id } = useParams();
-	const [record, setRecord] = React.useState(null);
+	// const [record, setRecord] = React.useState(null);
 	const [loading, setLoading] = React.useState("Loading assignment data...");
 	const [error, setError] = React.useState();
 
 	const [edit, setEdit] = React.useState(false);
 	const [buttonText, setButtonText] = React.useState("Edit");
+	const [assignment, setAssignment] = React.useState();
+
+
+	const fetchAssignment = async () => {
+		try {
+			setLoading("Fetching assignment...");
+
+			const {
+				content: [assignment],
+			} = await API.get(`assignment/${id}`);
+
+			setAssignment(assignment.fields);
+			console.log("this is current assignment", assignment);
+			setButtonText(buttonText);
+
+			setLoading(false);
+		} catch (err) {
+			console.error(err);
+			setError(err.toString());
+		}
+	};
 
 	React.useEffect(() => {
 		if (loading) {
-			(async function () {
-				try {
-					const response = await API.get(`assignment/${id}`);
-
-					console.log({ response });
-
-					if (!response.hasOwnProperty("content"))
-						throw new Error("Empty response");
-
-					setButtonText(buttonText);
-
-					setRecord(response.content[0].fields);
-					setLoading(false);
-					console.log(record);
-				} catch (err) {
-					setError(err.toString());
-				}
-			})();
+			fetchAssignment();
 		}
 	}, [loading]);
+
+	const editRecord = (props) => {
+		const copy = { ...assignment };
+
+		Object.keys(props).forEach((key) => {
+			copy[key] = props[key];
+		});
+
+		setAssignment(copy);
+	};
+
+	const handleSubmit = async (event) => {
+		event.preventDefault();
+
+		try {
+			setLoading("Updating form...");
+
+			console.log({
+				Title: assignment.Title,
+				Content: assignment.Content,
+				Due: assignment.Due,
+				Expected_Time: assignment.Expected_Time,
+				Expected_Time_Unit: assignment.Expected_Time_Unit,
+			});
+
+			const { content } = await API.update(`assignment/${id}`, {
+				Title: assignment.Title,
+				Content: assignment.Content,
+				Set: assignment.Set,
+				Due: assignment.Due,
+				Expected_Time: assignment.Expected_Time,
+				Expected_Time_Unit: assignment.Expected_Time_Unit,
+			});
+
+			console.log("new", { content });
+
+			setLoading(false);
+			fetchAssignment();
+			setEdit(!edit);
+		} catch (err) {
+			console.error(err);
+			setError(err.toString());
+		}
+	};
 
 	const transformDate = (date) => {
 		return moment(new Date(date)).format("LL");
@@ -64,59 +116,138 @@ export default () => {
 		<React.Fragment>
 			<TeacherNav />
 			<Container>
-				<ButtonWrapper
-				// hide={edit}
-				>
+				<ButtonWrapper>
 					<Button green onClick={() => openEdit()}>
 						{buttonText}
 					</Button>
 				</ButtonWrapper>
 
-				{record && edit && (
+				{assignment && edit && (
 					<React.Fragment>
-						<UpdateAssignment
-							assignmentId={id}
-							assignmentTitle={record.Title}
-							assignmentContent={record.Content}
-							reminder={record.is_Reminder}
-							dueDate={record.Due}
-							estimatedTime={record.Expected_Time}
-							estimatedUnit={record.Expected_Time_Unit}
-						/>
+						<Container>
+							<Heading style={{ marginTop: 0 }}>Update Assignment</Heading>
+							<Form onSubmit={handleSubmit}>
+								<Section title="Content">
+									<p>
+										To attach a file to this assignment add a link to a
+										file on the school Google Drive
+									</p>
+									<Form.Group>
+										<Form.Label>Title *</Form.Label>
+										<Form.Control
+											required
+											type="text"
+											defaultValue={assignment.Title}
+											onChange={({ target }) =>
+												editRecord({ Title: target.value })
+											}
+										/>
+									</Form.Group>
+									<Form.Group>
+										<Form.Label>Body</Form.Label>
+										<ReactQuill
+											defaultValue={assignment.Content}
+											onChange={(value) =>
+												editRecord({ Content: value })
+											}
+										/>
+									</Form.Group>
+								</Section>
+								<Section title="Date">
+									<Form.Row>
+										<Col>
+											<Form.Label>Due *</Form.Label>
+											<Form.Control
+												defaultValue={assignment.Due}
+												required
+												type="date"
+												onChange={({ target }) =>
+													editRecord({ Due: target.value })
+												}
+											/>
+										</Col>
+									</Form.Row>
+								</Section>
+								{!assignment.is_Reminder && (
+									<Section title="Expected time to complete assignment">
+										<Form.Row>
+											<Col>
+												<Form.Label>Expected Time Unit</Form.Label>
+												<Form.Control
+													as="select"
+													defaultValue={assignment.Expected_Time_Unit}
+													onChange={({ target }) =>
+														editRecord({
+															Expected_Time_Unit:
+																target.options[
+																	target.selectedIndex
+																].value,
+														})
+													}
+												>
+													<option value="">
+														-- Select a time unit --
+													</option>
+													<option value="Minutes">Minutes</option>
+													<option value="Hours">Hours</option>
+												</Form.Control>
+											</Col>
+											<Col>
+												<Form.Label>Expected Time</Form.Label>
+												<Form.Control
+													defaultValue={assignment.Expected_Time}
+													type="text"
+													onChange={({ target }) =>
+														editRecord({
+															Expected_Time: target.value,
+														})
+													}
+												/>
+											</Col>
+										</Form.Row>
+									</Section>
+								)}
+								<Section>
+									<Button pink type="submit">
+										Save
+									</Button>
+								</Section>
+							</Form>
+						</Container>
 					</React.Fragment>
 				)}
 
-				{record && !edit && (
+				{assignment && !edit && (
 					<React.Fragment>
 						<Header
-							heading={record.Title}
-							subheading={record.Class_Name}
+							heading={assignment.Title}
+							subheading={assignment.Class_Name}
 							style={{ marginTop: 0 }}
 						/>
 						<AssignmentDate>
-							Assignment created on: {transformDate(record.Set)}
+							Assignment created on: {transformDate(assignment.Set)}
 						</AssignmentDate>
 						<AssignmentDate>
-							Assignment is due on: {transformDate(record.Due)}
+							Assignment is due on: {transformDate(assignment.Due)}
 						</AssignmentDate>
-						{!record.is_Reminder && (
+						{!assignment.is_Reminder && (
 							<AssignmentEstimatedDuration>
 								Estimated completion time for assignment:{" "}
-								{record.Expected_Time}{" "}
-								{record.Expected_Time_Unit}
+								{assignment.Expected_Time}{" "}
+								{assignment.Expected_Time_Unit}
 							</AssignmentEstimatedDuration>
 						)}
 					</React.Fragment>
 				)}
 
-				{record && !edit && (
+				{assignment && !edit && (
 					<Section loading={loading} error={error} title="Summary">
 						<div
-							dangerouslySetInnerHTML={{ __html: record.Content }}
+							dangerouslySetInnerHTML={{ __html: assignment.Content }}
 						></div>
 					</Section>
 				)}
-				{record && role.staff && !edit && (
+				{assignment && role.staff && !edit && (
 					<ReviewAssignment assignmentId={id} />
 				)}
 			</Container>
