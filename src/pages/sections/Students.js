@@ -39,8 +39,18 @@ export default ({query = null, classId}) => {
 			if (!response.hasOwnProperty("content"))
 				throw new Error("Empty response");
 
-			setRecords(response.content);
+			
 			setYearGroup(response.content[0].fields.Year_Group);
+			
+
+			const sorted = response.content.sort(function(a,b){
+				if(a.fields.Surname < b.fields.Surname) { return -1; }
+				if(a.fields.Surname > b.fields.Surname) { return 1; }
+				return 0;
+			})
+
+			setRecords(sorted);
+
 			setLoading(false);
 
 		} catch (err) {
