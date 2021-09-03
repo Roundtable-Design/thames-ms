@@ -25,6 +25,8 @@ export default ({query = null, classId}) => {
 
 	const history = useHistory();
 
+	const [yearGroup, setYearGroup] = React.useState();
+
 	const fetchStudents = async () => {
 		try {
 			const response = await API.get(
@@ -38,6 +40,7 @@ export default ({query = null, classId}) => {
 				throw new Error("Empty response");
 
 			setRecords(response.content);
+			setYearGroup(response.content[0].fields.Year_Group);
 			setLoading(false);
 
 		} catch (err) {
@@ -94,7 +97,7 @@ export default ({query = null, classId}) => {
 
 	return (
 		<Section title="Students" loading={loading} error={error}>
-			{/* {records.length ? ( */}
+			{yearGroup <=9 ? (
 			<Grid>
 				<Table style={{ width: "510px"}} striped bordered>
 					<thead>
@@ -102,15 +105,15 @@ export default ({query = null, classId}) => {
 							<th>Name</th>
 							<th>Total Green Points</th>
 							<th>
-								{/* <Button 
-									yellow */}
-									{/* onClick={() =>
+								<Button 
+									yellow 
+									onClick={() =>
 										addPoint()
-									 } */}
-									{/* > */}
-										Add Green Points 
+									 }
+									> 
+										Add Green Points to All 
 										{/* to All */}
-								{/* </Button> */}
+								</Button>
 							</th>
 						</tr>
 					</thead>
@@ -118,7 +121,8 @@ export default ({query = null, classId}) => {
 						{records &&
 							records.map(({ fields }, index) => (
 								<React.Fragment>
-									{fields.class_year_id.includes(classId) ? (
+									{ fields.Year_Group <= 9 ? (
+										// fields.class_year_id.includes(classId) && ? (
 										<tr key={`row-${index}`} >
 										
 											<td key={`td-${1}`}>
@@ -145,15 +149,12 @@ export default ({query = null, classId}) => {
 										""
 									)}  
 
-								</React.Fragment>
-									
+								</React.Fragment>	
 							))} 
 					</tbody>
 				</Table>
 			</Grid>
-			{/* ) : (
-				<p>No students in this class</p>
-			)} */}
+			):("")}
 		</Section>
 	);
 };

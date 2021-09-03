@@ -1,6 +1,5 @@
 import API from "../../api";
 import ActivityIndicator from "../../components/ActivityIndicator";
-import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import { Link } from "react-router-dom";
 import Rating from "@material-ui/lab/Rating";
@@ -8,6 +7,8 @@ import React from "react";
 import Section from "../../components/Section";
 import Table from "react-bootstrap/Table";
 import queryString from "query-string";
+import {Button} from "../../components/";
+
 
 
 export default ({ assignmentId }) => {
@@ -82,6 +83,13 @@ export default ({ assignmentId }) => {
 		// setReviews(copy);
 	};
 
+	const handleMarkAll = async () => {
+		for(const review of reviews) {
+			await editReview(review.id, {Status: "Handed in"});
+		}
+		fetchReviews();
+	}
+
 	React.useEffect(() => {
 		fetchReviews();
 	}, []);
@@ -93,7 +101,18 @@ export default ({ assignmentId }) => {
 				<thead>
 					<tr>
 						<th>Name</th>
-						<th>Status</th>
+						<th>
+							<Button
+								yellow
+								onClick={
+									handleMarkAll
+								}	
+							>
+								Mark all as <i>Handed in</i>
+							</Button>
+
+
+						</th>
 						<th>Effort</th>
 						<th>Late</th>
 						<th>Feedback</th>
@@ -127,7 +146,7 @@ export default ({ assignmentId }) => {
 									<option value="Pending">
 										Pending
 									</option>
-									<option value="Handed In">Handed In</option>
+									<option value="Handed in">Handed in</option>
 									<option value="Resubmit">Resubmit</option>
 								</Form.Control>
 								</td>
