@@ -115,15 +115,14 @@ export default ({query = null, classId}) => {
 							{yearGroup <=9 && (<th>Total Green Points</th>)}
 							{yearGroup <=9 && (
 							<th>
-								<Button 
+								{/* <Button 
 									yellow 
 									onClick={() =>
 										addPoint()
 									 }
-									> 
+									>  */}
 										Add Green Points to All 
-										{/* to All */}
-								</Button>
+								{/* </Button> */}
 							</th>)}
 						</tr>
 					</thead>
