@@ -9,8 +9,6 @@ import useRole from "../hooks/useRole";
 export default () => {
 	const [role] = useRole();
 
-	console.log({ role });
-
 	return (
 		<React.Fragment>
 			{role.student && <Assignments />}
@@ -18,15 +16,9 @@ export default () => {
 			{role.staff && (
 				<React.Fragment>
 					<TeacherNav />
-					{/* <Logo style={{margin:"51px auto"}} /> */}
 					<Container>
 						<Classes />
 					</Container>
-					{/* <Section>
-						<Link to="/createAssignment" style={{color: "#CE0F69"}}>
-							<Button>Create assignment</Button>
-						</Link>
-					</Section> */}
 				</React.Fragment>
 			)}
 		</React.Fragment>

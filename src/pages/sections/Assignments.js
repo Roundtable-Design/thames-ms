@@ -1,12 +1,9 @@
-import { Card, Grid, Paragraph, Title } from "../../components";
-
 import API from "../../api";
 import CountDateButton from "../../components/CountDateButton";
 import ListHeader from "../../components/ListHeader";
 import ListItem from "../../components/ListItem";
 import Menu from "../../components/Menu";
 import React from "react";
-import Section from "../../components/Section";
 import moment from "moment";
 import queryString from "query-string";
 import styled from "styled-components";
@@ -35,13 +32,11 @@ export default ({ query = null }) => {
 	const [table, setTable] = React.useState([]);
 	const [dueDateSwitch, setDueDateSwitch] = React.useState(false);
 
-
 	const history = useHistory();
 
 	const translateDate = (date, status) => {
 		if (dueButtonText === "Count Down") {
-			
-			if (status=="Resubmit"){
+			if (status == "Resubmit") {
 				return "Resubmit";
 			}
 			return moment(new Date(date)).format("ll");
@@ -50,27 +45,25 @@ export default ({ query = null }) => {
 			const now = moment(new Date());
 			const diff = moment.duration(date.diff(now)).days();
 			const diffHours = moment.duration(date.diff(now)).hours();
-			if (status=="Resubmit"){
+			if (status == "Resubmit") {
 				return "Resubmit";
-			}
-			else{
+			} else {
 				if (diff > 0) {
-				return `${Math.abs(diff)} day${diff !== 1 ? "s" : ""}`;
-			} else if (diff < 0) {
-				return `Overdue`;
-			} else if (diffHours > 0 && diffHours <= 24) {
-				console.log("this is Diff housrs", diffHours);
-				return `Tomorrow`;
-			} else if (diff == 0) {
-				console.log("this is Diff", diff);
-				return `Today`;
+					return `${Math.abs(diff)} day${diff !== 1 ? "s" : ""}`;
+				} else if (diff < 0) {
+					return `Overdue`;
+				} else if (diffHours > 0 && diffHours <= 24) {
+					console.log("this is Diff housrs", diffHours);
+					return `Tomorrow`;
+				} else if (diff == 0) {
+					console.log("this is Diff", diff);
+					return `Today`;
+				}
 			}
-			}
-			
 		}
 	};
 
-	const CheckOverdueRreminder = (date) => {
+	const CheckOverdueReminder = (date) => {
 		date = moment(new Date(date));
 		const now = moment(new Date());
 		const diff = moment.duration(date.diff(now)).days();
@@ -79,12 +72,12 @@ export default ({ query = null }) => {
 		}
 	};
 
-	const translateCompleteDate = (date, status) => {	
-		if (status=="Resubmit"){
+	const translateCompleteDate = (date, status) => {
+		if (status == "Resubmit") {
 			return "Resubmit";
-		}else if(status=="Handed in"){
+		} else if (status == "Handed in") {
 			return moment(new Date(date)).format("MMM Do YY");
-		}else{
+		} else {
 			return "Pending";
 		}
 	};
@@ -153,7 +146,7 @@ export default ({ query = null }) => {
 									fields.Student_Checked ||
 									// fields.Teacher_Checked ||
 									(fields.is_Reminder &&
-										CheckOverdueRreminder(
+										CheckOverdueReminder(
 											fields.Assignment_Due
 										))
 								}
@@ -162,21 +155,26 @@ export default ({ query = null }) => {
 									fields.Class_Name,
 									fields.Assignment_Title
 								)}
-								date={translateDate(fields.Assignment_Due, fields.Status)}
+								date={translateDate(
+									fields.Assignment_Due,
+									fields.Status
+								)}
 								overdue={
-									translateDate(fields.Assignment_Due, fields.Status) ==
-										"Overdue" ||
-									translateDate(fields.Assignment_Due, fields.Status) ==
-										"Today" ||
-									translateDate(fields.Assignment_Due, fields.Status) ==
-										"Tomorrow"
+									translateDate(
+										fields.Assignment_Due,
+										fields.Status
+									) == "Overdue" ||
+									translateDate(
+										fields.Assignment_Due,
+										fields.Status
+									) == "Today" ||
+									translateDate(
+										fields.Assignment_Due,
+										fields.Status
+									) == "Tomorrow"
 								}
-								resubmit={
-									fields.Status=="Resubmit"
-								}
-								handed={
-									fields.Status=="Handed in"
-								}
+								resubmit={fields.Status == "Resubmit"}
+								handed={fields.Status == "Handed in"}
 								onClick={() =>
 									history.push(
 										`/assignment/${fields.assignment_id}`
@@ -203,7 +201,7 @@ export default ({ query = null }) => {
 						)
 						.map(({ fields }, index) => (
 							<ListItem
-								hide={!fields.Student_Checked }
+								hide={!fields.Student_Checked}
 								checked={
 									fields.Teacher_Checked &&
 									fields.Student_Checked
@@ -212,9 +210,7 @@ export default ({ query = null }) => {
 									fields.Student_Checked &&
 									!fields.Teacher_Checked
 								}
-								resubmit={
-									fields.Status=="Resubmit"
-								}
+								resubmit={fields.Status == "Resubmit"}
 								title={CheckReminderTitle(
 									fields.is_Reminder,
 									fields.Class_Name,
