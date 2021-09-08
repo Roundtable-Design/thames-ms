@@ -11,8 +11,6 @@ export default ({ query = null }) => {
 	const [error, setError] = React.useState();
 	const [records, setRecords] = React.useState();
 
-	const [yearGroup, setYearGroup] = React.useState();
-
 	const fetchStudents = async () => {
 		try {
 			const response = await API.get(
@@ -22,8 +20,6 @@ export default ({ query = null }) => {
 
 			if (!response.hasOwnProperty("content"))
 				throw new Error("Empty response");
-
-			setYearGroup(response.content[0].fields.Year_Group);
 
 			const sorted = response.content.sort(function (a, b) {
 				if (a.fields.Surname < b.fields.Surname) {
