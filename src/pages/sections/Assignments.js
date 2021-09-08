@@ -13,7 +13,7 @@ const TasksWrapper = styled.div`
 	height: 50vh;
 	padding: 0;
 	margin: 0;
-	position: relative;
+	position: sticky;
 	overflow: auto;
 `;
 
