@@ -6,7 +6,7 @@ import Classes from "./sections/Classes";
 import { Link } from "react-router-dom";
 import React from "react";
 import Section from "../components/Section";
-import Students from "./sections/Students";
+import ParentStudents from "./sections/ParentStudents";
 import useRole from "../hooks/useRole";
 import TeacherNav from "../components/TeacherNav";
 import Container from "react-bootstrap/Container";
@@ -21,7 +21,7 @@ export default () => {
 	return (
 		<React.Fragment>
 			{role.student && <Assignments />}
-			{role.parent && <Students />}
+			{role.parent && <ParentStudents />}
 			{role.staff && (
 				<React.Fragment>
 					<TeacherNav />
