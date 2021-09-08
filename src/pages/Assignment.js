@@ -40,7 +40,7 @@ export default () => {
 	};
 
 	const translateDatetoWeek = (date) => {
-		return moment(new Date(date)).format("dddd");
+		return moment(new Date(date)).format("dddd").substring(0,3);
 	};
 
 	const parseContent = (content) => {

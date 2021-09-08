@@ -1,6 +1,7 @@
 import { BrowserRouter, Link, Redirect, Route, Switch } from "react-router-dom";
 
 import Assignment from "./pages/Assignment";
+import Assignments from "./pages/sections/Assignments";
 import Class from "./pages/Class";
 import Container from "react-bootstrap/Container";
 import CreateAssignment from "./pages/CreateAssignment";
@@ -26,6 +27,10 @@ const App = () => {
 
 			<Route exact path="/" component={role.none ? Login : Dashboard} />
 			<Switch>
+				{role.parent && (
+					<Route path="/reviews" component={Assignments} />
+				)}
+
 				{role.student || role.parent ? (
 					<Route path="/assignment/:id" component={Assignment} />
 				) : (
@@ -70,7 +75,8 @@ const App = () => {
 				{/* {role.none && <Redirect from="/" to="/login" />} */}
 				{/* <Route component={NotFound} /> */}
 			</Switch>
-			<Footer />
+			{role.staff && (<Footer />)}
+			
 		</BrowserRouter>
 	);
 };

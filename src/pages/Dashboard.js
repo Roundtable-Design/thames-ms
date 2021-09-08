@@ -5,28 +5,29 @@ import React from "react";
 import Students from "./sections/Students";
 import TeacherNav from "../components/TeacherNav";
 import useRole from "../hooks/useRole";
+import {Button} from "../components/";
 
 export default () => {
 	const [role] = useRole();
-
-	console.log({ role });
-
+	const handleSuccess = () => {
+		localStorage.clear();
+		window.location.href = "/login";
+	};
 	return (
 		<React.Fragment>
 			{role.student && <Assignments />}
-			{role.parent && <Students />}
+			{role.parent && (
+				<Container>
+					<Students />
+					<Button green onClick={()=>handleSuccess()}>Sign out</Button>
+				</Container>
+			)}
 			{role.staff && (
 				<React.Fragment>
 					<TeacherNav />
-					{/* <Logo style={{margin:"51px auto"}} /> */}
 					<Container>
 						<Classes />
 					</Container>
-					{/* <Section>
-						<Link to="/createAssignment" style={{color: "#CE0F69"}}>
-							<Button>Create assignment</Button>
-						</Link>
-					</Section> */}
 				</React.Fragment>
 			)}
 		</React.Fragment>
