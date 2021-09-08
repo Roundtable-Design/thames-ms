@@ -229,7 +229,7 @@ export default ({ query = null }) => {
 							/>
 						))
 				) : (
-					<p>No active assignments</p>
+					<p>No complete assignments</p>
 				)}
 			</CompletedWrapper>
 			<Menu activeAssignment={true} activeAvatar={false} />
