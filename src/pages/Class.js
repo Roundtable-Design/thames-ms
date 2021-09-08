@@ -50,8 +50,8 @@ export default () => {
 				{record && (
 					<Header
 						error={error}
-						heading={record.Title}
-						subheading={record.Year_Group}
+						heading={record.id}
+						// subheading={record.Year_Group}
 					/>
 				)}
 				<StaffAssignments
@@ -60,7 +60,12 @@ export default () => {
 					}}
 				/>
 
-				{record && <Students classId={id} />}
+				{record && <Students 
+						query={{
+							class_id: id,
+						}}
+					classId={id} 
+					/>}
 			</Container>
 		</React.Fragment>
 	);

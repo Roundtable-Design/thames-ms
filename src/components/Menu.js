@@ -89,15 +89,15 @@ const Menu = ({
 }) => {
 	const [record, setRecord] = React.useState(null);
 	const [count, setCount] = React.useState();
-	const [totalAssignment, setTotalAssignment] = React.useState(0);
+	const [totalAssignment, setTotalAssignment] = React.useState();
 
 	const countComms = (comms) => {
-		if(comms == 'undefined'){
-			return 0; 
-		}else{
+		if (comms == "undefined") {
+			return 0;
+		} else {
 			return comms.length;
 		}
-	}
+	};
 
 	React.useEffect(() => {
 		(async function () {
@@ -116,10 +116,15 @@ const Menu = ({
 
 			setCount(me.fields.Green_Points);
 
-			console.log(me.fields.Year_Group)
-
-			if (me.fields.Year_Group[0].toString().replace(/\D/g, "") > 9) {
-				setCount(me.fields.Commendations.length);
+			if (
+				me.fields.hasOwnProperty("Year_Group") &&
+				me.fields.Year_Group[0].toString().replace(/\D/g, "") > 9
+			) {
+				if (me.fields.Commendations == null) {
+					setCount(0);
+				} else {
+					setCount(me.fields.Commendations.length);
+				}
 			}
 		})();
 	}, []);

@@ -47,7 +47,7 @@ export default () => {
 
 	const [show, setShow] = React.useState(false);
 	const [systemTitle, setSystemTitle] = React.useState("Points:");
-	const [systemCounter, setSystemCounter] = React.useState(0);
+	const [systemCounter, setSystemCounter] = React.useState();
 	const [commendations, setCommendations] = React.useState([]);
 	const [reports, setReports] = React.useState();
 	const [achievement, setAchievement] = React.useState("");
@@ -55,13 +55,12 @@ export default () => {
 	const CheckYear = (year, points, comms) => {
 		const string = year.toString();
 		const number = string.replace(/\D/g, "");
-		console.log("My year :", number);
 		setSystemCounter(points);
 		if (number > 9) {
 			setShow(true);
 			setSystemTitle("Commendations:");
 			if(comms.length){
-				setSystemCounter(comms);
+				setSystemCounter(comms.length);
 			} else{
 				setSystemCounter(0);
 			}
@@ -74,11 +73,7 @@ export default () => {
 
 		const svg = require("../assets/icons/paperclip-pink.svg");
 
-		console.log({ svg });
-
 		$("a").prepend(`<img src='${svg}' />`);
-
-		console.log("html", $.html());
 
 		return $.html()
 			.replace("<html><head></head><body>", "")
@@ -97,22 +92,24 @@ export default () => {
 					const record = response.content[0].fields;
 					setRecord(record);
 
-					// Seems that when there aren't any commendations present,
-					// this page never loads. Needs to be fixed
+					if(record.Commendations==null){
+						CheckYear(
+							record.Year_Group,
+							record.Green_Points,
+							0
+						);
+					}else{
+						setCommendations(record.Commendations_Name);
+						CheckYear(
+							record.Year_Group,
+							record.Green_Points,
+							record.Commendations
+						);
+					}
 
-					console.log("Record is", record);
-
-					CheckYear(
-						record.Year_Group,
-						record.Green_Points,
-						record.Commendations
-					);
-					setAchievement(parseContent(record.Achievement));
-
-					console.log(record);
+					setAchievement(parseContent(record.Achievement));			
 
 					setReports(parseContent(record.Reports));
-					setCommendations(record.Commendations_Name);
 
 					setLoading(false);
 				} catch (err) {
@@ -138,17 +135,17 @@ export default () => {
 						email={record.Email}
 					/>
 
-					{/* <CommendationsWrapper show={show}>
+					<CommendationsWrapper show={show}>
 						{commendations.length
-							? commendations.map((commendation) => (
+							 ? commendations.map((commendation) => (
 									<ProfileCommendations
-										dangerouslySetInnerHTML={{
-											__html: marked(commendation),
-										}}
-									/>
+										// dangerouslySetInnerHTML={{
+										// 	__html: marked(commendation),
+										// }}
+										>{commendation}</ProfileCommendations>
 							  ))
-							: ""}
-					</CommendationsWrapper> */}
+							 : "No commendation"} 
+					</CommendationsWrapper>
 
 					{/* `achievement` already marked */}
 					<ProfileContent achievement={achievement} report>

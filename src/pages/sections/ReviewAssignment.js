@@ -1,6 +1,6 @@
 import API from "../../api";
 import ActivityIndicator from "../../components/ActivityIndicator";
-import Button from "react-bootstrap/Button";
+import { Button } from "../../components/";
 import Form from "react-bootstrap/Form";
 import { Link } from "react-router-dom";
 import Rating from "@material-ui/lab/Rating";
@@ -9,14 +9,12 @@ import Section from "../../components/Section";
 import Table from "react-bootstrap/Table";
 import queryString from "query-string";
 
-
 export default ({ assignmentId }) => {
 	const [loading, setLoading] = React.useState("Loading reviews...");
 	const [error, setError] = React.useState();
 	const [reviews, setReviews] = React.useState();
 	const [record, setRecord] = React.useState({});
 	const [currentStatus, setCurrentStatus] = React.useState();
-
 
 	const fetchReviews = async () => {
 		try {
@@ -47,7 +45,7 @@ export default ({ assignmentId }) => {
 			review.fields[key] = props[key];
 		});
 
-		console.log("Status", props);
+		console.log("all props", props);
 
 		const {
 			// Teacher_Checked,
@@ -82,6 +80,33 @@ export default ({ assignmentId }) => {
 		// setReviews(copy);
 	};
 
+	const handleMarkAll = async () => {
+		const updatedReviews = reviews.map((value) => {
+			const copy = { ...value };
+
+			copy.fields.Status = "Handed in";
+
+			return copy;
+		});
+
+		setLoading(true);
+
+		API.update("reviews", updatedReviews)
+			.then(console.log)
+			.catch(console.error)
+			.finally(() => {
+				setLoading(false);
+				fetchReviews();
+			});
+
+		// try {
+		// 	await API.update(`reviews`, updatedReviews);
+		// } catch (err) {
+		// 	console.error(err);
+		// 	setError(err.toString());
+		// }
+	};
+
 	React.useEffect(() => {
 		fetchReviews();
 	}, []);
@@ -93,7 +118,11 @@ export default ({ assignmentId }) => {
 				<thead>
 					<tr>
 						<th>Name</th>
-						<th>Status</th>
+						<th>
+							<Button yellow onClick={handleMarkAll}>
+								Mark all as <i>Handed in</i>
+							</Button>
+						</th>
 						<th>Effort</th>
 						<th>Late</th>
 						<th>Feedback</th>
@@ -104,32 +133,33 @@ export default ({ assignmentId }) => {
 						reviews.map(({ fields }, index) => (
 							<tr key={`row-${index}`}>
 								<td key={`td-${1}`}>
-									<Link to={`/student/${fields.student_id}`}>
-										{fields.Student_Surname},{" "}
-										{fields.Student_Forename}
-									</Link>
+									{/* <Link to={`/student/${fields.student_id}`}> */}
+									{fields.Student_Surname},{" "}
+									{fields.Student_Forename}
+									{/* </Link> */}
 								</td>
 								<td key={`td-${2}`}>
-								<Form.Control
-									as="select"
-									required
-									defaultValue={fields.Status}
-									onChange={({ target }) =>
-									
-									editReview(fields.id, {
-											Status: 
-												target.options[target.selectedIndex]
-													.value,
-										})
-									}
-								>	
-									{/* <option value="Current Status">{fields.Status}</option> */}
-									<option value="Pending">
-										Pending
-									</option>
-									<option value="Handed In">Handed In</option>
-									<option value="Resubmit">Resubmit</option>
-								</Form.Control>
+									<Form.Control
+										as="select"
+										required
+										defaultValue={fields.Status}
+										onChange={({ target }) =>
+											editReview(fields.id, {
+												Status: target.options[
+													target.selectedIndex
+												].value,
+											})
+										}
+									>
+										{/* <option value="Current Status">{fields.Status}</option> */}
+										<option value="Pending">Pending</option>
+										<option value="Handed in">
+											Handed in
+										</option>
+										<option value="Resubmit">
+											Resubmit
+										</option>
+									</Form.Control>
 								</td>
 								<td key={`td-${3}`}>
 									<Rating
@@ -145,7 +175,7 @@ export default ({ assignmentId }) => {
 								<td key={`td-${4}`}>
 									<Form.Check
 										value={fields.Late}
-										checked= {fields.Late}
+										checked={fields.Late}
 										onChange={({ target }) =>
 											editReview(fields.id, {
 												Late: target.checked,
@@ -155,7 +185,8 @@ export default ({ assignmentId }) => {
 								</td>
 								<td key={`td-${5}`}>
 									<Form.Control
-										value={fields.Feedback}
+										as="textarea"
+										// value={fields.Feedback}
 										onBlur={({ target }) =>
 											editReview(fields.id, {
 												Feedback: target.value,

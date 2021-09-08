@@ -27,6 +27,8 @@ export default ({ query = null }) => {
 					throw new Error("Empty response");
 
 				setTable(response.content);
+
+				console.log(response.content);
 				setLoading(false);
 			} catch (err) {
 				setError(err.toString());
@@ -44,8 +46,8 @@ export default ({ query = null }) => {
 							key={`class-${index}`}
 						>
 							<Card.Body>
-								<Title>{fields.Title}</Title>
-								<Paragraph>{fields.Year_Group}</Paragraph>
+								<Title>{fields.id}</Title>
+								{/* <Paragraph>{fields.Year_Group}</Paragraph> */}
 							</Card.Body>
 							{fields.hasOwnProperty("Assignment_Count") && (
 								<Card.Footer style={{backgroundColor: "#DCEFC8", borderTop:"#DCEFC8"}}>
