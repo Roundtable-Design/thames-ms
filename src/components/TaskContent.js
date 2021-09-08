@@ -9,13 +9,13 @@ const Wrapper = styled.div`
 
 	width: 100vw;
 	max-width: 540px;
-	height: 100%;
+	/* height: 100%; */
 
 	background: #f8f8f8;
 `;
 
 const ContentWapper = styled.div`
-	//font-weight: 600;
+	box-sizing: border-box;
 	font-size: 15px;
 	line-height: 20px;
 
