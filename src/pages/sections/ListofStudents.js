@@ -1,5 +1,4 @@
 import { Grid } from "../../components";
-
 import API from "../../api";
 import React from "react";
 import Section from "../../components/Section";
@@ -7,9 +6,7 @@ import queryString from "query-string";
 import { useHistory } from "react-router-dom";
 
 import Table from "react-bootstrap/Table";
-import { Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
-
 import {Button} from "../../components";
 
 
@@ -118,10 +115,8 @@ export default ({ query = null , classId}) => {
 										<tr key={`row-${index}`} >
 										
 											<td key={`td-${1}`}>
-											{/* <Link to={`/student/${fields.student_id}`}> */}
 												{fields.Surname},{" "}
 												{fields.Forename}
-											{/* </Link> */}
 											</td>
 											<td>
 												{fields.Green_Points}
