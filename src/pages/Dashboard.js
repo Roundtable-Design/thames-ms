@@ -12,7 +12,7 @@ export default () => {
 	return (
 		<React.Fragment>
 			{role.student && <Assignments />}
-			{role.parent && <Students />}
+			{role.parent && <Container><Students /></Container>}
 			{role.staff && (
 				<React.Fragment>
 					<TeacherNav />

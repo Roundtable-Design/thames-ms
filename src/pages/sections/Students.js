@@ -35,6 +35,8 @@ export default ({ query = null }) => {
 				return 0;
 			});
 
+			console.log(response.content);
+
 			setRecords(sorted);
 
 			setLoading(false);
@@ -51,7 +53,7 @@ export default ({ query = null }) => {
 	return (
 		<Section title="Students" loading={loading} error={error}>
 			<Grid>
-				<Table style={{ width: "510px" }} striped bordered>
+				<Table style={{ maxWidth: "510px", minWidth: "290px" }} striped bordered>
 					<tbody>
 						{records &&
 							records.map(({ fields, id }, index) => (
@@ -60,6 +62,9 @@ export default ({ query = null }) => {
 										<a href={`/reviews?student_id=${id}`}>
 											{fields.Surname}, {fields.Forename}
 										</a>
+									</td>
+									<td key={`td-${1}`} style={{textAlign:"center"}}>
+											{fields.Year_Group}
 									</td>
 								</tr>
 							))}
