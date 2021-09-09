@@ -55,7 +55,7 @@ export default ({ query = null }) => {
 							records.map(({ fields, id }, index) => (
 								<tr key={`row-${index}`}>
 									<td key={`td-${1}`}>
-										<a href={`/reviews?student_id=${id}`}>
+										<a href={`/reviews?student_id=${fields.id}`}>
 											{fields.Surname}, {fields.Forename}
 										</a>
 									</td>
