@@ -13,7 +13,7 @@ import React from "react";
 import cheerio from "cheerio";
 import marked from "marked";
 import styled from "styled-components";
-import { useParams } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 import useRole from "../hooks/useRole";
 
 const ContentWrapper = styled.div`
@@ -38,7 +38,11 @@ const Wrapper = styled.div`
 	height: 100vh;
 `;
 
+
+
 export default () => {
+	const student_id =( new URLSearchParams(useLocation().search)).get("student_id");
+
 	const [role] = useRole();
 	const { id } = useParams();
 	const [record, setRecord] = React.useState(null);
@@ -55,6 +59,7 @@ export default () => {
 	const CheckYear = (year, points, comms) => {
 		const string = year.toString();
 		const number = string.replace(/\D/g, "");
+		console.log("number", number);
 		setSystemCounter(points);
 		if (number > 9) {
 			setShow(true);
@@ -84,13 +89,26 @@ export default () => {
 		if (loading) {
 			(async function () {
 				try {
-					const response = await API.get(`/me`);
+					let response;
+
+					console.log(student_id);
+
+					if(role.parent){
+						response = await API.get(`/students?id=${student_id}`);
+					}else{
+						response = await API.get(`/me`);
+					}
+
+					console.log(response.content[0])
+					
 
 					if (!response.hasOwnProperty("content"))
 						throw new Error("Empty response");
 
 					const record = response.content[0].fields;
 					setRecord(record);
+
+					console.log("record: ",record);
 
 					if(record.Commendations==null){
 						CheckYear(
@@ -107,9 +125,18 @@ export default () => {
 						);
 					}
 
-					setAchievement(parseContent(record.Achievement));			
+					if(record.hasOwnProperty("Achievement")){
+						setAchievement(parseContent(record.Achievement));	
+					}else{
+						setAchievement(achievement);
+					}
+					
+					if(record.hasOwnProperty("Reports")){
+						setReports(parseContent(record.Reports));
 
-					setReports(parseContent(record.Reports));
+					}else{
+						setReports("");
+					}
 
 					setLoading(false);
 				} catch (err) {
@@ -134,18 +161,19 @@ export default () => {
 						tutor={record.Tutor}
 						email={record.Email}
 					/>
-
-					<CommendationsWrapper show={show}>
-						{commendations.length
+					
+					{commendations.length
 							 ? commendations.map((commendation) => (
+						<CommendationsWrapper show={show}>
+						
 									<ProfileCommendations
 										// dangerouslySetInnerHTML={{
 										// 	__html: marked(commendation),
 										// }}
 										>{commendation}</ProfileCommendations>
-							  ))
-							 : "No commendation"} 
-					</CommendationsWrapper>
+							 
+						</CommendationsWrapper>
+ 					)) : ""}
 
 					{/* `achievement` already marked */}
 					<ProfileContent achievement={achievement} report>

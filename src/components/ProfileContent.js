@@ -178,9 +178,12 @@ const ProfileContent = ({ children, achievement, report, ...props }) => {
 		<Wrapper {...props}>
 			<Achievement>
 				<Title>Achievement</Title>
-				<Content
-					dangerouslySetInnerHTML={{ __html: marked(achievement) }}
-				/>
+				{achievement.length ?(
+					<Content
+						dangerouslySetInnerHTML={{ __html: marked(achievement) }}
+					/>
+				):(
+					<Content>"No achievements"</Content>)}
 			</Achievement>
 			<GeneralLinks>
 				<Title>Useful Information</Title>

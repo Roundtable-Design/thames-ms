@@ -7,7 +7,7 @@ import React from "react";
 import moment from "moment";
 import queryString from "query-string";
 import styled from "styled-components";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation, useParams } from "react-router-dom";
 
 const TasksWrapper = styled.div`
 	height: 50vh;
@@ -25,7 +25,11 @@ const CompletedWrapper = styled.div`
 	overflow: auto;
 `;
 
+
+
 export default ({ query = null }) => {
+	const student_id =( new URLSearchParams(useLocation().search)).get("student_id");
+
 	const [loading, setLoading] = React.useState("Loading assignments...");
 	const [error, setError] = React.useState(null);
 	const [dueButtonText, setDueButtonText] = React.useState("Count Down");
@@ -94,12 +98,9 @@ export default ({ query = null }) => {
 		(async function () {
 			try {
 				// Looks like a call to /reviews might make more sense. Just need to add fields in for the title of the assignment etc...
-
+				console.log("student id", student_id);
 				const response = await API.get(
-					"reviews" +
-						(query !== null
-							? `?${queryString.stringify(query)}`
-							: "")
+					`reviews?student_id=${student_id}`
 				);
 
 				if (!response.hasOwnProperty("content"))

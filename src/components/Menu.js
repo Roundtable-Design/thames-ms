@@ -1,6 +1,10 @@
 import API from "../api";
 import React from "react";
 import styled from "styled-components";
+import useRole from "../hooks/useRole";
+
+import {useLocation} from "react-router-dom";
+
 
 const Wrapper = styled.div`
 	box-sizing: border-box;
@@ -87,6 +91,11 @@ const Menu = ({
 	assignmentCounter,
 	pointsCounter,
 }) => {
+
+	const [role] = useRole();
+
+	const student_id =( new URLSearchParams(useLocation().search)).get("student_id");
+
 	const [record, setRecord] = React.useState(null);
 	const [count, setCount] = React.useState();
 	const [totalAssignment, setTotalAssignment] = React.useState();
@@ -101,9 +110,16 @@ const Menu = ({
 
 	React.useEffect(() => {
 		(async function () {
-			const {
-				content: [me],
-			} = await API.get(`/me`);
+			let me;
+
+			console.log(student_id);
+			
+			if(role.parent){
+				me = (await API.get(`/students?id=${student_id}`)).content[0]; 
+			} else {
+				me =( await API.get(`/me`)).content[0];
+				
+			}
 			let { content: reviews } = await API.get(`/reviews`);
 
 			let reviewsCount = reviews.filter(
@@ -131,14 +147,16 @@ const Menu = ({
 
 	return (
 		<Wrapper>
-			<MenuWrapper href="/">
+			<MenuWrapper href={`/${role.parent ? `reviews?student_id=${student_id}` : ""}`}>
 				<NavItem activeAssignment={activeAssignment} />
 				<Counters assignmentColor={true}>{totalAssignment}</Counters>
 			</MenuWrapper>
-			<MenuWrapper href="/profile">
+
+			<MenuWrapper href={`/profile${role.parent ? `?student_id=${student_id}` : ""}`}>
 				<NavProfile activeAvatar={activeAvatar} />
 				<Counters assignmentColor={false}>{count}</Counters>
 			</MenuWrapper>
+
 		</Wrapper>
 	);
 };
