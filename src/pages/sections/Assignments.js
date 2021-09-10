@@ -246,9 +246,10 @@ export default ({ query = null }) => {
 									fields.Status
 								)}
 								onClick={() =>
-									history.push(
-										`/assignment/${fields.assignment_id}`
-									)
+									PushAssignment(fields.assignment_id)
+									// history.push(
+									// 	`/assignment/${fields.assignment_id}`
+									// )
 								}
 								key={`assignment-${index}`}
 							/>
