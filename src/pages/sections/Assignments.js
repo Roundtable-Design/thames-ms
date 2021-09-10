@@ -8,6 +8,7 @@ import moment from "moment";
 import queryString from "query-string";
 import styled from "styled-components";
 import { useHistory, useLocation, useParams } from "react-router-dom";
+import useRole from "../../hooks/useRole";
 
 const TasksWrapper = styled.div`
 	height: 50vh;
@@ -28,6 +29,7 @@ const CompletedWrapper = styled.div`
 
 
 export default ({ query = null }) => {
+	const [role] = useRole();
 	const student_id =( new URLSearchParams(useLocation().search)).get("student_id");
 
 	const [loading, setLoading] = React.useState("Loading assignments...");
@@ -97,11 +99,20 @@ export default ({ query = null }) => {
 	React.useEffect(() => {
 		(async function () {
 			try {
-				// Looks like a call to /reviews might make more sense. Just need to add fields in for the title of the assignment etc...
-				console.log("student id", student_id);
-				const response = await API.get(
-					`reviews?student_id=${student_id}`
-				);
+				let response;
+				
+				if(role.parent){
+					response = await API.get(
+						`reviews?student_id=${student_id}`
+					);				
+				} else {
+					response = await API.get(
+						"reviews" +
+							(query !== null
+								? `?${queryString.stringify(query)}`
+								: ""));
+					
+				}
 
 				if (!response.hasOwnProperty("content"))
 					throw new Error("Empty response");
