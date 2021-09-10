@@ -111,16 +111,20 @@ const Menu = ({
 	React.useEffect(() => {
 		(async function () {
 			let me;
-
-			console.log(student_id);
+			let reviews;
 			
 			if(role.parent){
 				me = (await API.get(`/students?id=${student_id}`)).content[0]; 
+				reviews = (await API.get(`reviews?student_id=${student_id}`)).content;
 			} else {
-				me =( await API.get(`/me`)).content[0];
+				me = ( await API.get(`/me`)).content[0];
+				reviews = (await API.get(`/reviews`)).content;
 				
 			}
-			let { content: reviews } = await API.get(`/reviews`);
+			
+			console.log("check me", me);
+
+			console.log("check reviews", reviews);
 
 			let reviewsCount = reviews.filter(
 				({ fields }) => !fields.Student_Checked && !fields.is_Reminder
@@ -129,8 +133,6 @@ const Menu = ({
 			setTotalAssignment(reviewsCount);
 
 			setRecord(me);
-
-			setCount(me.fields.Green_Points);
 
 			if (
 				me.fields.hasOwnProperty("Year_Group") &&
@@ -141,6 +143,8 @@ const Menu = ({
 				} else {
 					setCount(me.fields.Commendations.length);
 				}
+			}else{
+				setCount(me.fields.Green_Points);
 			}
 		})();
 	}, []);
