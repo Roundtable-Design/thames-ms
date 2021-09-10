@@ -136,6 +136,18 @@ export default ({ query = null }) => {
 		}
 	};
 
+	const PushAssignment = (assignment_id) => {
+		if(role.parent){
+			history.push(
+				`/assignment/${assignment_id}?student_id=${student_id}`
+			)
+		} else{
+			history.push(
+				`/assignment/${assignment_id}`
+			)
+		}
+	}
+
 	return !loading ? (
 		<React.Fragment>
 			<TasksWrapper>
@@ -188,9 +200,10 @@ export default ({ query = null }) => {
 								resubmit={fields.Status == "Resubmit"}
 								handed={fields.Status == "Handed in"}
 								onClick={() =>
-									history.push(
-										`/assignment/${fields.assignment_id}`
-									)
+									PushAssignment(fields.assignment_id)
+									// history.push(
+									// 	`/assignment/${fields.assignment_id}`
+									// )
 								}
 								key={`assignment-${index}`}
 							/>

@@ -6,7 +6,7 @@ import TaskContent from "../components/TaskContent";
 import TaskHeader from "../components/TaskHeader";
 import cheerio from "cheerio";
 import moment from "moment";
-import { useParams } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 import useRole from "../hooks/useRole";
 import StudentViewFeedback from "../components/StudentViewFeedback";
 import styled from "styled-components";
@@ -20,6 +20,7 @@ const Wrapper = styled.div`
 
 export default () => {
 	const [role] = useRole();
+	const student_id =( new URLSearchParams(useLocation().search)).get("student_id");
 
 	const { id } = useParams();
 	const [record, setRecord] = React.useState(null);
