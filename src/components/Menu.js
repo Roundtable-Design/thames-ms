@@ -134,16 +134,19 @@ const Menu = ({
 
 			setRecord(me);
 
+			console.log({me});
+
 			if (
-				me.fields.hasOwnProperty("Year_Group") &&
-				me.fields.Year_Group[0].toString().replace(/\D/g, "") > 9
+				me.fields.Year_Group.toString().replace(/\D/g, "") > 9
 			) {
+				console.log("true funct")
 				if (me.fields.Commendations == null) {
 					setCount(0);
 				} else {
 					setCount(me.fields.Commendations.length);
 				}
 			}else{
+				console.log("false funct")
 				setCount(me.fields.Green_Points);
 			}
 		})();
