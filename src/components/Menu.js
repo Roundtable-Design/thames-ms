@@ -127,7 +127,7 @@ const Menu = ({
 			console.log("check reviews", reviews);
 
 			let reviewsCount = reviews.filter(
-				({ fields }) => !fields.Student_Checked && !fields.is_Reminder
+				({ fields }) => !fields.Student_Checked && !fields.is_Reminder[0]
 			).length;
 
 			setTotalAssignment(reviewsCount);
