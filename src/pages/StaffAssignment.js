@@ -52,6 +52,8 @@ export default () => {
 	React.useEffect(() => {
 		if (loading) {
 			fetchAssignment();
+
+			console.log("this is ass id", id);
 		}
 	}, [loading]);
 
@@ -91,8 +93,11 @@ export default () => {
 			console.log("new", { content });
 
 			setLoading(false);
-			fetchAssignment();
+			
 			setEdit(!edit);
+			console.log(edit);
+			setButtonText("Edit");
+			fetchAssignment();
 		} catch (err) {
 			console.error(err);
 			setError(err.toString());
