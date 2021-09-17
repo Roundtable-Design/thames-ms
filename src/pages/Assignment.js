@@ -31,6 +31,7 @@ export default () => {
 	const [studentCompleted, setStudentCompleted] = React.useState();
 	const [reviewId, setReviewId] = React.useState();
 	const [feedbackStatus, setFeedbackStatus] = React.useState();
+	const [subjectIcon, setSubjectIcon] = React.useState("../assets/icons/book-open.svg");
 	// const [feedbackEffort, setFeedbackEffort] = React.useState();
 	// const [feedbackMessage, setFeedbackMessage] = React.useState();
 
@@ -86,12 +87,19 @@ export default () => {
 						],
 					} = await API.get(`reviews?assignment_id=${id}`);
 
+					console.log({record});
 
+					if(record.hasOwnProperty("Class_Icon")){
+						setSubjectIcon(record.Class_Icon[0].url);
+					}else{
+						setSubjectIcon(subjectIcon);
+					}
 
 					setReviewId(reviewId);
 					setStudentCompleted(Student_Checked);
 					setRecord(record);
 					setContent(parseContent(record.Content));
+
 					setLoading(false);
 				} catch (err) {
 					setError(err.toString());
@@ -115,7 +123,7 @@ export default () => {
 	return !loading ? (
 		<Wrapper>
 			<TaskHeader
-				image={record.Class_Icon[0].url}
+				image={subjectIcon}
 				subject={record.Class_Name}
 				week={translateDatetoWeek(record.Due)}
 				date={translateDate(record.Due)}
