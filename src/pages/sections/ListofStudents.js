@@ -36,6 +36,8 @@ export default ({ query = null , classId}) => {
 				throw new Error("Empty response");
 
 			setRecords(response.content);
+
+			// console.log("student list test", response.content)
 			setLoading(false);
 
 		} catch (err) {
@@ -45,22 +47,34 @@ export default ({ query = null , classId}) => {
 	};
 
 	const editPoints = async (student_id, props) => {
-		const record = records.find(({ id }) => id === student_id);
+		const record = records.find(({ fields }) => fields.id === student_id);
+
+		// console.log("starting edit points", record);
+		
 
 		Object.keys(props).forEach((key) => {
 			record.fields[key] = props[key];
 		});
 
+		// console.log("edited props", props);
+
 		const {
 			Green_Points,
 		} = record.fields;
 
+		// console.log("This new green point", Green_Points)
+
+		const student__id = record.fields._id;
+		// console.log("found the stduent ", student_id)
+
 		try {
 			setLoading("Updating records...");
 
-			const response = await API.update(`student/${student_id}`, {
-				Green_Points
+			const response = await API.update(`student/${student__id}`, {
+				Green_Points,
 			});
+
+			// console.log("api call susscess", response)
 
 			if (!response.hasOwnProperty("content"))
 				throw new Error("Empty response");
@@ -77,6 +91,8 @@ export default ({ query = null , classId}) => {
 	const addPoint = (studentID, studentPoint) => {
 		setGreen(green);
 		studentPoint++;
+		// console.log("studentPoint after", studentPoint);
+
 		editPoints(studentID, {
 			Green_Points: studentPoint,
 		})
@@ -111,31 +127,26 @@ export default ({ query = null , classId}) => {
 						{records &&
 							records.map(({ fields }, index) => (
 								<React.Fragment>
-									{fields.class_year_id.includes(classId) ? (
-										<tr key={`row-${index}`} >
-										
-											<td key={`td-${1}`}>
-												{fields.Surname},{" "}
-												{fields.Forename}
-											</td>
-											<td>
-												{fields.Green_Points}
-											</td>
-											<td>
-												<Button 
-													yellow
-													onClick={() =>
-														addPoint(fields.id, fields.Green_Points)
-													}
-													>
-														Add Green Point
-												</Button>
-											</td>
-										</tr>
-									):(
-										""
-									)} 
-
+									<tr key={`row-${index}`} >
+									
+										<td key={`td-${1}`}>
+											{fields.Surname},{" "}
+											{fields.Forename}
+										</td>
+										<td>
+											{fields.Green_Points}
+										</td>
+										<td>
+											<Button 
+												yellow
+												onClick={() =>
+													addPoint(fields.id, fields.Green_Points)
+												}
+												>
+													Add Green Point
+											</Button>
+										</td>
+									</tr>
 								</React.Fragment>
 									
 							))} 
