@@ -26,6 +26,8 @@ export default () => {
 	const [error, setError] = React.useState();
 	const [table, setTable] = React.useState();
 	const [studentsTable, setStudentsTable] = React.useState();
+	const [staffID, setStaffID] = React.useState();
+
 	const [eventType, setEventType] = React.useState();
 	const [classId, setClassId] = React.useState();
 	const [record, setRecord] = React.useState({});
@@ -61,6 +63,8 @@ export default () => {
 
 			console.log("Assignment is ", record);
 
+			// what is the class id
+
 			// Create new assignment
 			const assignmentResponse = await API.create("assignment", {
 				record,
@@ -95,6 +99,9 @@ export default () => {
 				console.log("Starting...");
 				const response = await API.get("classes");
 				const students = await API.get("students");
+				const staff = await API.get("me");
+
+				// console.log(staff.content[0].id)
 
 				if (!response.hasOwnProperty("content"))
 					throw new Error("Empty response");
@@ -104,6 +111,8 @@ export default () => {
 				setTable(response.content);
 				
 				setStudentsTable(students.content);
+				setStaffID(staff.content[0].id);
+
 				console.log("Ending...");
 				setClassesLoading(false);
 				setStudentsLoading(false);
@@ -159,9 +168,11 @@ export default () => {
 
 								editRecord({
 									class_id: [class_id],
-									student_id: table.find(
-										({ id }) => id === class_id
-									).fields.student_id,
+									staff_id: [staffID],
+									student_id: [studentsTable.find(
+										({ fields }) => fields.id === table.find(
+											({ id }) => id === class_id
+										).fields.student_id).id],
 									
 								});
 							}}
