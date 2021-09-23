@@ -9,12 +9,6 @@ import TaskContent from "../components/TaskContent";
 import TaskHeader from "../components/TaskHeader";
 import cheerio from "cheerio";
 import moment from "moment";
-import { useParams } from "react-router-dom";
-import { useParams, useLocation } from "react-router-dom";
-
-import useRole from "../hooks/useRole";
-import StudentViewFeedback from "../components/StudentViewFeedback";
-
 import styled from "styled-components";
 import useRole from "../hooks/useRole";
 
@@ -26,10 +20,6 @@ const Wrapper = styled.div`
 
 export default () => {
 	const [role] = useRole();
-	const student_id = new URLSearchParams(useLocation().search).get(
-		"student_id"
-	);
-
 	const student_id = new URLSearchParams(useLocation().search).get(
 		"student_id"
 	);
@@ -54,9 +44,6 @@ export default () => {
 	};
 
 	const translateDatetoWeek = (date) => {
-		return moment(new Date(date)).format("dddd");
-		return moment(new Date(date)).format("dddd").substring(0, 3);
-
 		return moment(new Date(date)).format("dddd").substring(0, 3);
 	};
 
