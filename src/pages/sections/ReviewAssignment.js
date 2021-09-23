@@ -9,7 +9,7 @@ import Section from "../../components/Section";
 import Table from "react-bootstrap/Table";
 import queryString from "query-string";
 
-export default ({ assignmentId }) => {
+export default ({ assignmentId, onFetch }) => {
 	const [loading, setLoading] = React.useState("Loading reviews...");
 	const [error, setError] = React.useState();
 	const [reviews, setReviews] = React.useState();
@@ -76,35 +76,32 @@ export default ({ assignmentId }) => {
 			console.error(err);
 			setError(err.toString());
 		}
-
-		// setReviews(copy);
 	};
 
 	const handleMarkAll = async () => {
-		const updatedReviews = reviews.map((value) => {
-			const copy = { ...value };
-
-			copy.fields.Status = "Handed in";
-
-			return copy;
+		const updatedReviews = reviews.map(({ id }) => {
+			return {
+				id,
+				fields: {
+					Status: "Handed in",
+				},
+			};
 		});
 
 		setLoading(true);
 
-		API.update("reviews", updatedReviews)
-			.then(console.log)
-			.catch(console.error)
-			.finally(() => {
-				setLoading(false);
-				fetchReviews();
-			});
+		try {
+			await API.update("reviews", updatedReviews);
+		} catch (err) {
+			console.error(err);
+			setError(err.toString());
+		}
 
-		// try {
-		// 	await API.update(`reviews`, updatedReviews);
-		// } catch (err) {
-		// 	console.error(err);
-		// 	setError(err.toString());
-		// }
+		// Last of all – this needs to refresh, but it doesn't
+
+		fetchReviews();
+
+		setLoading(false);
 	};
 
 	React.useEffect(() => {

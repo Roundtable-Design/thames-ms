@@ -1,16 +1,22 @@
+import { useLocation, useParams } from "react-router-dom";
+
 import API from "../api";
 import Menu from "../components/Menu";
 import React from "react";
 import ReviewAssignment from "./sections/ReviewAssignment";
+import StudentViewFeedback from "../components/StudentViewFeedback";
 import TaskContent from "../components/TaskContent";
 import TaskHeader from "../components/TaskHeader";
 import cheerio from "cheerio";
 import moment from "moment";
+<<<<<<< Updated upstream
 import { useParams } from "react-router-dom";
 import useRole from "../hooks/useRole";
 import StudentViewFeedback from "../components/StudentViewFeedback";
+=======
+>>>>>>> Stashed changes
 import styled from "styled-components";
-
+import useRole from "../hooks/useRole";
 
 const Wrapper = styled.div`
 	box-sizing: border-box;
@@ -20,6 +26,12 @@ const Wrapper = styled.div`
 
 export default () => {
 	const [role] = useRole();
+<<<<<<< Updated upstream
+=======
+	const student_id = new URLSearchParams(useLocation().search).get(
+		"student_id"
+	);
+>>>>>>> Stashed changes
 
 	const { id } = useParams();
 	const [record, setRecord] = React.useState(null);
@@ -33,14 +45,16 @@ export default () => {
 	// const [feedbackEffort, setFeedbackEffort] = React.useState();
 	// const [feedbackMessage, setFeedbackMessage] = React.useState();
 
-
-
 	const translateDate = (date) => {
 		return moment(new Date(date)).format("MMM Do YY");
 	};
 
 	const translateDatetoWeek = (date) => {
+<<<<<<< Updated upstream
 		return moment(new Date(date)).format("dddd");
+=======
+		return moment(new Date(date)).format("dddd").substring(0, 3);
+>>>>>>> Stashed changes
 	};
 
 	const parseContent = (content) => {
@@ -66,15 +80,16 @@ export default () => {
 
 					const record = response.content[0].fields;
 
-					const assignmentReviews = await API.get(`reviews?assignment_id=${id}`);
+					const assignmentReviews = await API.get(
+						`reviews?assignment_id=${id}`
+					);
 					const feedbackContent = assignmentReviews.content[0].fields;
 					setFeedbackContent(feedbackContent);
 					setFeedbackStatus(feedbackContent.Status);
-					if(feedbackContent.Status==null){
-						setFeedbackStatus("Pending")
+					if (feedbackContent.Status == null) {
+						setFeedbackStatus("Pending");
 					}
-					
-					
+
 					console.log(feedbackContent);
 
 					const {
@@ -84,8 +99,6 @@ export default () => {
 							},
 						],
 					} = await API.get(`reviews?assignment_id=${id}`);
-
-
 
 					setReviewId(reviewId);
 					setStudentCompleted(Student_Checked);
@@ -107,10 +120,6 @@ export default () => {
 		setStudentCompleted(!studentCompleted);
 	};
 
-	const handleAssignmentFeedbackStatus = (status) =>{
-
-	}
-
 	return !loading ? (
 		<Wrapper>
 			<TaskHeader
@@ -128,18 +137,16 @@ export default () => {
 				onChange={handleCompletedChange}
 			>
 				<div dangerouslySetInnerHTML={{ __html: content }} />
-
-				
 			</TaskContent>
-			<StudentViewFeedback 
+			<StudentViewFeedback
 				content={feedbackContent.Feedback}
 				status={feedbackStatus}
 				effort={feedbackContent.Effort}
-				pending={feedbackStatus=="Pending"}
-				handed={feedbackStatus=="Handed in"}
-				resubmit={feedbackStatus=="Resubmit"}
-				/>
-			
+				pending={feedbackStatus == "Pending"}
+				handed={feedbackStatus == "Handed in"}
+				resubmit={feedbackStatus == "Resubmit"}
+			/>
+
 			<Menu activeAssignment={true} activeAvatar={false} />
 		</Wrapper>
 	) : (
