@@ -9,12 +9,12 @@ import TaskContent from "../components/TaskContent";
 import TaskHeader from "../components/TaskHeader";
 import cheerio from "cheerio";
 import moment from "moment";
-<<<<<<< Updated upstream
 import { useParams } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
+
 import useRole from "../hooks/useRole";
 import StudentViewFeedback from "../components/StudentViewFeedback";
-=======
->>>>>>> Stashed changes
+
 import styled from "styled-components";
 import useRole from "../hooks/useRole";
 
@@ -26,12 +26,13 @@ const Wrapper = styled.div`
 
 export default () => {
 	const [role] = useRole();
-<<<<<<< Updated upstream
-=======
 	const student_id = new URLSearchParams(useLocation().search).get(
 		"student_id"
 	);
->>>>>>> Stashed changes
+
+	const student_id = new URLSearchParams(useLocation().search).get(
+		"student_id"
+	);
 
 	const { id } = useParams();
 	const [record, setRecord] = React.useState(null);
@@ -42,6 +43,9 @@ export default () => {
 	const [studentCompleted, setStudentCompleted] = React.useState();
 	const [reviewId, setReviewId] = React.useState();
 	const [feedbackStatus, setFeedbackStatus] = React.useState();
+	const [subjectIcon, setSubjectIcon] = React.useState(
+		"../assets/icons/book-open.svg"
+	);
 	// const [feedbackEffort, setFeedbackEffort] = React.useState();
 	// const [feedbackMessage, setFeedbackMessage] = React.useState();
 
@@ -50,11 +54,10 @@ export default () => {
 	};
 
 	const translateDatetoWeek = (date) => {
-<<<<<<< Updated upstream
 		return moment(new Date(date)).format("dddd");
-=======
 		return moment(new Date(date)).format("dddd").substring(0, 3);
->>>>>>> Stashed changes
+
+		return moment(new Date(date)).format("dddd").substring(0, 3);
 	};
 
 	const parseContent = (content) => {
@@ -100,10 +103,19 @@ export default () => {
 						],
 					} = await API.get(`reviews?assignment_id=${id}`);
 
+					console.log({ record });
+
+					if (record.hasOwnProperty("Class_Icon")) {
+						setSubjectIcon(record.Class_Icon[0].url);
+					} else {
+						setSubjectIcon(subjectIcon);
+					}
+
 					setReviewId(reviewId);
 					setStudentCompleted(Student_Checked);
 					setRecord(record);
 					setContent(parseContent(record.Content));
+
 					setLoading(false);
 				} catch (err) {
 					setError(err.toString());
@@ -123,7 +135,7 @@ export default () => {
 	return !loading ? (
 		<Wrapper>
 			<TaskHeader
-				image={record.Class_Icon[0].url}
+				image={subjectIcon}
 				subject={record.Class_Name}
 				week={translateDatetoWeek(record.Due)}
 				date={translateDate(record.Due)}

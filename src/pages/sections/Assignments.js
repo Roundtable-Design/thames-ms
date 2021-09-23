@@ -7,13 +7,14 @@ import React from "react";
 import moment from "moment";
 import queryString from "query-string";
 import styled from "styled-components";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation, useParams } from "react-router-dom";
+import useRole from "../../hooks/useRole";
 
 const TasksWrapper = styled.div`
 	height: 50vh;
 	padding: 0;
 	margin: 0;
-	position: relative;
+	position: sticky;
 	overflow: auto;
 `;
 
@@ -25,7 +26,12 @@ const CompletedWrapper = styled.div`
 	overflow: auto;
 `;
 
+
+
 export default ({ query = null }) => {
+	const [role] = useRole();
+	const student_id =( new URLSearchParams(useLocation().search)).get("student_id");
+
 	const [loading, setLoading] = React.useState("Loading assignments...");
 	const [error, setError] = React.useState(null);
 	const [dueButtonText, setDueButtonText] = React.useState("Count Down");
@@ -93,14 +99,22 @@ export default ({ query = null }) => {
 	React.useEffect(() => {
 		(async function () {
 			try {
-				// Looks like a call to /reviews might make more sense. Just need to add fields in for the title of the assignment etc...
+				let response;
+				
+				if(role.parent){
+					response = await API.get(
+						`reviews?student_id=${student_id}`
+					);				
+				} else {
+					response = await API.get(
+						"reviews" +
+							(query !== null
+								? `?${queryString.stringify(query)}`
+								: ""));
+					
+				}
 
-				const response = await API.get(
-					"reviews" +
-						(query !== null
-							? `?${queryString.stringify(query)}`
-							: "")
-				);
+				console.log(response.content);
 
 				if (!response.hasOwnProperty("content"))
 					throw new Error("Empty response");
@@ -124,6 +138,18 @@ export default ({ query = null }) => {
 		}
 	};
 
+	const PushAssignment = (assignment_id) => {
+		if(role.parent){
+			history.push(
+				`/assignment/${assignment_id}?student_id=${student_id}`
+			)
+		} else{
+			history.push(
+				`/assignment/${assignment_id}`
+			)
+		}
+	}
+
 	return !loading ? (
 		<React.Fragment>
 			<TasksWrapper>
@@ -141,11 +167,11 @@ export default ({ query = null }) => {
 						)
 						.map(({ fields }, index) => (
 							<ListItem
-								reminder={fields.is_Reminder}
+								reminder={fields.is_Reminder[0] || false}
 								hide={
 									fields.Student_Checked ||
 									// fields.Teacher_Checked ||
-									(fields.is_Reminder &&
+									(fields.is_Reminder[0] &&
 										CheckOverdueReminder(
 											fields.Assignment_Due
 										))
@@ -176,9 +202,10 @@ export default ({ query = null }) => {
 								resubmit={fields.Status == "Resubmit"}
 								handed={fields.Status == "Handed in"}
 								onClick={() =>
-									history.push(
-										`/assignment/${fields.assignment_id}`
-									)
+									PushAssignment(fields.assignment_id)
+									// history.push(
+									// 	`/assignment/${fields.assignment_id}`
+									// )
 								}
 								key={`assignment-${index}`}
 							/>
@@ -221,15 +248,16 @@ export default ({ query = null }) => {
 									fields.Status
 								)}
 								onClick={() =>
-									history.push(
-										`/assignment/${fields.assignment_id}`
-									)
+									PushAssignment(fields.assignment_id)
+									// history.push(
+									// 	`/assignment/${fields.assignment_id}`
+									// )
 								}
 								key={`assignment-${index}`}
 							/>
 						))
 				) : (
-					<p>No active assignments</p>
+					<p>No complete assignments</p>
 				)}
 			</CompletedWrapper>
 			<Menu activeAssignment={true} activeAvatar={false} />

@@ -33,6 +33,8 @@ const Wrapper = styled.div`
     justify-content: center;
     align-items: center;
 
+    z-index: 100;
+
 `;
 
 const SubjectImage = styled.div`

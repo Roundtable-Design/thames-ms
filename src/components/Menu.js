@@ -126,25 +126,25 @@ const Menu = ({
 			console.log("check reviews", reviews);
 
 			let reviewsCount = reviews.filter(
-				({ fields }) => !fields.Student_Checked && !fields.is_Reminder
+				({ fields }) =>
+					!fields.Student_Checked && !fields.is_Reminder[0]
 			).length;
 
 			setTotalAssignment(reviewsCount);
 
 			setRecord(me);
 
-			setCount(me.fields.Green_Points);
+			console.log({ me });
 
-			if (
-				me.fields.hasOwnProperty("Year_Group") &&
-				me.fields.Year_Group[0].toString().replace(/\D/g, "") > 9
-			) {
+			if (me.fields.Year_Group.toString().replace(/\D/g, "") > 9) {
+				console.log("true funct");
 				if (me.fields.Commendations == null) {
 					setCount(0);
 				} else {
 					setCount(me.fields.Commendations.length);
 				}
 			} else {
+				console.log("false funct");
 				setCount(me.fields.Green_Points);
 			}
 		})();

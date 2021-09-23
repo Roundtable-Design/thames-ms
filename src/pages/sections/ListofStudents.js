@@ -1,0 +1,158 @@
+import { Grid } from "../../components";
+import API from "../../api";
+import React from "react";
+import Section from "../../components/Section";
+import queryString from "query-string";
+import { useHistory } from "react-router-dom";
+
+import Table from "react-bootstrap/Table";
+import { useParams } from "react-router-dom";
+import {Button} from "../../components";
+
+
+
+export default ({ query = null , classId}) => {
+	const { id } = useParams();
+
+	const [loading, setLoading] = React.useState("Loading students...");
+	const [error, setError] = React.useState();
+	const [records, setRecords] = React.useState();
+
+	const [green, setGreen] = React.useState(1);
+
+	const history = useHistory();
+
+	const fetchStudents = async () => {
+		try {
+			const response = await API.get(
+				
+				"students" +
+					(query !== null
+						? `?${queryString.stringify(query)}`
+						: "")
+			);
+			
+			if (!response.hasOwnProperty("content"))
+				throw new Error("Empty response");
+
+			setRecords(response.content);
+
+			// console.log("student list test", response.content)
+			setLoading(false);
+
+		} catch (err) {
+			console.error(err);
+			setError(err.toString());
+		}
+	};
+
+	const editPoints = async (student_id, props) => {
+		const record = records.find(({ fields }) => fields.id === student_id);
+
+		// console.log("starting edit points", record);
+		
+
+		Object.keys(props).forEach((key) => {
+			record.fields[key] = props[key];
+		});
+
+		// console.log("edited props", props);
+
+		const {
+			Green_Points,
+		} = record.fields;
+
+		// console.log("This new green point", Green_Points)
+
+		const student__id = record.fields._id;
+		// console.log("found the stduent ", student_id)
+
+		try {
+			setLoading("Updating records...");
+
+			const response = await API.update(`student/${student__id}`, {
+				Green_Points,
+			});
+
+			// console.log("api call susscess", response)
+
+			if (!response.hasOwnProperty("content"))
+				throw new Error("Empty response");
+
+			setLoading(false);
+
+			fetchStudents();
+		} catch (err) {
+			console.error(err);
+			setError(err.toString());
+		}
+	};
+
+	const addPoint = (studentID, studentPoint) => {
+		setGreen(green);
+		studentPoint++;
+		// console.log("studentPoint after", studentPoint);
+
+		editPoints(studentID, {
+			Green_Points: studentPoint,
+		})
+	}
+
+	React.useEffect(() => {
+		fetchStudents();
+	}, []);
+
+	return (
+		<Section title="Students" loading={loading} error={error}>
+			<Grid>
+				<Table style={{ width: "510px"}} striped bordered>
+					<thead>
+						<tr>
+							<th>Name</th>
+							<th>Total Green Points</th>
+							<th>
+								{/* <Button 
+									yellow */}
+									{/* onClick={() =>
+										addPoint()
+									 } */}
+									{/* > */}
+										Add Green Points 
+										{/* to All */}
+								{/* </Button> */}
+							</th>
+						</tr>
+					</thead>
+					<tbody>
+						{records &&
+							records.map(({ fields }, index) => (
+								<React.Fragment>
+									<tr key={`row-${index}`} >
+									
+										<td key={`td-${1}`}>
+											{fields.Surname},{" "}
+											{fields.Forename}
+										</td>
+										<td>
+											{fields.Green_Points}
+										</td>
+										<td>
+											<Button 
+												yellow
+												onClick={() =>
+													addPoint(fields.id, fields.Green_Points)
+												}
+												>
+													Add Green Point
+											</Button>
+										</td>
+									</tr>
+								</React.Fragment>
+									
+							))} 
+					</tbody>
+				</Table>
+			</Grid>
+		</Section>
+	);
+};

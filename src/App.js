@@ -75,7 +75,8 @@ const App = () => {
 				{/* {role.none && <Redirect from="/" to="/login" />} */}
 				{/* <Route component={NotFound} /> */}
 			</Switch>
-			<Footer />
+			{role.staff && (<Footer />)}
+			
 		</BrowserRouter>
 	);
 };

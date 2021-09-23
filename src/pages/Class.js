@@ -7,7 +7,7 @@ import Header from "../components/Header";
 import React from "react";
 import Section from "../components/Section";
 import StaffAssignments from "./sections/StaffAssignments";
-import Students from "./sections/Students";
+import ListofStudents from "./sections/ListofStudents";
 import Table from "react-bootstrap/Table";
 import { useParams } from "react-router-dom";
 import TeacherNav from "../components/TeacherNav";
@@ -60,7 +60,7 @@ export default () => {
 					}}
 				/>
 
-				{record && <Students 
+				{record && <ListofStudents 
 						query={{
 							class_id: id,
 						}}
