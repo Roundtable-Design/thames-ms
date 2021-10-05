@@ -23,6 +23,9 @@ export default () => {
 	const [studentsLoading, setStudentsLoading] = React.useState(
 		"Loading students..."
 	);
+	const [staffLoading, setStaffLoading] = React.useState(
+		"Loading staff..."
+	);
 	const [error, setError] = React.useState();
 	const [table, setTable] = React.useState();
 	const [studentsTable, setStudentsTable] = React.useState();
@@ -90,6 +93,8 @@ export default () => {
 			copy[key] = props[key];
 		});
 
+		console.log({copy});
+
 		setRecord(copy);
 	};
 
@@ -111,11 +116,13 @@ export default () => {
 				setTable(response.content);
 				
 				setStudentsTable(students.content);
+
 				setStaffID(staff.content[0].id);
 
 				console.log("Ending...");
 				setClassesLoading(false);
 				setStudentsLoading(false);
+				setStaffLoading(false);
 				
 
 			} catch (err) {
@@ -169,10 +176,12 @@ export default () => {
 								editRecord({
 									class_id: [class_id],
 									staff_id: [staffID],
-									student_id: [studentsTable.find(
-										({ fields }) => fields.id === table.find(
-											({ id }) => id === class_id
-										).fields.student_id).id],
+									student_id: table.find(({id}) => id === class_id).fields.student_id.split(", ").map(niceId => studentsTable.find(({fields}) => fields.id === niceId).id),
+									
+									// [studentsTable.find(
+									// 	({ fields }) => fields.id === table.find(
+									// 		({ id }) => id === class_id
+									// 	).fields.student_id).id]
 									
 								});
 							}}
