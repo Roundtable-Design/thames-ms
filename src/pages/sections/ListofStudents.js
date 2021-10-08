@@ -8,6 +8,8 @@ import { useHistory } from "react-router-dom";
 import Table from "react-bootstrap/Table";
 import { useParams } from "react-router-dom";
 import {Button} from "../../components";
+import Form from "react-bootstrap/Form";
+
 
 
 
@@ -19,6 +21,9 @@ export default ({ query = null , classId}) => {
 	const [records, setRecords] = React.useState();
 
 	const [green, setGreen] = React.useState(1);
+	const [buttonState, setButtonState]  = React.useState(0);
+
+	let count;
 
 	const history = useHistory();
 
@@ -79,6 +84,7 @@ export default ({ query = null , classId}) => {
 			if (!response.hasOwnProperty("content"))
 				throw new Error("Empty response");
 
+
 			setLoading(false);
 
 			fetchStudents();
@@ -98,6 +104,19 @@ export default ({ query = null , classId}) => {
 		})
 	}
 
+	// const UpdateButtonState = (checked, currentCount) =>{
+	// 	console.log(checked)
+	// 	if(checked){
+	// 		currentCount++;
+	// 		setButtonState(currentCount);
+	// 		console.log(currentCount);
+	// 	}else{
+	// 		currentCount--;
+	// 		setButtonState(currentCount);
+	// 		console.log(currentCount);
+
+	// 	}
+	// } 
 	React.useEffect(() => {
 		fetchStudents();
 	}, []);
@@ -121,6 +140,18 @@ export default ({ query = null , classId}) => {
 										{/* to All */}
 								{/* </Button> */}
 							</th>
+							{/* <th>
+								<Button 
+									green={buttonState>=('input:checkbox:checked').length}
+									grey={buttonState<('input:checkbox:checked').length} 
+									disabled={buttonState>=('input:checkbox:checked').length}
+									onClick={() =>
+										console.log("clicked")
+									 } 
+									 >
+										Add multiple Green Points 
+								</Button>
+							</th> */}
 						</tr>
 					</thead>
 					<tbody>
@@ -146,6 +177,16 @@ export default ({ query = null , classId}) => {
 													Add Green Point
 											</Button>
 										</td>
+										{/* <td style={{padding: "50px 60px"}}>
+										<Form.Check
+											// value={false}
+											// checked={false}
+											style={{textAlign:"center"}}
+											onChange={({ target }) =>{
+												UpdateButtonState(target.checked, count);
+												}										}
+											/>
+										</td> */}
 									</tr>
 								</React.Fragment>
 									
