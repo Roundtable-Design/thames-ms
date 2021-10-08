@@ -124,6 +124,13 @@ export const Button = styled.button`
 		color: #002E5D;	
 	`}
 
+	${({ grey }) =>
+		grey &&
+		`
+		border: 3px solid #E3E3DD;
+		color: #E3E3DD;	
+	`}
+
 	${({ pink }) =>
 		pink &&
 		`

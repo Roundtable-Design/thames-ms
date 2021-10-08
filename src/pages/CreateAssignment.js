@@ -38,26 +38,6 @@ export default () => {
 	// removed 'Short Report' and 'Long Report' from radioEventTypes for now
 
 	const radioEventTypes = ["Assignment", "Reminder"];
-	const gradesTypes = [
-		"9",
-		"9/8",
-		"8",
-		"8/7",
-		"7",
-		"7/6",
-		"6",
-		"6/5",
-		"5",
-		"5/4",
-		"4",
-		"4/3",
-		"3",
-		"3/2",
-		"2",
-		"2/1",
-		"1",
-	];
-	const performanceRanks = [1, 2, 3, 4];
 
 	const handleSubmit = async (event) => {
 		event.preventDefault();
@@ -114,7 +94,7 @@ export default () => {
 					throw new Error("Empty student response");
 
 				setTable(response.content);
-				
+
 				setStudentsTable(students.content);
 
 				setStaffID(staff.content[0].id);
@@ -131,12 +111,12 @@ export default () => {
 		})();
 	}, []);
 
-	const SetCreateType =(key)=>{
+	const SetCreateType = (key) => {
 		setEventType(key);
-		if(key==1){
-			editRecord({is_Reminder: true});
+		if (key == 1) {
+			editRecord({ is_Reminder: true });
 		}
-	}
+	};
 
 	return (
 		<React.Fragment>
@@ -170,8 +150,9 @@ export default () => {
 							required
 							as="select"
 							onChange={({ target }) => {
-								const class_id = target.options[target.selectedIndex].value;
-								setClassId(class_id)
+								const class_id =
+									target.options[target.selectedIndex].value;
+								setClassId(class_id);
 
 								editRecord({
 									class_id: [class_id],
@@ -189,10 +170,15 @@ export default () => {
 							<option value="">-- Select a class --</option>
 							{table &&
 								table.map(({ id, fields }) => (
-									<option value={id}>
-										{fields.id}
-									</option>
+									<option value={id}>{fields.id}</option>
 								))}
+
+							{/* {
+								id: "record id",
+								fields : {
+									id: "nice looking id"
+								}
+							} */}
 						</Form.Control>
 					</Section>
 					{!(eventType == 2 || eventType == 3) && (
@@ -230,7 +216,7 @@ export default () => {
 											type="date"
 											onChange={({ target }) =>
 												editRecord({
-													Set: target.value
+													Set: target.value,
 												})
 											}
 										/>
@@ -242,7 +228,7 @@ export default () => {
 											type="date"
 											onChange={({ target }) =>
 												editRecord({
-													Due: target.value
+													Due: target.value,
 												})
 											}
 										/>
@@ -288,7 +274,7 @@ export default () => {
 												onChange={({ target }) =>
 													editRecord({
 														Expected_Time:
-															target.value
+															target.value,
 													})
 												}
 											/>

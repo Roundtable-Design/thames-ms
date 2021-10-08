@@ -1,10 +1,8 @@
 import API from "../api";
 import React from "react";
 import styled from "styled-components";
+import { useLocation } from "react-router-dom";
 import useRole from "../hooks/useRole";
-
-import {useLocation} from "react-router-dom";
-
 
 const Wrapper = styled.div`
 	box-sizing: border-box;
@@ -91,10 +89,11 @@ const Menu = ({
 	assignmentCounter,
 	pointsCounter,
 }) => {
-
 	const [role] = useRole();
 
-	const student_id =( new URLSearchParams(useLocation().search)).get("student_id");
+	const student_id = new URLSearchParams(useLocation().search).get(
+		"student_id"
+	);
 
 	const [record, setRecord] = React.useState(null);
 	const [count, setCount] = React.useState();
@@ -112,41 +111,40 @@ const Menu = ({
 		(async function () {
 			let me;
 			let reviews;
-			
-			if(role.parent){
-				me = (await API.get(`/students?id=${student_id}`)).content[0]; 
-				reviews = (await API.get(`reviews?student_id=${student_id}`)).content;
+
+			if (role.parent) {
+				me = (await API.get(`/students?id=${student_id}`)).content[0];
+				reviews = (await API.get(`reviews?student_id=${student_id}`))
+					.content;
 			} else {
-				me = ( await API.get(`/me`)).content[0];
+				me = (await API.get(`/me`)).content[0];
 				reviews = (await API.get(`/reviews`)).content;
-				
 			}
-			
+
 			console.log("check me", me);
 
 			console.log("check reviews", reviews);
 
 			let reviewsCount = reviews.filter(
-				({ fields }) => !fields.Student_Checked && !fields.is_Reminder[0]
+				({ fields }) =>
+					!fields.Student_Checked && !fields.is_Reminder[0]
 			).length;
 
 			setTotalAssignment(reviewsCount);
 
 			setRecord(me);
 
-			console.log({me});
+			console.log({ me });
 
-			if (
-				me.fields.Year_Group.toString().replace(/\D/g, "") > 9
-			) {
-				console.log("true funct")
+			if (me.fields.Year_Group.toString().replace(/\D/g, "") > 9) {
+				console.log("true funct");
 				if (me.fields.Commendations == null) {
 					setCount(0);
 				} else {
 					setCount(me.fields.Commendations.length);
 				}
-			}else{
-				console.log("false funct")
+			} else {
+				console.log("false funct");
 				setCount(me.fields.Green_Points);
 			}
 		})();
@@ -154,16 +152,23 @@ const Menu = ({
 
 	return (
 		<Wrapper>
-			<MenuWrapper href={`/${role.parent ? `reviews?student_id=${student_id}` : ""}`}>
+			<MenuWrapper
+				href={`/${
+					role.parent ? `reviews?student_id=${student_id}` : ""
+				}`}
+			>
 				<NavItem activeAssignment={activeAssignment} />
 				<Counters assignmentColor={true}>{totalAssignment}</Counters>
 			</MenuWrapper>
 
-			<MenuWrapper href={`/profile${role.parent ? `?student_id=${student_id}` : ""}`}>
+			<MenuWrapper
+				href={`/profile${
+					role.parent ? `?student_id=${student_id}` : ""
+				}`}
+			>
 				<NavProfile activeAvatar={activeAvatar} />
 				<Counters assignmentColor={false}>{count}</Counters>
 			</MenuWrapper>
-
 		</Wrapper>
 	);
 };

@@ -1,17 +1,17 @@
 import { AssignmentDate, AssignmentEstimatedDuration } from "../components";
 import { Button, ButtonWrapper } from "../components/";
-import Col from "react-bootstrap/Col";
-import Form from "react-bootstrap/Form";
-import { Heading } from "../components/";
+
 import API from "../api";
+import Col from "react-bootstrap/Col";
 import Container from "react-bootstrap/Container";
+import Form from "react-bootstrap/Form";
 import Header from "../components/Header";
+import { Heading } from "../components/";
 import React from "react";
+import ReactQuill from "react-quill"; // ES6
 import ReviewAssignment from "./sections/ReviewAssignment";
 import Section from "../components/Section";
 import TeacherNav from "../components/TeacherNav";
-import ReactQuill from "react-quill"; // ES6
-
 import UpdateAssignment from "./UpdateAssignment";
 import moment from "moment";
 import { useParams } from "react-router-dom";
@@ -29,9 +29,10 @@ export default () => {
 	const [buttonText, setButtonText] = React.useState("Edit");
 	const [assignment, setAssignment] = React.useState();
 
-
 	const fetchAssignment = async () => {
 		try {
+			console.log("Fetching");
+
 			setLoading("Fetching assignment...");
 
 			const {
@@ -130,12 +131,15 @@ export default () => {
 				{assignment && edit && (
 					<React.Fragment>
 						<Container>
-							<Heading style={{ marginTop: 0 }}>Update Assignment</Heading>
+							<Heading style={{ marginTop: 0 }}>
+								Update Assignment
+							</Heading>
 							<Form onSubmit={handleSubmit}>
 								<Section title="Content">
 									<p>
-										To attach a file to this assignment add a link to a
-										file on the school Google Drive
+										To attach a file to this assignment add
+										a link to a file on the school Google
+										Drive
 									</p>
 									<Form.Group>
 										<Form.Label>Title *</Form.Label>
@@ -144,7 +148,9 @@ export default () => {
 											type="text"
 											defaultValue={assignment.Title}
 											onChange={({ target }) =>
-												editRecord({ Title: target.value })
+												editRecord({
+													Title: target.value,
+												})
 											}
 										/>
 									</Form.Group>
@@ -167,7 +173,9 @@ export default () => {
 												required
 												type="date"
 												onChange={({ target }) =>
-													editRecord({ Due: target.value })
+													editRecord({
+														Due: target.value,
+													})
 												}
 											/>
 										</Col>
@@ -177,15 +185,20 @@ export default () => {
 									<Section title="Expected time to complete assignment">
 										<Form.Row>
 											<Col>
-												<Form.Label>Expected Time Unit</Form.Label>
+												<Form.Label>
+													Expected Time Unit
+												</Form.Label>
 												<Form.Control
 													as="select"
-													defaultValue={assignment.Expected_Time_Unit}
+													defaultValue={
+														assignment.Expected_Time_Unit
+													}
 													onChange={({ target }) =>
 														editRecord({
 															Expected_Time_Unit:
 																target.options[
-																	target.selectedIndex
+																	target
+																		.selectedIndex
 																].value,
 														})
 													}
@@ -193,18 +206,27 @@ export default () => {
 													<option value="">
 														-- Select a time unit --
 													</option>
-													<option value="Minutes">Minutes</option>
-													<option value="Hours">Hours</option>
+													<option value="Minutes">
+														Minutes
+													</option>
+													<option value="Hours">
+														Hours
+													</option>
 												</Form.Control>
 											</Col>
 											<Col>
-												<Form.Label>Expected Time</Form.Label>
+												<Form.Label>
+													Expected Time
+												</Form.Label>
 												<Form.Control
-													defaultValue={assignment.Expected_Time}
+													defaultValue={
+														assignment.Expected_Time
+													}
 													type="text"
 													onChange={({ target }) =>
 														editRecord({
-															Expected_Time: target.value,
+															Expected_Time:
+																target.value,
 														})
 													}
 												/>
@@ -230,10 +252,12 @@ export default () => {
 							style={{ marginTop: 0 }}
 						/>
 						<AssignmentDate>
-							Assignment created on: {transformDate(assignment.Set)}
+							Assignment created on:{" "}
+							{transformDate(assignment.Set)}
 						</AssignmentDate>
 						<AssignmentDate>
-							Assignment is due on: {transformDate(assignment.Due)}
+							Assignment is due on:{" "}
+							{transformDate(assignment.Due)}
 						</AssignmentDate>
 						{!assignment.is_Reminder && (
 							<AssignmentEstimatedDuration>
@@ -248,12 +272,17 @@ export default () => {
 				{assignment && !edit && (
 					<Section loading={loading} error={error} title="Summary">
 						<div
-							dangerouslySetInnerHTML={{ __html: assignment.Content }}
+							dangerouslySetInnerHTML={{
+								__html: assignment.Content,
+							}}
 						></div>
 					</Section>
 				)}
 				{assignment && role.staff && !edit && (
-					<ReviewAssignment assignmentId={id} />
+					<ReviewAssignment
+						assignmentId={id}
+						onFetch={fetchAssignment}
+					/>
 				)}
 			</Container>
 		</React.Fragment>
