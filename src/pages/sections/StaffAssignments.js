@@ -6,6 +6,8 @@ import Section from "../../components/Section";
 import moment from "moment";
 import queryString from "query-string";
 import { useHistory } from "react-router-dom";
+import Select from 'react-select';
+
 
 export default ({ query = null }) => {
 	const [loading, setLoading] = React.useState("Loading assignments...");
@@ -13,6 +15,7 @@ export default ({ query = null }) => {
 	const [table, setTable] = React.useState([]);
 
 	const history = useHistory();
+	// const { selectedOption } = this.state;
 
 	React.useEffect(() => {
 		(async function () {
@@ -28,6 +31,8 @@ export default ({ query = null }) => {
 					throw new Error("Empty response");
 
 				setTable(response.content);
+
+				console.log(response.content);
 				setLoading(false);
 			} catch (err) {
 				setError(err.toString());
@@ -42,8 +47,10 @@ export default ({ query = null }) => {
 
 		if (diff > 0) {
 			return `Due in ${Math.abs(diff)} day${diff !== 1 ? "s" : ""}`;
+			
 		} else if (diff < 0) {
 			return `Due ${Math.abs(diff)} day${diff !== -1 ? "s" : ""} ago`;
+
 		} else {
 			return `Due today`;
 		}
@@ -53,7 +60,11 @@ export default ({ query = null }) => {
 		<Section title="Assignments" loading={loading} error={error}>
 			{table.length ? (
 				<Grid>
-					{table.map(({ fields }, index) => (
+					{table.sort(
+							(a, b) =>
+								new Date(b.fields.Due) -
+								new Date(a.fields.Due)
+						).map(({ fields }, index) => (
 						<Card
 							onClick={() =>
 								history.push(`/assignment/${fields.id}`)
@@ -64,11 +75,24 @@ export default ({ query = null }) => {
 								<Title>{fields.Title}</Title>
 								<Paragraph>{fields.Class_Name}</Paragraph>
 							</Card.Body>
-							{!fields.is_Reminder ? (
-								<Card.Footer style={{backgroundColor: "#DCEFC8", borderTop:"#DCEFC8"}}>{getStatus(fields.Due)}</Card.Footer>
+							{getStatus(fields.Due).includes("ago") ? (
+								<Card.Footer id="Card_Footer" 
+									style={{backgroundColor: "#E3E3DD", borderTop:"#E3E3DD"}}
+									>{getStatus(fields.Due)}</Card.Footer>
 							):(								
-								<Card.Footer style={{backgroundColor: "#99D6EA", borderTop:"#99D6EA"}}>{getStatus(fields.Due)}</Card.Footer>
-							)}	
+								<Card.Footer 
+									style={{backgroundColor: "#99D6EA", borderTop:"#99D6EA"}}
+									>{getStatus(fields.Due)}</Card.Footer>
+							)}
+							{/* {!fields.is_Reminder ? (
+								<Card.Footer id="Card_Footer" 
+									style={{backgroundColor: "#DCEFC8", borderTop:"#DCEFC8"}}
+									>{getStatus(fields.Due)}</Card.Footer>
+							):(								
+								<Card.Footer 
+									style={{backgroundColor: "#99D6EA", borderTop:"#99D6EA"}}
+									>{getStatus(fields.Due)}</Card.Footer>
+							)}	 */}
 						</Card>
 					))}
 				</Grid>
