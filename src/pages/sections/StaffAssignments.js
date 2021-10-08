@@ -6,7 +6,6 @@ import Section from "../../components/Section";
 import moment from "moment";
 import queryString from "query-string";
 import { useHistory } from "react-router-dom";
-import Select from 'react-select';
 
 
 export default ({ query = null }) => {
