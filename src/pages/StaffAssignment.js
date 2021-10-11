@@ -281,7 +281,6 @@ export default () => {
 				{assignment && role.staff && !edit && (
 					<ReviewAssignment
 						assignmentId={id}
-						onFetch={fetchAssignment}
 					/>
 				)}
 			</Container>

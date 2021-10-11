@@ -9,7 +9,7 @@ import Section from "../../components/Section";
 import Table from "react-bootstrap/Table";
 import queryString from "query-string";
 
-export default ({ assignmentId, onFetch }) => {
+export default ({ assignmentId }) => {
 	const [loading, setLoading] = React.useState("Loading reviews...");
 	const [error, setError] = React.useState();
 	const [reviews, setReviews] = React.useState();
@@ -28,9 +28,8 @@ export default ({ assignmentId, onFetch }) => {
 			if (!response.hasOwnProperty("content"))
 				throw new Error("Empty response");
 
-			console.log("content", response.content);
-
 			setReviews(response.content);
+
 			setLoading(false);
 		} catch (err) {
 			console.error(err);
@@ -88,20 +87,18 @@ export default ({ assignmentId, onFetch }) => {
 			};
 		});
 
-		setLoading(true);
-
 		try {
+			setLoading(true);
+
 			await API.update("reviews", updatedReviews);
+
+			setLoading(false);
+
+			fetchReviews();
 		} catch (err) {
 			console.error(err);
 			setError(err.toString());
-		}
-
-		// Last of all – this needs to refresh, but it doesn't
-
-		fetchReviews();
-
-		setLoading(false);
+		}	
 	};
 
 	React.useEffect(() => {
@@ -138,8 +135,7 @@ export default ({ assignmentId, onFetch }) => {
 								<td key={`td-${2}`}>
 									<Form.Control
 										as="select"
-										required
-										defaultValue={fields.Status}
+										value={fields.Status}
 										onChange={({ target }) =>
 											editReview(fields.id, {
 												Status: target.options[
