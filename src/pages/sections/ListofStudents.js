@@ -11,21 +11,19 @@ import {Button} from "../../components";
 import Form from "react-bootstrap/Form";
 
 
-
-
 export default ({ query = null , classId}) => {
 	const { id } = useParams();
+	const history = useHistory();
 
 	const [loading, setLoading] = React.useState("Loading students...");
 	const [error, setError] = React.useState();
+
 	const [records, setRecords] = React.useState();
+	const [selectedRecords, setSelectedRecords] = React.useState([]);
 
 	const [green, setGreen] = React.useState(1);
-	const [buttonState, setButtonState]  = React.useState(0);
-
-	let count;
-
-	const history = useHistory();
+	const [buttonState, setButtonState] = React.useState();
+	const [actionGP, setActionGP]  = React.useState("");
 
 	const fetchStudents = async () => {
 		try {
@@ -41,9 +39,9 @@ export default ({ query = null , classId}) => {
 				throw new Error("Empty response");
 
 			setRecords(response.content);
-
-			// console.log("student list test", response.content)
+			setSelectedRecords([]);
 			setLoading(false);
+			setButtonState(false);
 
 		} catch (err) {
 			console.error(err);
@@ -51,26 +49,49 @@ export default ({ query = null , classId}) => {
 		}
 	};
 
-	const editPoints = async (student_id, props) => {
-		const record = records.find(({ fields }) => fields.id === student_id);
+	const updateGPForSelectedStudents = async (list, switcher) => {
+		const updatedStudentsGP = records.filter(({id}) => list.includes(id))
+				.map(({ id, fields }) => {
+					return {
+						id,
+						fields: {
+							Green_Points: fields.Green_Points + switcher,
+						},
+					};
+				});
 
-		// console.log("starting edit points", record);
+			console.log({updatedStudentsGP});
+
+		try {
+			setLoading(true);
+
+			await API.update("students", updatedStudentsGP);
+
+			setLoading(false);
+
+			fetchStudents();
+		} catch (err) {
+			console.error(err);
+			setError(err.toString());
+		}
+
+	}
+
+	const editPoints = async (student_id, props) => {
 		
+		const record = records.find(({ fields }) => fields.id === student_id);		
 
 		Object.keys(props).forEach((key) => {
 			record.fields[key] = props[key];
 		});
 
-		// console.log("edited props", props);
-
 		const {
 			Green_Points,
 		} = record.fields;
 
-		// console.log("This new green point", Green_Points)
+		console.log(Green_Points);
 
 		const student__id = record.fields._id;
-		// console.log("found the stduent ", student_id)
 
 		try {
 			setLoading("Updating records...");
@@ -78,8 +99,6 @@ export default ({ query = null , classId}) => {
 			const response = await API.update(`student/${student__id}`, {
 				Green_Points,
 			});
-
-			// console.log("api call susscess", response)
 
 			if (!response.hasOwnProperty("content"))
 				throw new Error("Empty response");
@@ -97,66 +116,90 @@ export default ({ query = null , classId}) => {
 	const addPoint = (studentID, studentPoint) => {
 		setGreen(green);
 		studentPoint++;
-		// console.log("studentPoint after", studentPoint);
 
 		editPoints(studentID, {
 			Green_Points: studentPoint,
 		})
 	}
 
-	// const UpdateButtonState = (checked, currentCount) =>{
-	// 	console.log(checked)
-	// 	if(checked){
-	// 		currentCount++;
-	// 		setButtonState(currentCount);
-	// 		console.log(currentCount);
-	// 	}else{
-	// 		currentCount--;
-	// 		setButtonState(currentCount);
-	// 		console.log(currentCount);
-
-	// 	}
-	// } 
 	React.useEffect(() => {
 		fetchStudents();
 	}, []);
 
+	const RemoveID = (list, id) => {
+		console.log(list, id);
+		list.splice(list.findIndex(e => e === id),1);
+		setSelectedRecords(list);
+	}
+
+	
+
 	return (
 		<Section title="Students" loading={loading} error={error}>
-			<Grid>
+
+			<div style={{display:"block", textAlign:"right", paddingBottom: "10px"}}>
+				<Button 
+					style={{width:"190px"}}
+					yellow
+					grey={!buttonState} 
+					disabled={!buttonState}
+					onClick={()=>{
+						updateGPForSelectedStudents(selectedRecords, -1)
+					}} 
+						>Remove Green Point 
+				</Button>
+			</div>
+
+			<div style={{display:"block", textAlign:"right", paddingBottom: "10px"}}>
+				<Button 
+					style={{width:"190px"}}
+					green
+					grey={!buttonState} 
+					disabled={!buttonState}
+					onClick={() => {
+						updateGPForSelectedStudents(selectedRecords, +1);
+					}} 
+						>Add Green Point 
+				</Button>
+			</div>
+				
+			{/* <Grid> */}
 				<Table style={{ width: "510px"}} striped bordered>
 					<thead>
 						<tr>
 							<th>Name</th>
-							<th>Total Green Points</th>
-							<th>
-								{/* <Button 
-									yellow */}
-									{/* onClick={() =>
-										addPoint()
-									 } */}
-									{/* > */}
-										Add Green Points 
-										{/* to All */}
-								{/* </Button> */}
+							<th >Total Green Points</th>
+							<th style={{width:"190px", textAlign:"center"}}>
+								Select All
+								<Form.Check
+									id="selectAllFoo"
+									style={{textAlign:"center"}}
+									onChange={({ target }) =>{
+										if(target.checked){
+											var checkboxes = document.getElementsByName("addFoo")
+											for(var i=0; i<checkboxes.length; i++){
+												checkboxes[i].checked = target.checked;
+											}
+											setSelectedRecords(records.map(({id}) =>id));
+											setButtonState(true);
+
+										}else{
+											var checkboxes = document.getElementsByName("addFoo")
+											for(var i=0; i<checkboxes.length; i++){
+												checkboxes[i].checked = target.unchecked;
+											}
+											setSelectedRecords([]);
+											setButtonState(false);
+										}
+										console.log({selectedRecords})
+									}}
+								/>
 							</th>
-							{/* <th>
-								<Button 
-									green={buttonState>=('input:checkbox:checked').length}
-									grey={buttonState<('input:checkbox:checked').length} 
-									disabled={buttonState>=('input:checkbox:checked').length}
-									onClick={() =>
-										console.log("clicked")
-									 } 
-									 >
-										Add multiple Green Points 
-								</Button>
-							</th> */}
 						</tr>
 					</thead>
 					<tbody>
 						{records &&
-							records.map(({ fields }, index) => (
+							records.map(({ fields, id }, index) => (
 								<React.Fragment>
 									<tr key={`row-${index}`} >
 									
@@ -167,7 +210,7 @@ export default ({ query = null , classId}) => {
 										<td>
 											{fields.Green_Points}
 										</td>
-										<td>
+										{/* <td>
 											<Button 
 												yellow
 												onClick={() =>
@@ -176,24 +219,45 @@ export default ({ query = null , classId}) => {
 												>
 													Add Green Point
 											</Button>
-										</td>
-										{/* <td style={{padding: "50px 60px"}}>
+										</td> */}
+										<td >
 										<Form.Check
-											// value={false}
-											// checked={false}
+											name="addFoo"
+											key={index}
 											style={{textAlign:"center"}}
 											onChange={({ target }) =>{
-												UpdateButtonState(target.checked, count);
-												}										}
+												console.log("start ",selectedRecords)
+												if(target.checked){
+													setButtonState(true);
+													if(!selectedRecords.includes(id)){
+														selectedRecords.push(id);
+														console.log(id)
+														console.log("updated list add:", selectedRecords)
+														console.log(selectedRecords.length>0)
+													}
+
+												}else{
+													var checkboxeAll = document.getElementById("selectAllFoo")
+													checkboxeAll.checked = target.unchecked;
+													if(selectedRecords.length==1){
+														selectedRecords.length=0;
+														setButtonState(false);
+														
+													}else{
+														RemoveID(selectedRecords, id)
+													}
+													console.log("updated list remove: ", selectedRecords)
+												}
+												}}
 											/>
-										</td> */}
+										</td>
 									</tr>
 								</React.Fragment>
 									
 							))} 
 					</tbody>
 				</Table>
-			</Grid>
+			{/* </Grid> */}
 		</Section>
 	);
 };
