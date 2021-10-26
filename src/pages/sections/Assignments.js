@@ -114,6 +114,8 @@ export default ({ query = null }) => {
 					
 				}
 
+				console.log(response.content);
+
 				if (!response.hasOwnProperty("content"))
 					throw new Error("Empty response");
 
@@ -165,11 +167,11 @@ export default ({ query = null }) => {
 						)
 						.map(({ fields }, index) => (
 							<ListItem
-								reminder={fields.is_Reminder}
+								reminder={fields.is_Reminder[0] || false}
 								hide={
 									fields.Student_Checked ||
 									// fields.Teacher_Checked ||
-									(fields.is_Reminder &&
+									(fields.is_Reminder[0] &&
 										CheckOverdueReminder(
 											fields.Assignment_Due
 										))

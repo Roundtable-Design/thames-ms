@@ -1,16 +1,16 @@
+import { useLocation, useParams } from "react-router-dom";
+
 import API from "../api";
 import Menu from "../components/Menu";
 import React from "react";
 import ReviewAssignment from "./sections/ReviewAssignment";
+import StudentViewFeedback from "../components/StudentViewFeedback";
 import TaskContent from "../components/TaskContent";
 import TaskHeader from "../components/TaskHeader";
 import cheerio from "cheerio";
 import moment from "moment";
-import { useParams, useLocation } from "react-router-dom";
-import useRole from "../hooks/useRole";
-import StudentViewFeedback from "../components/StudentViewFeedback";
 import styled from "styled-components";
-
+import useRole from "../hooks/useRole";
 
 const Wrapper = styled.div`
 	box-sizing: border-box;
@@ -20,7 +20,9 @@ const Wrapper = styled.div`
 
 export default () => {
 	const [role] = useRole();
-	const student_id =( new URLSearchParams(useLocation().search)).get("student_id");
+	const student_id = new URLSearchParams(useLocation().search).get(
+		"student_id"
+	);
 
 	const { id } = useParams();
 	const [record, setRecord] = React.useState(null);
@@ -31,17 +33,18 @@ export default () => {
 	const [studentCompleted, setStudentCompleted] = React.useState();
 	const [reviewId, setReviewId] = React.useState();
 	const [feedbackStatus, setFeedbackStatus] = React.useState();
+	const [subjectIcon, setSubjectIcon] = React.useState(
+		"../assets/icons/book-open.svg"
+	);
 	// const [feedbackEffort, setFeedbackEffort] = React.useState();
 	// const [feedbackMessage, setFeedbackMessage] = React.useState();
-
-
 
 	const translateDate = (date) => {
 		return moment(new Date(date)).format("MMM Do YY");
 	};
 
 	const translateDatetoWeek = (date) => {
-		return moment(new Date(date)).format("dddd").substring(0,3);
+		return moment(new Date(date)).format("dddd").substring(0, 3);
 	};
 
 	const parseContent = (content) => {
@@ -67,15 +70,16 @@ export default () => {
 
 					const record = response.content[0].fields;
 
-					const assignmentReviews = await API.get(`reviews?assignment_id=${id}`);
+					const assignmentReviews = await API.get(
+						`reviews?assignment_id=${id}`
+					);
 					const feedbackContent = assignmentReviews.content[0].fields;
 					setFeedbackContent(feedbackContent);
 					setFeedbackStatus(feedbackContent.Status);
-					if(feedbackContent.Status==null){
-						setFeedbackStatus("Pending")
+					if (feedbackContent.Status == null) {
+						setFeedbackStatus("Pending");
 					}
-					
-					
+
 					console.log(feedbackContent);
 
 					const {
@@ -86,12 +90,19 @@ export default () => {
 						],
 					} = await API.get(`reviews?assignment_id=${id}`);
 
+					console.log({ record });
 
+					if (record.hasOwnProperty("Class_Icon")) {
+						setSubjectIcon(record.Class_Icon[0].url);
+					} else {
+						setSubjectIcon(subjectIcon);
+					}
 
 					setReviewId(reviewId);
 					setStudentCompleted(Student_Checked);
 					setRecord(record);
 					setContent(parseContent(record.Content));
+
 					setLoading(false);
 				} catch (err) {
 					setError(err.toString());
@@ -108,14 +119,10 @@ export default () => {
 		setStudentCompleted(!studentCompleted);
 	};
 
-	const handleAssignmentFeedbackStatus = (status) =>{
-
-	}
-
 	return !loading ? (
 		<Wrapper>
 			<TaskHeader
-				image={record.Class_Icon[0].url}
+				image={subjectIcon}
 				subject={record.Class_Name}
 				week={translateDatetoWeek(record.Due)}
 				date={translateDate(record.Due)}
@@ -129,18 +136,16 @@ export default () => {
 				onChange={handleCompletedChange}
 			>
 				<div dangerouslySetInnerHTML={{ __html: content }} />
-
-				
 			</TaskContent>
-			<StudentViewFeedback 
+			<StudentViewFeedback
 				content={feedbackContent.Feedback}
 				status={feedbackStatus}
 				effort={feedbackContent.Effort}
-				pending={feedbackStatus=="Pending"}
-				handed={feedbackStatus=="Handed in"}
-				resubmit={feedbackStatus=="Resubmit"}
-				/>
-			
+				pending={feedbackStatus == "Pending"}
+				handed={feedbackStatus == "Handed in"}
+				resubmit={feedbackStatus == "Resubmit"}
+			/>
+
 			<Menu activeAssignment={true} activeAvatar={false} />
 		</Wrapper>
 	) : (

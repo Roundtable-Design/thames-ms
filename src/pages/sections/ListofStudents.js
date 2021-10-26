@@ -8,6 +8,8 @@ import { useHistory } from "react-router-dom";
 import Table from "react-bootstrap/Table";
 import { useParams } from "react-router-dom";
 import {Button} from "../../components";
+import Form from "react-bootstrap/Form";
+
 
 
 
@@ -19,6 +21,9 @@ export default ({ query = null , classId}) => {
 	const [records, setRecords] = React.useState();
 
 	const [green, setGreen] = React.useState(1);
+	const [buttonState, setButtonState]  = React.useState(0);
+
+	let count;
 
 	const history = useHistory();
 
@@ -36,6 +41,8 @@ export default ({ query = null , classId}) => {
 				throw new Error("Empty response");
 
 			setRecords(response.content);
+
+			// console.log("student list test", response.content)
 			setLoading(false);
 
 		} catch (err) {
@@ -45,25 +52,38 @@ export default ({ query = null , classId}) => {
 	};
 
 	const editPoints = async (student_id, props) => {
-		const record = records.find(({ id }) => id === student_id);
+		const record = records.find(({ fields }) => fields.id === student_id);
+
+		// console.log("starting edit points", record);
+		
 
 		Object.keys(props).forEach((key) => {
 			record.fields[key] = props[key];
 		});
 
+		// console.log("edited props", props);
+
 		const {
 			Green_Points,
 		} = record.fields;
 
+		// console.log("This new green point", Green_Points)
+
+		const student__id = record.fields._id;
+		// console.log("found the stduent ", student_id)
+
 		try {
 			setLoading("Updating records...");
 
-			const response = await API.update(`student/${student_id}`, {
-				Green_Points
+			const response = await API.update(`student/${student__id}`, {
+				Green_Points,
 			});
+
+			// console.log("api call susscess", response)
 
 			if (!response.hasOwnProperty("content"))
 				throw new Error("Empty response");
+
 
 			setLoading(false);
 
@@ -77,11 +97,26 @@ export default ({ query = null , classId}) => {
 	const addPoint = (studentID, studentPoint) => {
 		setGreen(green);
 		studentPoint++;
+		// console.log("studentPoint after", studentPoint);
+
 		editPoints(studentID, {
 			Green_Points: studentPoint,
 		})
 	}
 
+	// const UpdateButtonState = (checked, currentCount) =>{
+	// 	console.log(checked)
+	// 	if(checked){
+	// 		currentCount++;
+	// 		setButtonState(currentCount);
+	// 		console.log(currentCount);
+	// 	}else{
+	// 		currentCount--;
+	// 		setButtonState(currentCount);
+	// 		console.log(currentCount);
+
+	// 	}
+	// } 
 	React.useEffect(() => {
 		fetchStudents();
 	}, []);
@@ -105,37 +140,54 @@ export default ({ query = null , classId}) => {
 										{/* to All */}
 								{/* </Button> */}
 							</th>
+							{/* <th>
+								<Button 
+									green={buttonState>=('input:checkbox:checked').length}
+									grey={buttonState<('input:checkbox:checked').length} 
+									disabled={buttonState>=('input:checkbox:checked').length}
+									onClick={() =>
+										console.log("clicked")
+									 } 
+									 >
+										Add multiple Green Points 
+								</Button>
+							</th> */}
 						</tr>
 					</thead>
 					<tbody>
 						{records &&
 							records.map(({ fields }, index) => (
 								<React.Fragment>
-									{fields.class_year_id.includes(classId) ? (
-										<tr key={`row-${index}`} >
-										
-											<td key={`td-${1}`}>
-												{fields.Surname},{" "}
-												{fields.Forename}
-											</td>
-											<td>
-												{fields.Green_Points}
-											</td>
-											<td>
-												<Button 
-													yellow
-													onClick={() =>
-														addPoint(fields.id, fields.Green_Points)
-													}
-													>
-														Add Green Point
-												</Button>
-											</td>
-										</tr>
-									):(
-										""
-									)} 
-
+									<tr key={`row-${index}`} >
+									
+										<td key={`td-${1}`}>
+											{fields.Surname},{" "}
+											{fields.Forename}
+										</td>
+										<td>
+											{fields.Green_Points}
+										</td>
+										<td>
+											<Button 
+												yellow
+												onClick={() =>
+													addPoint(fields.id, fields.Green_Points)
+												}
+												>
+													Add Green Point
+											</Button>
+										</td>
+										{/* <td style={{padding: "50px 60px"}}>
+										<Form.Check
+											// value={false}
+											// checked={false}
+											style={{textAlign:"center"}}
+											onChange={({ target }) =>{
+												UpdateButtonState(target.checked, count);
+												}										}
+											/>
+										</td> */}
+									</tr>
 								</React.Fragment>
 									
 							))} 
