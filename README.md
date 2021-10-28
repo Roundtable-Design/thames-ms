@@ -3,6 +3,7 @@
 ### Project description
 Frontend for the Thames Admin App.
 'MS' stands for 'management system'
+Works in conjunction with the ['thames-auth' repository](https://github.com/Roundtable-Design/thames-auth)
 
 ### Notable files/folders + file structure
 1. '/deploy.sh'
@@ -25,5 +26,7 @@ Frontend for the Thames Admin App.
 1. `npm install`
 2. `npm start`
 
-### How to deploy
-1. Push changes to the `master` branch
+### How to deploy and depoloyment pipeline
+Push changes to the `master` branch
+A webhook has been set up on an AWS instance that waits for a 'git push' event
+// Link to AWS instance
