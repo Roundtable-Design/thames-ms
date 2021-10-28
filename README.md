@@ -1,9 +1,9 @@
 # About
 
 ### Project description
-Frontend for the Thames Admin App.
-'MS' stands for 'management system'
-Works in conjunction with the ['thames-auth' repository](https://github.com/Roundtable-Design/thames-auth)
+- Frontend for the Thames Admin App.
+- 'MS' stands for 'management system'
+- The ['thames-auth' repository](https://github.com/Roundtable-Design/thames-auth) provides API endpoints
 
 ### Notable files/folders + file structure
 1. '/deploy.sh'
