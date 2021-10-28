@@ -3,12 +3,17 @@ import { useLocation, useParams } from "react-router-dom";
 import API from "../api";
 import Menu from "../components/Menu";
 import React from "react";
-import ReviewAssignment from "./sections/ReviewAssignment";
 import StudentViewFeedback from "../components/StudentViewFeedback";
 import TaskContent from "../components/TaskContent";
 import TaskHeader from "../components/TaskHeader";
 import cheerio from "cheerio";
 import moment from "moment";
+import { useParams } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
+
+import useRole from "../hooks/useRole";
+import StudentViewFeedback from "../components/StudentViewFeedback";
+
 import styled from "styled-components";
 import useRole from "../hooks/useRole";
 
@@ -19,11 +24,6 @@ const Wrapper = styled.div`
 `;
 
 export default () => {
-	const [role] = useRole();
-	const student_id = new URLSearchParams(useLocation().search).get(
-		"student_id"
-	);
-
 	const { id } = useParams();
 	const [record, setRecord] = React.useState(null);
 	const [feedbackContent, setFeedbackContent] = React.useState(null);
@@ -36,15 +36,13 @@ export default () => {
 	const [subjectIcon, setSubjectIcon] = React.useState(
 		"../assets/icons/book-open.svg"
 	);
-	// const [feedbackEffort, setFeedbackEffort] = React.useState();
-	// const [feedbackMessage, setFeedbackMessage] = React.useState();
 
 	const translateDate = (date) => {
 		return moment(new Date(date)).format("MMM Do YY");
 	};
 
 	const translateDatetoWeek = (date) => {
-		return moment(new Date(date)).format("dddd").substring(0, 3);
+		return moment(new Date(date)).format("dddd"); //.substring(0.3);
 	};
 
 	const parseContent = (content) => {
