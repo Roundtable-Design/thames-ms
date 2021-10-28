@@ -1,13 +1,15 @@
 # About
 
 ### Project description
-Frontend for the Thames Admin App
+Frontend for the Thames Admin App.
+'MS' stands for 'management system'
 
-### Notable files/folders
+### Notable files/folders + file structure
 1. '/deploy.sh'
     - Executed on `git push` on the server
 2. '/App.js'
     - Routing
+3. This is built on top of a 'create-react-app' boilerplate
 
 # Set up
 
