@@ -1,4 +1,4 @@
-import "react-quill/dist/quill.snow.css"; // ES6
+ import "react-quill/dist/quill.snow.css"; // ES6
 
 import API from "../api";
 import ActivityIndicator from "../components/ActivityIndicator";
@@ -30,26 +30,21 @@ export default () => {
 	const [table, setTable] = React.useState();
 	const [studentsTable, setStudentsTable] = React.useState();
 	const [staffID, setStaffID] = React.useState();
-
-	const [eventType, setEventType] = React.useState();
-	const [classId, setClassId] = React.useState();
+	const [eventType, setEventType] = React.useState(0);
 	const [record, setRecord] = React.useState({});
+	const [className, setClassName] = React.useState();
 
 	// removed 'Short Report' and 'Long Report' from radioEventTypes for now
 
-	const radioEventTypes = ["Assignment", "Reminder"];
-
+	const radioEventTypes = ["Assignment", "Reminder", "Short Report", "Long Report"];
+	const gradesTypes = ["9", "9/8", "8", "8/7", "7", "7/6", "6", "6/5", "5", "5/4", "4", "4/3", "3", "3/2", "2", "2/1", "1"]
+	const performanceRanks = ["n/a", 1, 2, 3, 4]
 	const handleSubmit = async (event) => {
 		event.preventDefault();
 		try {
 			setSubmitLoading("Submitting form...", { record });
-
-			console.log("Assignment is ", record);
-
-			// what is the class id
-
-			// Create new assignment
-			const assignmentResponse = await API.create("assignment", {
+			let route = (eventType == 0 || eventType == 1) ? "assignment" : "reports";
+			const assignmentResponse = await API.create(route, {
 				record,
 			});
 
@@ -73,10 +68,12 @@ export default () => {
 			copy[key] = props[key];
 		});
 
-		console.log({copy});
 
 		setRecord(copy);
+
 	};
+
+	React.useEffect(() => console.log('this is the record',record),[record]);
 
 	React.useEffect(() => {
 		(async function () {
@@ -85,7 +82,6 @@ export default () => {
 				const response = await API.get("classes");
 				const students = await API.get("students");
 				const staff = await API.get("me");
-
 				// console.log(staff.content[0].id)
 
 				if (!response.hasOwnProperty("content"))
@@ -103,7 +99,7 @@ export default () => {
 				setClassesLoading(false);
 				setStudentsLoading(false);
 				setStaffLoading(false);
-				
+
 
 			} catch (err) {
 				setError(err.toString());
@@ -116,6 +112,7 @@ export default () => {
 		if (key == 1) {
 			editRecord({ is_Reminder: true });
 		}
+		setRecord({});
 	};
 
 	return (
@@ -135,6 +132,7 @@ export default () => {
 								type="radio"
 								name="TypeOfEvent"
 								label={type}
+								checked={(eventType) === key}
 								onChange={({ target }) => {
 									SetCreateType(key);
 								}}
@@ -152,22 +150,23 @@ export default () => {
 							onChange={({ target }) => {
 								const class_id =
 									target.options[target.selectedIndex].value;
-								setClassId(class_id);
+								// setClassId(class_id);
+								setClassName(table.find(({id}) => id===class_id).fields.id);
 
 								editRecord({
 									class_id: [class_id],
 									staff_id: [staffID],
-									student_id: table.find(({id}) => id === class_id).fields.student_id.split(", ").map(niceId => studentsTable.find(({fields}) => fields.id === niceId).id),
-									
+									student_id: table.find(({ id }) => id === class_id).fields.student_id.split(", ").map(niceId => studentsTable.find(({ fields }) => fields.id === niceId).id),
+
 									// [studentsTable.find(
 									// 	({ fields }) => fields.id === table.find(
 									// 		({ id }) => id === class_id
 									// 	).fields.student_id).id]
-									
+
 								});
 							}}
 						>
-							<option value="">-- Select a class --</option>
+							<option value="" selected disabled>-- Select a class --</option>
 							{table &&
 								table.map(({ id, fields }) => (
 									<option value={id}>{fields.id}</option>
@@ -285,7 +284,7 @@ export default () => {
 						</React.Fragment>
 					)}
 					{/* Commented the code for reports */}
-					{/* {((eventType == 2 || eventType == 3) &&
+					{((eventType == 2 || eventType == 3) &&
 						<React.Fragment>
 							<Section loading={studentsLoading} error={error}>
 								<Table style={{ minWidth: "1000px" }} striped bordered>
@@ -302,11 +301,11 @@ export default () => {
 									</thead>
 									<tbody>
 										{(studentsTable) &&
-											studentsTable.filter(({ fields }) => fields.class_year_id.includes(classId))
+											studentsTable.filter(({ fields }) => fields.class_id.includes(className))
 												.map((({ fields }) =>
 													<React.Fragment>
 														<tr>
-															<td>{fields.Forename}{fields.Surname}</td>
+															<td>{fields.Forename} {fields.Surname}</td>
 															<td>
 																<Form.Control
 																	as="select"
@@ -314,7 +313,7 @@ export default () => {
 																	defaultValue={'9'}
 																	onChange={({ target }) =>
 
-																		editRecord({})
+																		editRecord({target_grade: target.value})
 																	}
 																>
 																	{gradesTypes.map((targetGrade, key) =>
@@ -329,7 +328,7 @@ export default () => {
 																	defaultValue={'9'}
 																	onChange={({ target }) =>
 
-																		editRecord({})
+																		editRecord({actual_grade: target.value})
 																	}
 																>
 																	{gradesTypes.map((actualGrade, key) =>
@@ -344,7 +343,7 @@ export default () => {
 																	defaultValue={'1'}
 																	onChange={({ target }) =>
 
-																		editRecord({})
+																		editRecord({effort: target.value})
 																	}
 																>
 																	{performanceRanks.map((effort, key) =>
@@ -359,7 +358,7 @@ export default () => {
 																	defaultValue={'1'}
 																	onChange={({ target }) =>
 
-																		editRecord({})
+																		editRecord({homework_quality: target.value})
 																	}
 																>
 																	{performanceRanks.map((homeworkQuality, key) =>
@@ -374,7 +373,7 @@ export default () => {
 																	defaultValue={'1'}
 																	onChange={({ target }) =>
 
-																		editRecord({})
+																		editRecord({behaviour: target.value})
 																	}
 																>
 																	{performanceRanks.map((behaviour, key) =>
@@ -389,7 +388,7 @@ export default () => {
 																	defaultValue={'1'}
 																	onChange={({ target }) =>
 
-																		editRecord({})
+																		editRecord({meeting_deadlines: target.value})
 																	}
 																>
 																	{gradesTypes.map((meetingDeadlines, key) =>
@@ -405,17 +404,22 @@ export default () => {
 																	<th colSpan={3}>Targets:</th>
 																</tr>
 																<tr>
-																	<td>
+																	<td colSpan={4}>
 																		<Form.Control
-																			value={ }
-																			onBlur={
+																			as="textarea"
+																			rows={5}
+																			onChange={({ target }) =>
+																				editRecord({comments: target.value})
 																			}
 																		/>
 																	</td>
-																	<td>
+																	<td colSpan={3}>
 																		<Form.Control
-																			value={ }
-																			onBlur={ }
+																			as="textarea"
+																			rows={5}
+																			onChange={({ target }) =>
+																				editRecord({targets: target.value})
+																			}
 																		/>
 																	</td>
 																</tr>
@@ -424,7 +428,7 @@ export default () => {
 									</tbody>
 								</Table>
 							</Section>
-						</React.Fragment>)} */}
+						</React.Fragment>)}
 					<Section>
 						<Button type="submit" variant="secondary">
 							Submit
