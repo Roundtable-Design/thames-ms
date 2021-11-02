@@ -29,4 +29,3 @@
 ### How to deploy and depoloyment pipeline
 Push changes to the `master` branch
 A webhook has been set up on an AWS instance that waits for a 'git push' event
-// Link to AWS instance
