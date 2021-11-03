@@ -25,6 +25,7 @@
 ### How to run locally
 1. `npm install`
 2. `npm start`
+3. Also, run `npm start` in the `thames-auth` directory
 
 ### How to deploy and depoloyment pipeline
 Push changes to the `master` branch
