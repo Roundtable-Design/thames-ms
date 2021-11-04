@@ -179,13 +179,12 @@ export default ({ assignmentId }) => {
 								<td key={`td-${5}`}>
 									<Form.Control
 										as="textarea"
-										// value={fields.Feedback}
 										onBlur={({ target }) =>
 											editReview(fields.id, {
 												Feedback: target.value,
 											})
 										}
-									/>
+									>{fields.Feedback}</Form.Control>
 								</td>
 							</tr>
 						))}
