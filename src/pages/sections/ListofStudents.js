@@ -24,6 +24,7 @@ export default ({ query = null , classId}) => {
 	const [green, setGreen] = React.useState(1);
 	const [buttonState, setButtonState] = React.useState();
 	const [actionGP, setActionGP]  = React.useState("");
+	const [yearGroup, setYearGroup] = React.useState();
 
 	const fetchStudents = async () => {
 		try {
@@ -39,6 +40,7 @@ export default ({ query = null , classId}) => {
 				throw new Error("Empty response");
 
 			setRecords(response.content);
+			setYearGroup(response.content[0].fields.Year_Group);
 			setSelectedRecords([]);
 			setLoading(false);
 			setButtonState(false);
@@ -103,6 +105,8 @@ export default ({ query = null , classId}) => {
 			if (!response.hasOwnProperty("content"))
 				throw new Error("Empty response");
 
+			
+
 
 			setLoading(false);
 
@@ -135,6 +139,7 @@ export default ({ query = null , classId}) => {
 	
 
 	return (
+		(yearGroup<10 ?  (
 		<Section title="Students" loading={loading} error={error}>
 
 			<div style={{display:"block", textAlign:"right", paddingBottom: "10px"}}>
@@ -259,5 +264,6 @@ export default ({ query = null , classId}) => {
 				</Table>
 			{/* </Grid> */}
 		</Section>
+		):(""))
 	);
 };
