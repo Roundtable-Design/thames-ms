@@ -40,7 +40,7 @@ export default ({ query = null , classId}) => {
 				throw new Error("Empty response");
 
 			setRecords(response.content);
-			setYearGroup(response.content[0].fields.Year_Group);
+			setYearGroup(response.content[0].fields.Year_Group<10);
 			setSelectedRecords([]);
 			setLoading(false);
 			setButtonState(false);
@@ -139,9 +139,9 @@ export default ({ query = null , classId}) => {
 	
 
 	return (
-		(yearGroup<10 ?  (
+		
 		<Section title="Students" loading={loading} error={error}>
-
+		{yearGroup ?  (
 			<div style={{display:"block", textAlign:"right", paddingBottom: "10px"}}>
 				<Button 
 					style={{width:"190px"}}
@@ -154,7 +154,8 @@ export default ({ query = null , classId}) => {
 						>Remove Green Point 
 				</Button>
 			</div>
-
+		):("")}
+		{yearGroup ?  (
 			<div style={{display:"block", textAlign:"right", paddingBottom: "10px"}}>
 				<Button 
 					style={{width:"190px"}}
@@ -167,10 +168,12 @@ export default ({ query = null , classId}) => {
 						>Add Green Point 
 				</Button>
 			</div>
-				
+		):("")}
+	
 			{/* <Grid> */}
 				<Table style={{ width: "510px"}} striped bordered>
 					<thead>
+					{yearGroup ?  (
 						<tr>
 							<th>Name</th>
 							<th >Total Green Points</th>
@@ -201,11 +204,18 @@ export default ({ query = null , classId}) => {
 								/>
 							</th>
 						</tr>
+						):(	
+							<tr>
+								<th>Name</th>
+							</tr>
+						)}
 					</thead>
 					<tbody>
 						{records &&
 							records.map(({ fields, id }, index) => (
 								<React.Fragment>
+									{yearGroup ?  (
+										
 									<tr key={`row-${index}`} >
 									
 										<td key={`td-${1}`}>
@@ -257,6 +267,14 @@ export default ({ query = null , classId}) => {
 											/>
 										</td>
 									</tr>
+										):(	
+											<tr key={`row-${index}`}>
+												<td key={`td-${1}`}>
+													{fields.Surname},{" "}
+													{fields.Forename}
+												</td>
+											</tr>
+										)}
 								</React.Fragment>
 									
 							))} 
@@ -264,6 +282,5 @@ export default ({ query = null , classId}) => {
 				</Table>
 			{/* </Grid> */}
 		</Section>
-		):(""))
 	);
 };
