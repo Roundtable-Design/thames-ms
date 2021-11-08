@@ -26,29 +26,46 @@ export default () => {
 	const [staffLoading, setStaffLoading] = React.useState(
 		"Loading staff..."
 	);
+	const [reportsLoading, setReportsLoading] = React.useState(
+		"Loading reports..."
+	);
+
 	const [error, setError] = React.useState();
 	const [table, setTable] = React.useState();
 	const [studentsTable, setStudentsTable] = React.useState();
+	const [reports, setReports]  = React.useState();
+
 	const [staffID, setStaffID] = React.useState();
 	const [eventType, setEventType] = React.useState(0);
 	const [record, setRecord] = React.useState({});
 	const [className, setClassName] = React.useState();
+	const [classID, setClassID] = React.useState();
+	const [selectedReports, setSelectedReports] = React.useState();
 
 	// removed 'Short Report' and 'Long Report' from radioEventTypes for now
 
 	const radioEventTypes = ["Assignment", "Reminder", "Short Report", "Long Report"];
-	const gradesTypes = ["9", "9/8", "8", "8/7", "7", "7/6", "6", "6/5", "5", "5/4", "4", "4/3", "3", "3/2", "2", "2/1", "1"]
-	const performanceRanks = ["n/a", 1, 2, 3, 4]
+	const gradesTypes = ["9", "9/8", "8", "8/7", "7", "7/6", "6", "6/5", "5", "5/4", "4", "4/3", "3", "3/2", "2", "2/1", "1"];
+	const performanceRanks = ["n/a", 1, 2, 3, 4];
+
 	const handleSubmit = async (event) => {
 		event.preventDefault();
 		try {
 			setSubmitLoading("Submitting form...", { record });
 			let route = (eventType == 0 || eventType == 1) ? "assignment" : "reports";
-			const assignmentResponse = await API.create(route, {
-				record,
-			});
+			let assignmentResponse;
 
-			console.log("Assignment was pushed");
+			if(route == "assignment"){
+				assignmentResponse = await API.create(route, {
+					record,
+				});				
+			} 
+			
+			// else if(route == "reports") {
+			// 	assignmentResponse = await API.update(route, {
+			// 		record,
+			// 	});	
+				// }
 
 			if (!assignmentResponse.hasOwnProperty("content"))
 				throw new Error("Empty response");
@@ -68,10 +85,55 @@ export default () => {
 			copy[key] = props[key];
 		});
 
-
 		setRecord(copy);
-
 	};
+
+	const editReport = async (report_id, props) => {
+		// const copy = { ...reports };
+		const report = reports.find(({id}) => id===report_id);
+
+		Object.keys(props).forEach((key) => {
+			report.fields[key] = props[key];
+		});
+
+		const {
+			target_grade,
+			actual_grade,
+			effort,
+			homework_quality,
+			behaviour,
+			meeting_deadlines,
+			comments,
+			targets,
+			// staffID,
+		} = report.fields;
+
+		try {
+			setReportsLoading("Updating report...");
+
+			const response = await API.update(`report/${report_id}`, {
+				target_grade,
+				actual_grade,
+				effort,
+				homework_quality,
+				behaviour,
+				meeting_deadlines,
+				comments,
+				targets,
+				// staffID,
+			});
+
+			if (!response.hasOwnProperty("content"))
+				throw new Error("Empty response");
+
+			setReportsLoading(false);
+			
+		} catch (err) {
+			console.error(err);
+			setError(err.toString());
+		}
+
+	}
 
 	React.useEffect(() => console.log('this is the record',record),[record]);
 
@@ -82,7 +144,7 @@ export default () => {
 				const response = await API.get("classes");
 				const students = await API.get("students");
 				const staff = await API.get("me");
-				// console.log(staff.content[0].id)
+				const reports = await API.get("reports");
 
 				if (!response.hasOwnProperty("content"))
 					throw new Error("Empty response");
@@ -95,11 +157,23 @@ export default () => {
 
 				setStaffID(staff.content[0].id);
 
+				const sorted = reports.content.sort(function (a, b) {
+					if (a.fields.Surname < b.fields.Surname) {
+						return -1;
+					}
+					if (a.fields.Surname > b.fields.Surname) {
+						return 1;
+					}
+					return 0;
+				});
+
+				setReports(sorted);
+
 				console.log("Ending...");
 				setClassesLoading(false);
 				setStudentsLoading(false);
 				setStaffLoading(false);
-
+				setReportsLoading(false);
 
 			} catch (err) {
 				setError(err.toString());
@@ -107,13 +181,94 @@ export default () => {
 		})();
 	}, []);
 
+
+
 	const SetCreateType = (key) => {
 		setEventType(key);
-		if (key == 1) {
+		if (key === 1) {
 			editRecord({ is_Reminder: true });
 		}
-		setRecord({});
 	};
+
+	const createReport = async (newReport)  => {
+		try {
+			const newReports = await API.create("reports", {
+				newReport,
+			});	
+
+			if (!newReports.hasOwnProperty("content"))
+				throw new Error("Empty response");
+
+			
+			
+			const reports = await API.get("reports");
+
+			const sorted = reports.content.sort(function (a, b) {
+				if (a.fields.Surname < b.fields.Surname) {
+					return -1;
+				}
+				if (a.fields.Surname > b.fields.Surname) {
+					return 1;
+				}
+				return 0;
+			});
+
+			setReports(sorted);
+			setSelectedReports(sorted);
+			editRecord({});
+			setReportsLoading(false);
+
+		} catch (err) {
+			console.error(err);
+			setError(err.toString());
+			console.log("Assignment cannot be created");
+		}
+	}
+
+	const findStudentWithoutReport = async (reportsList, studentList, classId) => {
+		
+		//find list func student's id that does not have report
+		if(reportsList.length!==0){
+			// case: some students in the class needs @create report@
+			const studentwithoutreport = studentList.filter(({id}) => !id.includes(reportsList.map(({fields}) => fields.student_id))).map(({id}) => id);
+
+			if(studentwithoutreport.length !== 0){
+				editRecord({});
+
+				const props = {
+					student_id: studentwithoutreport,
+					class_id: [classId],
+					staff_id: [staffID],
+				};
+				const copy = { ...record };
+
+				Object.keys(props).forEach((key) => {
+					copy[key] = props[key];
+				});
+
+				createReport(copy);
+			}
+		}else{
+			// case: all students in the class needs @create report@
+			const studentwithoutreport = studentList.map(({id}) => id);
+
+			editRecord({});
+
+			const props = {
+				student_id: studentwithoutreport,
+				class_id: [classId],
+				staff_id: [staffID],
+			};
+		
+			const copy = { ...record };
+
+			Object.keys(props).forEach((key) => {
+				copy[key] = props[key];
+			});
+
+			createReport(copy);
+		}
+	}
 
 	return (
 		<React.Fragment>
@@ -125,21 +280,7 @@ export default () => {
 				<Heading>Create</Heading>
 				<p>NOTE: Fields marked as * are required</p>
 				<Form onSubmit={handleSubmit}>
-					<Section title="Type of event *">
-						{radioEventTypes.map((type, key) => (
-							<Form.Check
-								key={key}
-								type="radio"
-								name="TypeOfEvent"
-								label={type}
-								checked={(eventType) === key}
-								onChange={({ target }) => {
-									SetCreateType(key);
-								}}
-							/>
-						))}
-					</Section>
-					<Section
+				<Section
 						loading={classesLoading}
 						error={error}
 						title="Class *"
@@ -148,22 +289,38 @@ export default () => {
 							required
 							as="select"
 							onChange={({ target }) => {
-								const class_id =
-									target.options[target.selectedIndex].value;
-								// setClassId(class_id);
-								setClassName(table.find(({id}) => id===class_id).fields.id);
+								const class_id = target.options[target.selectedIndex].value;
+								setClassID(class_id);
+								setClassName(table.find(({id}) => id===class_id).fields.id); 
+								
+								
+								if((eventType == 2 || eventType == 3) 
+										&& class_id !== undefined){
 
-								editRecord({
-									class_id: [class_id],
-									staff_id: [staffID],
-									student_id: table.find(({ id }) => id === class_id).fields.student_id.split(", ").map(niceId => studentsTable.find(({ fields }) => fields.id === niceId).id),
+									const studentList = table.find(({ id }) => id === class_id).fields.student_id.split(", ").map(niceId => studentsTable.find(({ fields }) => fields.id === niceId));		
+									let class_reports = reports.filter(({ fields }) => fields.class_id.includes(class_id));									
+									
+									if(class_reports.length<studentList.length){
+										// case: new student or all student did not had report created before
+										if(studentList !== undefined){
+												findStudentWithoutReport(class_reports, studentList, class_id);
+										}
+									}else if(class_reports.length>studentList.length){
+										//case: reports for old students are present
+										let smart = class_reports.filter(({fields}) => (studentList.map(({id}) => id)).includes(fields.student_id.toString()) );
+										setSelectedReports(smart);
+									}else{
+										//case: reports up to date with student list
+										setSelectedReports(class_reports);
+									}
+								}else if((eventType == 0 || eventType == 1)){
+									editRecord({
+										class_id: [class_id],
+										staff_id: [staffID],
+										student_id: table.find(({ id }) => id === class_id).fields.student_id.split(", ").map(niceId => studentsTable.find(({ fields }) => fields.id === niceId).id),
 
-									// [studentsTable.find(
-									// 	({ fields }) => fields.id === table.find(
-									// 		({ id }) => id === class_id
-									// 	).fields.student_id).id]
-
-								});
+									});
+								}
 							}}
 						>
 							<option value="" selected disabled>-- Select a class --</option>
@@ -171,16 +328,52 @@ export default () => {
 								table.map(({ id, fields }) => (
 									<option value={id}>{fields.id}</option>
 								))}
-
-							{/* {
-								id: "record id",
-								fields : {
-									id: "nice looking id"
-								}
-							} */}
 						</Form.Control>
 					</Section>
-					{!(eventType == 2 || eventType == 3) && (
+					<Section title="Type of event *">
+						{radioEventTypes.map((type, key) => (
+							<Form.Check
+								key={key}
+								type="radio"
+								name="TypeOfEvent"
+								label={type}
+								checked={(eventType) === key}
+
+								onChange={({ target }) => {
+									SetCreateType(key);
+									
+									if((eventType == 2 || eventType == 3) 
+										&& classID !== undefined){
+
+										const studentList = table.find(({ id }) => id === classID).fields.student_id.split(", ").map(niceId => studentsTable.find(({ fields }) => fields.id === niceId));		
+										let class_reports = reports.filter(({ fields }) => fields.class_id.includes(classID));									
+										
+										if(class_reports.length<studentList.length){
+											// case: new student or all student did not had report created before
+											if(studentList !== undefined){
+												findStudentWithoutReport(class_reports, studentList, classID);
+											}
+										}else if(class_reports.length>studentList.length){
+											//case: reports for old students are present
+											let smart = class_reports.filter(({fields}) => (studentList.map(({id}) => id)).includes(fields.student_id.toString()) );
+											setSelectedReports(smart);
+										}else{
+											//case: reports up to date with student list
+											setSelectedReports(class_reports);
+										}
+									}else if((eventType == 0 || eventType == 1) && classID !== undefined){
+										editRecord({
+											class_id: [classID],
+											staff_id: [staffID],
+											student_id: table.find(({ id }) => id === classID).fields.student_id.split(", ").map(niceId => studentsTable.find(({ fields }) => fields.id === niceId).id),
+	
+										});
+									}
+								}}
+							/>
+						))}
+					</Section>
+					{!(eventType == 2 || eventType == 3) &&(
 						<React.Fragment>
 							<Section title="Content">
 								<p>
@@ -283,11 +476,13 @@ export default () => {
 							)}
 						</React.Fragment>
 					)}
-					{/* Commented the code for reports */}
+					{(eventType == 2 || eventType == 3) && reportsLoading && (
+						<Section loading={reportsLoading}> </Section>
+						)}
 					{((eventType == 2 || eventType == 3) &&
 						<React.Fragment>
-							<Section loading={studentsLoading} error={error}>
-								<Table style={{ minWidth: "1000px" }} striped bordered>
+							<Section error={error}>
+								<Table style={{ minWidth: "1000px", maxWidth:"1000px" }} striped bordered>
 									<thead>
 										<tr>
 											<th>Name</th>
@@ -300,20 +495,26 @@ export default () => {
 										</tr>
 									</thead>
 									<tbody>
-										{(studentsTable) &&
-											studentsTable.filter(({ fields }) => fields.class_id.includes(className))
-												.map((({ fields }) =>
+										{selectedReports && classID &&
+											// && reports.filter(({ fields }) => fields.class_id.includes(classID))
+											// selectedReports
+											selectedReports.filter(({ fields }) => fields.class_id.includes(classID))
+											.map((({ fields, id }) => {
+												
+												
+													return (
 													<React.Fragment>
 														<tr>
-															<td>{fields.Forename} {fields.Surname}</td>
+															<td>{fields.Surname}, {fields.Forename} </td>
 															<td>
 																<Form.Control
 																	as="select"
 																	required
-																	defaultValue={'9'}
+																	value={fields.target_grade}
+																	// defaultValue={'9'}
 																	onChange={({ target }) =>
 
-																		editRecord({target_grade: target.value})
+																		editReport(id, {target_grade: target.value})
 																	}
 																>
 																	{gradesTypes.map((targetGrade, key) =>
@@ -325,10 +526,10 @@ export default () => {
 																<Form.Control
 																	as="select"
 																	required
-																	defaultValue={'9'}
+																	value={fields.actual_grade}
 																	onChange={({ target }) =>
 
-																		editRecord({actual_grade: target.value})
+																		editReport(id, {actual_grade: target.value})
 																	}
 																>
 																	{gradesTypes.map((actualGrade, key) =>
@@ -340,10 +541,11 @@ export default () => {
 																<Form.Control
 																	as="select"
 																	required
-																	defaultValue={'1'}
+																	value={fields.effort}
+																	// defaultValue={'1'}
 																	onChange={({ target }) =>
 
-																		editRecord({effort: target.value})
+																		editReport(id, {effort: target.value})
 																	}
 																>
 																	{performanceRanks.map((effort, key) =>
@@ -355,10 +557,11 @@ export default () => {
 																<Form.Control
 																	as="select"
 																	required
-																	defaultValue={'1'}
+																	// defaultValue={'1'}
+																	value={fields.homework_quality}
 																	onChange={({ target }) =>
 
-																		editRecord({homework_quality: target.value})
+																		editReport(id, {homework_quality: target.value})
 																	}
 																>
 																	{performanceRanks.map((homeworkQuality, key) =>
@@ -370,10 +573,11 @@ export default () => {
 																<Form.Control
 																	as="select"
 																	required
-																	defaultValue={'1'}
+																	// defaultValue={'1'}
+																	value={fields.behaviour}
 																	onChange={({ target }) =>
 
-																		editRecord({behaviour: target.value})
+																		editReport(id, {behaviour: target.value})
 																	}
 																>
 																	{performanceRanks.map((behaviour, key) =>
@@ -385,13 +589,14 @@ export default () => {
 																<Form.Control
 																	as="select"
 																	required
-																	defaultValue={'1'}
+																	// defaultValue={'1'}
+																	value={fields.meeting_deadlines}
 																	onChange={({ target }) =>
 
-																		editRecord({meeting_deadlines: target.value})
+																		editReport(id,{meeting_deadlines: target.value})
 																	}
 																>
-																	{gradesTypes.map((meetingDeadlines, key) =>
+																	{performanceRanks.map((meetingDeadlines, key) =>
 																		<option key={key} value={meetingDeadlines}>{meetingDeadlines}</option>
 																	)}
 																</Form.Control>
@@ -408,32 +613,35 @@ export default () => {
 																		<Form.Control
 																			as="textarea"
 																			rows={5}
-																			onChange={({ target }) =>
-																				editRecord({comments: target.value})
+																			onBlur={({ target }) =>
+																				editReport(id, {comments: target.value})
 																			}
-																		/>
+																		>{fields.comments}</Form.Control>
 																	</td>
 																	<td colSpan={3}>
 																		<Form.Control
 																			as="textarea"
 																			rows={5}
-																			onChange={({ target }) =>
-																				editRecord({targets: target.value})
+																			onBlur={({ target }) =>
+																				editReport(id, {targets: target.value
+																					})
 																			}
-																		/>
+																		>{fields.targets}</Form.Control>
 																	</td>
 																</tr>
 															</React.Fragment>}
-													</React.Fragment>))}
+													</React.Fragment>)}))}
 									</tbody>
 								</Table>
 							</Section>
 						</React.Fragment>)}
+					{((eventType == 0 || eventType == 1) &&
 					<Section>
 						<Button type="submit" variant="secondary">
 							Submit
 						</Button>
 					</Section>
+					)}
 				</Form>
 			</Container>
 		</React.Fragment>
