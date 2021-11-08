@@ -105,7 +105,6 @@ export default () => {
 			meeting_deadlines,
 			comments,
 			targets,
-			// staffID,
 		} = report.fields;
 
 		try {
@@ -120,7 +119,6 @@ export default () => {
 				meeting_deadlines,
 				comments,
 				targets,
-				// staffID,
 			});
 
 			if (!response.hasOwnProperty("content"))
@@ -168,6 +166,7 @@ export default () => {
 				});
 
 				setReports(sorted);
+				setSelectedReports(sorted);
 
 				console.log("Ending...");
 				setClassesLoading(false);
@@ -303,7 +302,7 @@ export default () => {
 									if(class_reports.length<studentList.length){
 										// case: new student or all student did not had report created before
 										if(studentList !== undefined){
-												findStudentWithoutReport(class_reports, studentList, class_id);
+											findStudentWithoutReport(class_reports, studentList, class_id);
 										}
 									}else if(class_reports.length>studentList.length){
 										//case: reports for old students are present
@@ -501,7 +500,6 @@ export default () => {
 											selectedReports.filter(({ fields }) => fields.class_id.includes(classID))
 											.map((({ fields, id }) => {
 												
-												
 													return (
 													<React.Fragment>
 														<tr>
@@ -576,7 +574,6 @@ export default () => {
 																	// defaultValue={'1'}
 																	value={fields.behaviour}
 																	onChange={({ target }) =>
-
 																		editReport(id, {behaviour: target.value})
 																	}
 																>
