@@ -51,7 +51,7 @@ export default ({ query = null }) => {
 							</Card.Body>
 							{fields.hasOwnProperty("Assignment_Count") && (
 								<Card.Footer style={{backgroundColor: "#DCEFC8", borderTop:"#DCEFC8"}}>
-									{fields.Assignment_Count} assignment
+									{fields.Assignment_Count} task
 									{fields.Assignment_Count !== 1 && "s"}
 								</Card.Footer>
 							)}
