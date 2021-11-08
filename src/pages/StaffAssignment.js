@@ -167,6 +167,23 @@ export default () => {
 								<Section title="Date">
 									<Form.Row>
 										<Col>
+											<Form.Label>Set *</Form.Label>
+											<Form.Control
+												defaultValue={assignment.Set}
+												required
+												type="date"
+												onChange={({ target }) =>
+													editRecord({
+														Set: target.value,
+													})
+												}
+											/>
+										</Col>
+									</Form.Row>
+								</Section>
+								<Section title="Date">
+									<Form.Row>
+										<Col>
 											<Form.Label>Due *</Form.Label>
 											<Form.Control
 												defaultValue={assignment.Due}
