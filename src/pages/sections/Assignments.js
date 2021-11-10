@@ -51,19 +51,38 @@ export default ({ query = null }) => {
 			const now = moment(new Date());
 			const diff = moment.duration(date.diff(now)).days();
 			const diffHours = moment.duration(date.diff(now)).hours();
+			const monthDiff = moment.duration(date.diff(now)).months();
+
+			if(diffHours > 0 && diffHours < 24){
+				diff++;
+			}else if(diffHours < 0 && diffHours > -24){
+				diff--;
+			}
+			
 			if (status == "Resubmit") {
 				return "Resubmit";
 			} else {
 				if (diff > 0) {
-					return `${Math.abs(diff)} day${diff !== 1 ? "s" : ""}`;
+					if(diff==1 && monthDiff==0){
+						return `Tomorrow`;
+					}else if(monthDiff!==0){
+						return `
+							${Math.abs(monthDiff)} month${monthDiff !== 1 ? "s" : ""}
+							${Math.abs(diff)} day${diff !== 1 ? "s" : ""}`;
+					}else{
+						return `${Math.abs(diff)} day${diff !== 1 ? "s" : ""}`;
+					}
 				} else if (diff < 0) {
 					return `Overdue`;
-				} else if (diffHours > 0 && diffHours <= 24) {
-					console.log("this is Diff housrs", diffHours);
-					return `Tomorrow`;
 				} else if (diff == 0) {
-					console.log("this is Diff", diff);
-					return `Today`;
+					if(monthDiff==0){
+						return `Today`;
+					}else if (monthDiff>0){
+						return `Due in
+							${Math.abs(monthDiff)} month${monthDiff !== 1 ? "s" : ""}`;
+					}else{
+						return `Overdue`;
+					}
 				}
 			}
 		}
