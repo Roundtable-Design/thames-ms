@@ -13,6 +13,7 @@ import Section from "../components/Section";
 import Table from "react-bootstrap/Table";
 import TeacherNav from "../components/TeacherNav";
 import { useHistory } from "react-router-dom";
+import Loader from 'react-loader-spinner'
 
 export default () => {
 	const history = useHistory();
@@ -476,11 +477,15 @@ export default () => {
 						</React.Fragment>
 					)}
 					{(eventType == 2 || eventType == 3) && reportsLoading && (
-						<Section loading={reportsLoading}> </Section>
+						<div style={{position: 'absolute', left: '50%', display: 'flex', alignItems: 'center', flexDirection: 'column'}}>
+							<Loader type="ThreeDots" color="000" height={30} width={30}></Loader>
+							<p>{reportsLoading}</p>
+						</div>
 						)}
 					{((eventType == 2 || eventType == 3) &&
 						<React.Fragment>
-							<Section error={error}>
+						
+							<Section error={error} style={{marginTop: '50px'}}>
 								<Table style={{ minWidth: "1000px", maxWidth:"1000px" }} striped bordered>
 									<thead>
 										<tr>
