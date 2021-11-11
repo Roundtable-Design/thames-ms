@@ -535,6 +535,9 @@ export default () => {
 																		editReport(id, {actual_grade: target.value})
 																	}
 																>
+																	<option value="falling short of target">falling short of target</option>
+																	<option value="progressing well towards target">progressing well towards target</option>
+																	<option value="at or above target">at or above target</option>
 																	{gradesTypes.map((actualGrade, key) =>
 																		<option key={key} value={actualGrade}>{actualGrade}</option>
 																	)}
