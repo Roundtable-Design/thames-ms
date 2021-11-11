@@ -40,7 +40,6 @@ export default ({ query = null }) => {
 	}, []);
 
 	const getStatus = (due) => {
-		console.log({due})
 		due = moment(new Date(due));
 
 		const now = moment(new Date());
@@ -48,13 +47,12 @@ export default ({ query = null }) => {
 		let diff = moment.duration(due.diff(now)).days();
 		const diffHours = moment.duration(due.diff(now)).hours();
 
-		console.log({diffHours, diff, monthDiff})
 		if(diffHours > 0 && diffHours < 24){
 			diff++;
-		}else if(diffHours < 0 && diffHours > -24){
-			diff--;
 		}
-		console.log({diffHours, diff, monthDiff})
+		// else if(diffHours < 0 && diffHours > -24){
+		// 	diff--;
+		// }
 
 		if (diff > 0) {
 			if(monthDiff!==0){

@@ -55,9 +55,10 @@ export default ({ query = null }) => {
 
 			if(diffHours > 0 && diffHours < 24){
 				diff++;
-			}else if(diffHours < 0 && diffHours > -24){
-				diff--;
 			}
+			// else if(diffHours < 0 && diffHours > -24){
+			// 	diff--;
+			// }
 			
 			if (status == "Resubmit") {
 				return "Resubmit";
