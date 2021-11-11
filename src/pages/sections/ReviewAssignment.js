@@ -8,6 +8,7 @@ import React from "react";
 import Section from "../../components/Section";
 import Table from "react-bootstrap/Table";
 import queryString from "query-string";
+import Loader from 'react-loader-spinner'
 
 export default ({ assignmentId }) => {
 	const [loading, setLoading] = React.useState("Loading reviews...");
@@ -107,8 +108,12 @@ export default ({ assignmentId }) => {
 
 	return (
 		<Section title="Review" error={error}>
-			{loading && <ActivityIndicator inline>{loading}</ActivityIndicator>}
-			<Table style={{ minWidth: "1000px" }} striped bordered>
+			{loading && 
+				<div style={{position: 'absolute', left: '50%', display: 'flex', alignItems: 'center', flexDirection: 'column'}}>
+					<Loader type="ThreeDots" color="000" height={30} width={30}></Loader>
+					<p>{loading}</p>
+				</div>}
+			<Table style={{ minWidth: "1000px", marginTop: '100px' }} striped bordered>
 				<thead>
 					<tr>
 						<th>Name</th>
