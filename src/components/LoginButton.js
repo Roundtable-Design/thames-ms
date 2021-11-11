@@ -62,12 +62,13 @@ export default () => {
 
 	return (
 		<Section error={error} loading={loading}>
-			<div onClick={handleClick} style={{backgroundColor:"#E3E3DD"}}>
+			<div onClick={handleClick} style={{backgroundColor:"#E3E3DD", display: "inline-block"}}>
 				<GoogleLogin
 					clientId="218807385555-cnlc8e780kouun416qag1fe5r0uenioq.apps.googleusercontent.com"
 					buttonText="Login with Google"
 					onSuccess={handleSuccess}
 					onFailure={handleFailure}
+					onAutoLoadFinished={() => setLoading(false)}
 					// cookiePolicy={"single_host_origin"}
 				/>
 			</div>
