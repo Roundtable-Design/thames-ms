@@ -40,30 +40,49 @@ export default ({ query = null }) => {
 	}, []);
 
 	const getStatus = (due) => {
+		console.log({due})
 		due = moment(new Date(due));
+
 		const now = moment(new Date());
 		const monthDiff = moment.duration(due.diff(now)).months();
-		const diff = moment.duration(due.diff(now)).days();
-		
+		let diff = moment.duration(due.diff(now)).days();
+		const diffHours = moment.duration(due.diff(now)).hours();
+
+		console.log({diffHours, diff, monthDiff})
+		if(diffHours > 0 && diffHours < 24){
+			diff++;
+		}else if(diffHours < 0 && diffHours > -24){
+			diff--;
+		}
+		console.log({diffHours, diff, monthDiff})
 
 		if (diff > 0) {
 			if(monthDiff!==0){
 				return `Due in 
-						${Math.abs(monthDiff)} month${monthDiff !== 1 ? "s" : ""}
-						${Math.abs(diff)} day${diff !== 1 ? "s" : ""}`;
+					${Math.abs(monthDiff)} month${monthDiff !== 1 ? "s" : ""}
+					${Math.abs(diff)} day${diff !== 1 ? "s" : ""}`;
 			} else{
 				return `Due in ${Math.abs(diff)} day${diff !== 1 ? "s" : ""}`;
 			}
 		} else if (diff < 0) {
 			if(monthDiff!==0){
 				return `Due  
-						${Math.abs(monthDiff)} month${monthDiff !== 1 ? "s" : ""}
-						${Math.abs(diff)} day${diff !== -1 ? "s" : ""} ago`;
+					${Math.abs(monthDiff)} month${monthDiff !== 1 ? "s" : ""}
+					${Math.abs(diff)} day${diff !== -1 ? "s" : ""} ago`;
 			} else{
 				return `Due ${Math.abs(diff)} day${diff !== -1 ? "s" : ""} ago`;
 			}
-		} else {
-			return `Due today`;
+		} else if (diff == 0){
+			if(monthDiff==0){
+				return `Due today`;
+			}else if (monthDiff>0){
+				return `Due in
+					${Math.abs(monthDiff)} month${monthDiff !== 1 ? "s" : ""}`;
+			}else{
+				return `Due in
+					${Math.abs(monthDiff)} month${monthDiff !== 1 ? "s" : ""} ago`;
+			}
+			
 		}
 	};
 
