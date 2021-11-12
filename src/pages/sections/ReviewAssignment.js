@@ -129,7 +129,7 @@ export default ({ assignmentId }) => {
 				</thead>
 				<tbody>
 					{reviews &&
-						reviews.map(({ fields }, index) => (
+						reviews.sort((a, b) => a.fields.Student_Surname.toString().localeCompare(b.fields.Student_Surname.toString())).map(({ fields }, index) => (
 							<tr key={`row-${index}`}>
 								<td key={`td-${1}`}>
 									{/* <Link to={`/student/${fields.student_id}`}> */}
