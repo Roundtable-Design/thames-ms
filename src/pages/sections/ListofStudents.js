@@ -212,7 +212,7 @@ export default ({ query = null , classId}) => {
 					</thead>
 					<tbody>
 						{records &&
-							records.sort((a, b) => a.fields.Surname.localeCompare(b.fields.Surname)).map(({ fields, id }, index) => (
+							records.sort((a, b) => a.fields.Surname.toString().localeCompare(b.fields.Surname.toString())).map(({ fields, id }, index) => (
 								<React.Fragment>
 									{yearGroup ?  (
 										
