@@ -19,7 +19,7 @@
 2. NPM
 
 ### Configuration
-*Environment variables(?)*
+_This variable should point to the URL of the live thames-auth server that is being used._
 1. `REACT_APP_API_ROOT="http://localhost:8000/api"`
 
 ### How to run locally
