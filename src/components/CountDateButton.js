@@ -8,11 +8,11 @@ const Wrapper = styled.button`
 	border: 1px solid #C7C9C7;
 	border-radius: 3px;
 	background-color: #FFFFFF;
-	padding: 6.5px 11.5px;
+	padding: 6.5px 7.5px;
 	box-sizing: border-box;
 	width: 103px;
 
-	font-family: Nunito;
+	/*font-family: 'Nunito';*/
     font-style: normal;
     font-weight: 800;
     font-size: 14px;
