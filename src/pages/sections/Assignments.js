@@ -49,7 +49,7 @@ export default ({ query = null }) => {
 		} else {
 			date = moment(new Date(date));
 			const now = moment(new Date());
-			const diff = moment.duration(date.diff(now)).days();
+			let diff = moment.duration(date.diff(now)).days();
 			const diffHours = moment.duration(date.diff(now)).hours();
 			const monthDiff = moment.duration(date.diff(now)).months();
 
