@@ -109,10 +109,12 @@ export default ({ query = null }) => {
 	};
 
 	const CheckReminderTitle = (isReminder, class_name, title) => {
-		if (isReminder) {
+		if (isReminder===true) {
+			console.log({isReminder});
 			return title;
 		} else {
 			return class_name;
+			
 		}
 	};
 
@@ -197,8 +199,9 @@ export default ({ query = null }) => {
 										))
 								}
 								title={CheckReminderTitle(
-									fields.is_Reminder,
-									fields.Class_Name,
+									fields.is_Reminder[0],
+									// fields.Class_Name,
+									fields.class_id_name,
 									fields.Assignment_Title
 								)}
 								date={translateDate(
@@ -259,8 +262,9 @@ export default ({ query = null }) => {
 								}
 								resubmit={fields.Status == "Resubmit"}
 								title={CheckReminderTitle(
-									fields.is_Reminder,
-									fields.Class_Name,
+									fields.is_Reminder[0],
+									// fields.Class_Name,
+									fields.class_id_name,
 									fields.Assignment_Title
 								)}
 								date={translateCompleteDate(
