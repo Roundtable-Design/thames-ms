@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 
 const Wrapper = styled.button`
-/* grid-area: date; */
+	/* grid-area: date; */
 	grid-column: span 3;
 	appearance: none;
 	border: 1px solid #C7C9C7;
@@ -10,7 +10,7 @@ const Wrapper = styled.button`
 	background-color: #FFFFFF;
 	padding: 6.5px 7.5px;
 	box-sizing: border-box;
-	width: 103px;
+	min-width: 103px;
 
 	/*font-family: 'Nunito';*/
     font-style: normal;
