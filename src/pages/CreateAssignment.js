@@ -45,7 +45,7 @@ export default () => {
 
 	// removed 'Short Report' and 'Long Report' from radioEventTypes for now
 
-	const radioEventTypes = ["Assignment", "Reminder", "Short Report", "Long Report"];
+	const radioEventTypes = ["Assignment", "Reminder"];
 	const gradesTypes = ["9", "8/9", "8", "7/8", "7", "6/7", "6", "5/6", "5", "4/5", "4", "3/4", "3", "2/3", "2", "1/2", "1"];
 	const performanceRanks = ["n/a", 1, 2, 3, 4];
 
