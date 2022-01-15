@@ -17,7 +17,7 @@
 		"bootstrap": "^4.5.0",
 		"cheerio": "^1.0.0-rc.9",
 		"html2json": "^1.0.2",
-		"marked": "^2.1.2",
+		"marked": "^4.0.10",
 		"moment": "^2.27.0",
 		"omit-deep-lodash": "^1.1.5",
 		"query-string": "^6.13.1",
